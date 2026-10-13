@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polysocial in Claude</title>
+<meta name="description" content="Prototype: a brand marketing manager reviews and creates Polysocial campaigns from a Claude chat through the Polysocial MCP connector.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- Claude chat tokens ---------- */
+:root{
+  --bg:#faf9f5; --side:#f5f4ed; --panel:#ffffff; --bubble:#f0eee6;
+  --text:#141413; --muted:#73726c; --faint:#a3a199;
+  --line:rgba(31,30,29,.13); --line-2:rgba(31,30,29,.22);
+  --clay:#d97757; --clay-ink:#c6613f; --clay-soft:rgba(217,119,87,.12);
+  --ok:#2f7d4f; --ok-soft:rgba(47,125,79,.12); --warn:#a8641a; --warn-soft:rgba(196,129,40,.14);
+  --code:#f5f4ed;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.05);
+  /* Polysocial (brand web app) tokens */
+  --ps-blue:#1548eb; --ps-blue-600:#123bbd; --ps-blue-100:#d0dafb;
+  --ps-g100:#ececec; --ps-g200:#d9d9d9; --ps-g600:#717171; --ps-g800:#121212; --ps-card:#fff;
+  --chat-font:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  --ps-font:'Inter',-apple-system,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#262624; --side:#1f1e1d; --panel:#30302e; --bubble:#141413;
+    --text:#faf9f5; --muted:#a6a39b; --faint:#7d7b74;
+    --line:rgba(222,220,209,.13); --line-2:rgba(222,220,209,.24);
+    --clay-soft:rgba(217,119,87,.18); --ok:#6cc08f; --ok-soft:rgba(108,192,143,.14); --warn:#e0a458; --warn-soft:rgba(224,164,88,.15);
+    --code:#1f1e1d; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+    --ps-g100:#3a3a38; --ps-g200:#4a4a47; --ps-g600:#a6a39b; --ps-g800:#faf9f5; --ps-card:#30302e; --ps-blue-100:rgba(115,145,243,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#262624; --side:#1f1e1d; --panel:#30302e; --bubble:#141413;
+  --text:#faf9f5; --muted:#a6a39b; --faint:#7d7b74;
+  --line:rgba(222,220,209,.13); --line-2:rgba(222,220,209,.24);
+  --clay-soft:rgba(217,119,87,.18); --ok:#6cc08f; --ok-soft:rgba(108,192,143,.14); --warn:#e0a458; --warn-soft:rgba(224,164,88,.15);
+  --code:#1f1e1d; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  --ps-g100:#3a3a38; --ps-g200:#4a4a47; --ps-g600:#a6a39b; --ps-g800:#faf9f5; --ps-card:#30302e; --ps-blue-100:rgba(115,145,243,.25);
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;}
+body{background:var(--bg);color:var(--text);font:15px/1.6 var(--chat-font);-webkit-font-smoothing:antialiased;overflow:hidden;}
+button{font:inherit;color:inherit;cursor:pointer;}
+img{display:block;}
+
+.app{display:grid;grid-template-columns:260px 1fr;height:100dvh;}
+
+/* ---------- Sidebar ---------- */
+.side{background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:12px 10px;min-width:0;}
+.side .top{display:flex;align-items:center;gap:8px;padding:6px 8px 14px;font-weight:600;font-size:18px;letter-spacing:-.01em;}
+.newchat{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;border:0;background:none;text-align:left;font-weight:500;color:var(--clay-ink);}
+.newchat .plus{width:24px;height:24px;border-radius:50%;background:var(--clay);color:#fff;display:grid;place-items:center;font-size:17px;line-height:1;}
+.newchat:hover{background:var(--clay-soft);}
+.side h4{margin:18px 10px 6px;font-size:12px;font-weight:500;color:var(--muted);}
+.side ul{list-style:none;margin:0;padding:0;}
+.side li{padding:7px 10px;border-radius:8px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);opacity:.88;}
+.side li.on{background:var(--bubble);opacity:1;}
+.side li:not(.on):hover{background:var(--clay-soft);}
+.me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid var(--line);}
+.me .av{width:32px;height:32px;border-radius:50%;background:#3d3929;color:#faf9f5;display:grid;place-items:center;font-size:13px;font-weight:600;flex:none;}
+.me b{display:block;font-size:13.5px;font-weight:600;line-height:1.25;}
+.me span{display:block;font-size:12px;color:var(--muted);line-height:1.3;}
+
+/* ---------- Main ---------- */
+.main{display:flex;flex-direction:column;min-width:0;height:100dvh;position:relative;}
+.bar{display:flex;align-items:center;gap:12px;padding:10px 20px;border-bottom:1px solid var(--line);min-height:54px;}
+.bar .title{font-weight:500;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bar .spacer{flex:1;}
+.conn{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 6px;border:1px solid var(--line);border-radius:999px;font-size:12.5px;color:var(--muted);white-space:nowrap;}
+.conn .dot{width:7px;height:7px;border-radius:50%;background:#3fb06e;}
+.ps-mark{width:16px;height:16px;border-radius:4px;background:var(--ps-blue);color:#fff;display:grid;place-items:center;flex:none;}
+.ps-mark svg{width:11px;height:8px;}
+
+.ctrls{display:flex;gap:6px;align-items:center;}
+.ctrls button{border:1px solid var(--line-2);background:var(--panel);border-radius:8px;padding:5px 10px;font-size:13px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+.ctrls button:hover{border-color:var(--clay);}
+.ctrls button.primary{background:var(--text);color:var(--bg);border-color:var(--text);}
+.ctrls button:disabled{opacity:.45;cursor:default;}
+.ctrls .step{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:38px;text-align:right;}
+
+.scroll{flex:1;overflow-y:auto;scroll-behavior:smooth;}
+.thread{max-width:768px;margin:0 auto;padding:28px 24px 40px;}
+
+/* intro (empty state) */
+.intro{text-align:center;padding:9vh 0 0;}
+.intro h1{font-size:30px;font-weight:400;letter-spacing:-.02em;margin:14px 0 8px;font-family:Georgia,"Times New Roman",serif;}
+.intro p{color:var(--muted);margin:0 auto 22px;max-width:520px;}
+.intro .spark{width:38px;height:38px;margin:0 auto;}
+.intro .go{border:0;background:var(--clay);color:#fff;border-radius:10px;padding:10px 18px;font-weight:500;}
+.intro .go:hover{background:var(--clay-ink);}
+.intro .hint{display:block;margin-top:12px;font-size:12.5px;color:var(--faint);}
+.intro .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:26px;}
+.intro .chips span{font-size:12.5px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);color:var(--muted);}
+
+/* messages */
+.msg{margin:0 0 26px;animation:rise .35s ease both;}
+@keyframes rise{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.msg.user{display:flex;justify-content:flex-end;}
+.msg.user .b{background:var(--bubble);border-radius:16px;padding:10px 16px;max-width:82%;white-space:pre-wrap;}
+.msg.claude .head{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.spark{width:22px;height:22px;color:var(--clay);flex:none;}
+.spark.spin{animation:spin 2.4s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.thinking{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px;}
+.thinking .shimmer{background:linear-gradient(90deg,var(--muted) 0%,var(--text) 50%,var(--muted) 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 1.6s linear infinite;}
+@keyframes sh{from{background-position:200% 0;}to{background-position:-200% 0;}}
+.txt p{margin:0 0 12px;}
+.txt p:last-child{margin-bottom:0;}
+.txt ul,.txt ol{margin:0 0 12px;padding-left:22px;}
+.txt li{margin:3px 0;}
+.txt blockquote{margin:0 0 12px;padding:8px 14px;border-left:3px solid var(--clay);background:var(--clay-soft);border-radius:0 8px 8px 0;}
+.blk{margin:0 0 14px;}
+.blk:last-child{margin-bottom:0;}
+
+/* tool call */
+.tool{border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden;font-size:13.5px;}
+.tool > button{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;cursor:pointer;}
+.tool > button:focus-visible{outline:2px solid var(--clay);outline-offset:-2px;border-radius:12px;}
+.tool .nm{font-weight:500;}
+.tool .srv{color:var(--muted);}
+.tool .st{margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12.5px;}
+.tool .chev{transition:transform .2s;width:14px;height:14px;}
+.tool.open .chev{transform:rotate(180deg);}
+.tool .spinner{width:14px;height:14px;border-radius:50%;border:2px solid var(--line-2);border-top-color:var(--clay);animation:spin .8s linear infinite;}
+.tool .tick{color:var(--ok);}
+.tool .io{display:none;border-top:1px solid var(--line);padding:10px 12px 12px;background:var(--code);}
+.tool.open .io{display:block;}
+.tool .io h5{margin:0 0 4px;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);}
+.tool .io pre{margin:0 0 10px;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-word;color:var(--text);}
+.tool .io pre:last-child{margin:0;}
+.tools-group{display:flex;flex-direction:column;gap:8px;}
+
+/* permission prompt */
+.perm{border:1px solid var(--line-2);border-radius:14px;background:var(--panel);padding:14px 16px;box-shadow:var(--shadow);}
+.perm .q{display:flex;gap:10px;align-items:flex-start;}
+.perm .q b{font-weight:600;}
+.perm .q p{margin:2px 0 0;color:var(--muted);font-size:13.5px;}
+.perm pre{margin:10px 0 0;padding:8px 10px;border-radius:8px;background:var(--code);font:12px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;}
+.perm .acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.perm .acts button{border:1px solid var(--line-2);background:transparent;border-radius:8px;padding:6px 12px;font-size:13.5px;}
+.perm .acts button.yes{background:var(--text);color:var(--bg);border-color:var(--text);}
+.perm .acts button.pulse{animation:pulse 1.2s ease infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(217,119,87,.0);}50%{box-shadow:0 0 0 5px rgba(217,119,87,.35);}}
+.perm.done{box-shadow:none;padding:9px 12px;}
+.perm.done .acts,.perm.done pre,.perm.done .q p{display:none;}
+.perm .res{display:none;font-size:13px;color:var(--muted);}
+.perm.done .res{display:inline;}
+.perm.done .q{align-items:center;font-size:13.5px;}
+
+/* composer */
+.composer{padding:0 24px 18px;}
+.box{max-width:768px;margin:0 auto;border:1px solid var(--line-2);border-radius:18px;background:var(--panel);box-shadow:var(--shadow);padding:12px 12px 10px 16px;}
+.box .ta{min-height:24px;max-height:120px;overflow:auto;white-space:pre-wrap;color:var(--text);}
+.box .ta:empty::before{content:"Reply to Claude…";color:var(--faint);}
+.box .ta .caret{display:inline-block;width:1.5px;height:1.1em;background:var(--text);vertical-align:-2px;animation:blink 1s step-end infinite;}
+@keyframes blink{50%{opacity:0;}}
+.box .row{display:flex;align-items:center;gap:6px;margin-top:10px;}
+.ibtn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;background:transparent;color:var(--muted);}
+.ibtn svg{width:16px;height:16px;}
+.box .model{margin-left:auto;font-size:13px;color:var(--muted);padding:0 8px;}
+.send{width:32px;height:32px;border-radius:8px;border:0;background:var(--clay);color:#fff;display:grid;place-items:center;opacity:.5;transition:opacity .15s;}
+.send.ready{opacity:1;}
+.send svg{width:16px;height:16px;}
+.foot{max-width:768px;margin:8px auto 0;text-align:center;font-size:11.5px;color:var(--faint);}
+
+/* ---------- Polysocial cards (mirror brand web app) ---------- */
+.ps{font-family:var(--ps-font);background:var(--ps-card);border:1px solid var(--line);border-radius:14px;overflow:hidden;color:var(--ps-g800);font-size:13px;line-height:1.45;box-shadow:var(--shadow);}
+.ps-h{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--line);font-size:12px;font-weight:600;color:var(--ps-g600);}
+.ps-h .live{margin-left:auto;font-weight:500;display:flex;align-items:center;gap:5px;}
+.ps-h .live i{width:6px;height:6px;border-radius:50%;background:#3fb06e;}
+.ps-f{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--ps-g600);}
+.ps-f a{color:var(--ps-blue);font-weight:600;text-decoration:none;}
+.ps-f a:hover{text-decoration:underline;}
+:root[data-theme="dark"] .ps-f a{color:#7391f3;}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ps-f a{color:#7391f3;}}
+
+.ps-camp{display:flex;gap:12px;padding:14px;align-items:center;}
+.ps-camp img{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:none;}
+.ps-camp .t{font-size:15px;font-weight:600;letter-spacing:-.01em;line-height:1.3;}
+.ps-camp .m{color:var(--ps-g600);font-size:12px;margin-top:2px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;}
+.badge.blue{background:var(--ps-blue-100);color:var(--ps-blue-600);}
+:root[data-theme="dark"] .badge.blue{color:#a1b6f7;}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .badge.blue{color:#a1b6f7;}}
+.badge.ok{background:var(--ok-soft);color:var(--ok);}
+.badge.warn{background:var(--warn-soft);color:var(--warn);}
+.badge.grey{background:var(--ps-g100);color:var(--ps-g600);}
+
+.ps-stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);}
+.ps-stats > div{padding:12px 14px;border-right:1px solid var(--line);}
+.ps-stats > div:last-child{border-right:0;}
+.ps-stats .k{font-size:11.5px;color:var(--ps-g600);font-weight:500;}
+.ps-stats .v{font-size:18px;font-weight:600;letter-spacing:-.015em;font-variant-numeric:tabular-nums;margin-top:2px;}
+.ps-stats .s{font-size:11.5px;color:var(--ps-g600);font-variant-numeric:tabular-nums;}
+.ps-budget{padding:12px 14px;border-top:1px solid var(--line);}
+.ps-budget .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-variant-numeric:tabular-nums;}
+.ps-budget .spent{font-size:16px;font-weight:600;}
+.ps-budget .of{color:var(--ps-g600);font-weight:500;}
+.ps-budget .pct{color:var(--ps-blue);font-weight:600;}
+.track{height:6px;border-radius:99px;background:var(--ps-g100);overflow:hidden;margin:8px 0 6px;}
+.track i{display:block;height:100%;background:var(--ps-blue);border-radius:99px;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1);}
+.ps-budget .ft{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ps-g600);font-variant-numeric:tabular-nums;}
+.split{display:flex;height:8px;border-radius:99px;overflow:hidden;gap:2px;margin:8px 0;}
+.split i{display:block;height:100%;}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11.5px;color:var(--ps-g600);}
+.legend span{display:inline-flex;align-items:center;gap:5px;}
+.legend em{width:8px;height:8px;border-radius:2px;display:inline-block;}
+
+.subs{display:grid;grid-template-columns:repeat(3,1fr);gap:0;}
+.sub{border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0;}
+.sub:last-child{border-right:0;}
+.sub .media{position:relative;aspect-ratio:4/5;background:var(--ps-g100);overflow:hidden;}
+.sub .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.sub .media img.alt{transform:scale(1.6);object-position:70% 40%;}
+.on-img{background:rgba(255,255,255,.94)!important;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.on-img.warn{color:#8a4e0c!important;}
+.on-img.blue{color:#123bbd!important;}
+.on-img.grey{color:#414141!important;}
+.sub .media .type{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.55);color:#fff;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:99px;}
+.sub .media .wait{position:absolute;top:8px;right:8px;}
+.sub .who{display:flex;align-items:center;gap:8px;padding:10px 12px 4px;}
+.sub .who img{width:28px;height:28px;border-radius:50%;object-fit:cover;}
+.sub .who b{display:block;font-size:12.5px;line-height:1.2;}
+.sub .who span{display:block;font-size:11px;color:var(--ps-g600);}
+.sub .cap{padding:0;margin:2px 12px 8px;font-size:11.5px;color:var(--ps-g600);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.sub .checks{list-style:none;margin:auto 0 0;padding:8px 12px 12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:4px;font-size:11.5px;}
+.sub .checks li{display:flex;gap:6px;align-items:flex-start;}
+.sub .checks .y{color:var(--ok);font-weight:700;}
+.sub .checks .n{color:var(--warn);font-weight:700;}
+.sub .verdict{padding:0 12px 12px;}
+.sub.dim .media img{filter:saturate(.85);}
+
+/* campaign page (draft) — the middle column of the creator-facing campaign page */
+.cp-hero{position:relative;aspect-ratio:16/7;background:#000;}
+.cp-hero img{width:100%;height:100%;object-fit:cover;opacity:.92;}
+.cp-hero .brand{position:absolute;left:14px;bottom:12px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.92);color:#121212;border-radius:99px;padding:4px 10px 4px 4px;font-size:12px;font-weight:600;}
+.cp-hero .brand img{width:22px;height:22px;border-radius:50%;object-fit:cover;opacity:1;}
+.cp-hero .stat{position:absolute;right:14px;top:12px;}
+.cp-body{padding:14px 16px 4px;}
+.cp-body h3{margin:0;font-size:18px;font-weight:600;letter-spacing:-.015em;line-height:1.3;}
+.cp-body .meta{color:var(--ps-g600);font-size:12px;margin-top:3px;}
+.sec{padding:12px 16px;border-top:1px solid var(--line);}
+.sec h6{margin:0 0 8px;font-size:12px;font-weight:600;color:var(--ps-g800);}
+.plist{display:flex;flex-direction:column;}
+.plist div{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);font-variant-numeric:tabular-nums;}
+.plist div:last-child{border-bottom:0;}
+.plist span{color:var(--ps-g600);}
+.plist b{font-weight:600;}
+.plist .chg b{color:var(--ps-blue);}
+.plist .chg s{color:var(--ps-g600);font-weight:400;margin-right:6px;}
+.tags{display:flex;flex-wrap:wrap;gap:6px;}
+.tags span{padding:4px 10px;border-radius:99px;background:var(--ps-g100);font-size:12px;font-weight:500;}
+.sec p{margin:0 0 6px;color:var(--ps-g600);}
+.sec ol{margin:0;padding-left:18px;color:var(--ps-g600);}
+.sec ol li{margin:2px 0;}
+.sec ol li.new{color:var(--ps-blue);font-weight:500;}
+.ctas{display:flex;flex-direction:column;gap:5px;}
+.ctas span{border-left:2px solid var(--ps-blue);padding-left:8px;color:var(--ps-g800);}
+.two{display:grid;grid-template-columns:1fr 1fr;}
+.two > .sec:first-child{border-right:1px solid var(--line);}
+
+.sched{display:flex;align-items:center;gap:14px;padding:14px;}
+.sched .cal{width:52px;border-radius:10px;border:1px solid var(--line);overflow:hidden;text-align:center;flex:none;}
+.sched .cal div{background:var(--ps-blue);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.06em;padding:2px 0;}
+.sched .cal b{display:block;font-size:20px;font-weight:700;padding:3px 0 4px;}
+.sched .t{font-weight:600;font-size:14.5px;}
+.sched .m{font-size:12px;color:var(--ps-g600);}
+.timeline{display:flex;gap:0;padding:0 14px 14px;}
+.timeline div{flex:1;font-size:11px;color:var(--ps-g600);border-top:3px solid var(--ps-g100);padding-top:6px;}
+.timeline div.on{border-color:var(--ps-blue);color:var(--ps-g800);font-weight:600;}
+
+/* ---------- Responsive ---------- */
+@media (max-width:900px){
+  .app{grid-template-columns:1fr;}
+  .side{display:none;}
+}
+@media (max-width:640px){
+  .bar{padding:8px 16px;flex-wrap:wrap;}
+  .bar .title{flex:1 1 100%;order:-1;}
+  .bar .spacer{display:none;}
+  .thread{padding:20px 16px 32px;}
+  .composer{padding:0 16px 12px;}
+  .ps-stats{grid-template-columns:1fr 1fr;}
+  .ps-stats > div:nth-child(2){border-right:0;}
+  .ps-stats > div:nth-child(-n+2){border-bottom:1px solid var(--line);}
+  .subs{grid-template-columns:1fr;}
+  .sub{border-right:0;border-bottom:1px solid var(--line);}
+  .sub:last-child{border-bottom:0;}
+  .sub .media{aspect-ratio:16/10;}
+  .two{grid-template-columns:1fr;}
+  .two > .sec:first-child{border-right:0;}
+  .msg.user .b{max-width:92%;}
+  .ctrls .lbl{display:none;}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
+  .scroll{scroll-behavior:auto;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" aria-label="Chats">
+    <div class="top"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><use href="#spark"/></svg>Claude</div>
+    <button class="newchat" type="button"><span class="plus">+</span>New chat</button>
+    <h4>Recents</h4>
+    <ul>
+      <li class="on">Christmas Mocha review &amp; January launch</li>
+      <li>Q4 influencer budget split</li>
+      <li>Caption ideas — Pumpkin Spice</li>
+      <li>Creator brief template</li>
+      <li>Polysocial weekly report — Nov 3</li>
+      <li>Festive menu launch plan</li>
+    </ul>
+    <div class="me"><div class="av">DR</div><div><b>Dinithi Rajapaksa</b><span>Marketing Manager · Starbucks Sri Lanka</span></div></div>
+  </aside>
+
+  <main class="main">
+    <div class="bar">
+      <div class="title">Christmas Mocha review &amp; January launch</div>
+      <span class="conn" title="Polysocial MCP connector is connected"><span class="ps-mark"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial<span class="dot"></span></span>
+      <span class="spacer"></span>
+      <div class="ctrls" role="group" aria-label="Demo controls">
+        <button type="button" id="restart" title="Restart (R)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="lbl">Restart</span></button>
+        <button type="button" id="all" title="Show the whole conversation (A)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span class="lbl">Show all</span></button>
+        <button type="button" id="play" title="Auto-play (P)"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"/></svg><span class="lbl">Play</span></button>
+        <button type="button" id="next" class="primary" title="Next message (Space or →)"><span>Next</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        <span class="step" id="step">0/5</span>
+      </div>
+    </div>
+
+    <div class="scroll" id="scroll">
+      <div class="thread" id="thread">
+        <div class="intro" id="intro">
+          <svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><use href="#spark"/></svg>
+          <h1>Good morning, Dinithi</h1>
+          <p>A walkthrough of a brand marketing manager running Polysocial campaigns from Claude through the Polysocial MCP connector. Nothing here touches live data.</p>
+          <button class="go" type="button" id="start">Start the conversation</button>
+          <span class="hint">Space / → next message · P auto-play · A show all · R restart</span>
+          <div class="chips"><span>Check campaign performance</span><span>Review creator submissions</span><span>Approve &amp; request changes</span><span>Draft a new campaign</span><span>Schedule with approval</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="composer">
+      <div class="box">
+        <div class="ta" id="ta" aria-live="polite"></div>
+        <div class="row">
+          <span class="ibtn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+          <span class="ibtn" title="Connectors: Polysocial" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></span>
+          <span class="model">Claude</span>
+          <span class="send" id="send" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
+        </div>
+      </div>
+      <div class="foot">Prototype for stakeholder review · campaign data mirrors the Polysocial brand web app demo set</div>
+    </div>
+  </main>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="spark" viewBox="0 0 24 24"><g fill="currentColor"><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(40 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(80 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(125 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(165 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(205 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(245 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(285 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(322 12 12)"/></g></symbol>
+    <symbol id="pslogo" viewBox="0 0 269 184"><path d="M121.556 4.06404C141.556 -7.48297 166.556 6.9505 166.556 30.0445C166.556 31.0921 165.899 32.0212 164.936 32.4319C152.062 37.9179 143.037 50.6867 143.037 65.564V116.564C143.037 131.086 151.636 143.598 164.02 149.29C165.519 149.979 166.556 151.435 166.556 153.085C166.555 176.178 141.556 190.612 121.556 179.065L15 117.545C-5 105.998 -5 77.1306 15 65.5836L121.556 4.06404Z" fill="currentColor"/><path d="M227.969 0.278931C250.418 0.27893 268.617 18.478 268.617 40.9274V140.409C268.617 162.858 250.418 181.056 227.969 181.056C210.666 181.056 195.891 170.245 190.025 155.01C189.233 152.955 190.505 150.769 192.546 149.942C205.734 144.6 215.037 131.669 215.037 116.564V65.5641C215.037 50.3684 205.621 37.3734 192.306 32.0911C190.279 31.2867 188.994 29.1414 189.737 27.0903C195.397 11.453 210.378 0.278951 227.969 0.278931Z" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+
+<script>
+/* =====================================================================
+   Polysocial × Claude — scripted conversation
+   Campaign, creator and pricing data follow the brand web app demo set
+   (Starbucks Christmas Mocha campaign, base Rs. 6,488 per content,
+   Rs. 2,000 / 1K views performance pricing, Rs. 500,000 budget).
+   ===================================================================== */
+
+const PS_ICON = '<span class="ps-mark"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>';
+const psHead = (label) => `<div class="ps-h">${PS_ICON}Polysocial · ${label}<span class="live"><i></i>Live</span></div>`;
+
+/* ---------- Cards ---------- */
+const CARD_PERFORMANCE = `
+<div class="ps">
+  ${psHead('Campaign performance')}
+  <div class="ps-camp">
+    <img src="images/sbHero.jpg" alt="">
+    <div style="min-width:0">
+      <div class="t">Starbucks Christmas Mocha campaign</div>
+      <div class="m">Food · Colombo · Reels · 10 days left</div>
+    </div>
+    <span class="badge blue" style="margin-left:auto">Active</span>
+  </div>
+  <div class="ps-budget">
+    <div class="row"><span><span class="spent">Rs. 285,000</span> <span class="of">/ Rs. 500,000</span></span><span class="pct">57%</span></div>
+    <div class="track"><i data-w="57%"></i></div>
+    <div class="ft"><span>Spent</span><span>Rs. 215,000 available</span></div>
+  </div>
+  <div class="ps-stats">
+    <div><div class="k">Creators joined</div><div class="v">412</div><div class="s">+38 this week</div></div>
+    <div><div class="k">Posts live</div><div class="v">126</div><div class="s">14 awaiting review</div></div>
+    <div><div class="k">Total views</div><div class="v">1.84M</div><div class="s">Rs. 155 / 1K views</div></div>
+    <div><div class="k">Approval time</div><div class="v">1 d</div><div class="s">96% approval rate</div></div>
+  </div>
+  <div class="ps-budget">
+    <div class="k" style="font-size:11.5px;color:var(--ps-g600);font-weight:500">Views by platform</div>
+    <div class="split"><i style="width:52%;background:#1548eb"></i><i style="width:38%;background:#f433ab"></i><i style="width:7%;background:#7391f3"></i><i style="width:3%;background:#b3b3b3"></i></div>
+    <div class="legend"><span><em style="background:#1548eb"></em>TikTok 52%</span><span><em style="background:#f433ab"></em>Instagram 38%</span><span><em style="background:#7391f3"></em>YouTube 7%</span><span><em style="background:#b3b3b3"></em>Facebook 3%</span></div>
+  </div>
+  <div class="ps-f"><span>Updated just now</span><a href="#" onclick="return false">Open in Polysocial ↗</a></div>
+</div>`;
+
+const sub = (o) => `
+<div class="sub">
+  <div class="media"><img src="images/${o.img}"${o.alt?' class="alt"':''} alt="${o.name}'s post"><span class="type">${o.type}</span><span class="wait badge on-img ${o.waitCls||'grey'}">${o.wait}</span></div>
+  <div class="who"><img src="images/${o.av}" alt=""><div><b>${o.name}</b><span>${o.handle} · ${o.followers}</span></div></div>
+  <div class="cap">${o.caption}</div>
+  <ul class="checks">${o.checks.map(c=>`<li><span class="${c[0]?'y':'n'}">${c[0]?'✓':'!'}</span>${c[1]}</li>`).join('')}</ul>
+  <div class="verdict" data-verdict="${o.id}">${o.verdict}</div>
+</div>`;
+
+const SUBS = [
+  {id:'kavindu',img:'sbContent2.jpg',type:'Carousel · 3',wait:'Waiting 31 h',waitCls:'warn',av:'av2.jpg',name:'Kavindu Jayasuriya',handle:'@kavindu.sips',followers:'45K followers',
+   caption:'First Christmas Mocha of the season ☕🎄 Cheers to the holidays, swipe for the whole cup. @starbuckslk #StarbucksLK #ChristmasMocha',
+   checks:[[1,'Cup &amp; Christmas Mocha label visible'],[1,'Brand handle tagged'],[1,'Original audio'],[1,'No competitor brands']],
+   verdict:'<span class="badge ok">Meets all requirements</span>'},
+  {id:'nethmi',img:'sbContent1.jpg',type:'Reel · 0:18',wait:'Waiting 27 h',waitCls:'warn',av:'av1.jpg',name:'Nethmi Perera',handle:'@nethmi.eats',followers:'45.2K followers',
+   caption:'Rainy Colombo afternoon fixed 🌧️☕ Christmas Mocha with extra whip, rating it a solid 9/10. @starbuckslk #ChristmasMocha',
+   checks:[[1,'Cup &amp; Christmas Mocha label visible'],[1,'Brand handle tagged'],[1,'Face visible'],[1,'No competitor brands']],
+   verdict:'<span class="badge ok">Meets all requirements</span>'},
+  {id:'sachini',img:'sbHero.jpg',alt:1,type:'Image',wait:'Waiting 26 h',waitCls:'warn',av:'av4.jpg',name:'Sachini Wickramasinghe',handle:'@sachini.w',followers:'38.5K followers',
+   caption:'Christmas came early at Starbucks Havelock 🎄 This mocha is dangerously good. #ChristmasMocha #ColomboCafes',
+   checks:[[1,'Cup &amp; Christmas Mocha label visible'],[0,'Brand handle not tagged in caption'],[1,'Original content'],[1,'No competitor brands']],
+   verdict:'<span class="badge warn">1 requirement missing</span>'}
+];
+const CARD_SUBS = `
+<div class="ps">
+  ${psHead('Submissions awaiting review')}
+  <div class="subs">${SUBS.map(sub).join('')}</div>
+  <div class="ps-f"><span>Showing 3 of 14 · oldest first</span><a href="#" onclick="return false">Review all in Polysocial ↗</a></div>
+</div>`;
+
+const draftCard = (v) => `
+<div class="ps">
+  ${psHead(v.final ? 'Campaign scheduled' : 'Campaign draft · creator view')}
+  <div class="cp-hero">
+    <img src="images/sbContent1.jpg" alt="">
+    <span class="brand"><img src="images/starbucks.png" alt="">Starbucks Sri Lanka</span>
+    <span class="stat badge on-img ${v.final?'blue':'grey'}">${v.final?'Upcoming · opens Jan 5':'Draft — not visible to creators'}</span>
+  </div>
+  <div class="cp-body">
+    <h3>Starbucks Toffee Nut Latte New Year launch</h3>
+    <div class="meta">Food · Jan 5 – Jan 26, 2027 · 3 weeks</div>
+  </div>
+  <div class="two">
+    <div class="sec">
+      <h6>Pricing</h6>
+      <div class="plist">
+        <div><span>Base price per content</span><b>Rs. 6,000</b></div>
+        <div><span>Max earning per content</span><b>Rs. 90,000</b></div>
+        <div class="${v.final?'chg':''}"><span>Performance pricing</span><b>${v.final?'<s>Rs. 2,000</s>':''}Rs. ${v.final?'1,800':'2,000'} / 1K views</b></div>
+        <div><span>Total budget</span><b>Rs. 750,000</b></div>
+      </div>
+    </div>
+    <div class="sec">
+      <h6>Best suited for</h6>
+      <div class="tags"><span>All genders</span><span>18–30 age</span><span>Colombo</span><span>Kandy</span><span>Reels</span><span>TikTok</span></div>
+      <h6 style="margin-top:12px">Platforms</h6>
+      <div class="tags"><span>TikTok</span><span>Instagram</span></div>
+    </div>
+  </div>
+  <div class="sec">
+    <h6>Requirements</h6>
+    <p>Show your audience the first sip of the new Toffee Nut Latte — at a Starbucks store in Colombo or Kandy, or on the go — and why it's your New Year treat.</p>
+    <p><b style="color:var(--ps-g800);font-weight:600">Brand visibility:</b> Toffee Nut Latte cup and Starbucks logo clearly visible</p>
+  </div>
+  <div class="two">
+    <div class="sec">
+      <h6>Suggested CTAs</h6>
+      <div class="ctas"><span>Start the year with a Toffee Nut Latte.</span><span>New year, new favourite — try it today.</span><span>Show us your first sip and tag @starbuckslk.</span></div>
+    </div>
+    <div class="sec">
+      <h6>Restrictions</h6>
+      <ol>
+        <li>No AI generated content</li>
+        <li>Face must be visible in the content</li>
+        <li>Caption must tag the brand handle</li>
+        <li>Use only licensed or original audio</li>
+        <li>Keep the post live for at least 30 days</li>
+        ${v.final?'<li class="new">No other coffee brands in the frame</li>':''}
+      </ol>
+    </div>
+  </div>
+  <div class="ps-f"><span>${v.final?'ID cmp_sb_toffee_nut_26':'Draft saved · ID cmp_sb_toffee_nut_26'}</span><a href="#" onclick="return false">${v.final?'View in Upcoming ↗':'Edit in Polysocial ↗'}</a></div>
+</div>`;
+
+const CARD_SCHEDULED = `
+<div class="ps">
+  ${psHead('Schedule')}
+  <div class="sched">
+    <div class="cal"><div>JAN</div><b>5</b></div>
+    <div><div class="t">Opens to creators Mon, Jan 5 · 9:00 AM</div><div class="m">Closes Mon, Jan 26 · Budget held: Rs. 750,000 · Listed under <b>Upcoming</b></div></div>
+  </div>
+  <div class="timeline"><div class="on">Today · scheduled</div><div>Jan 5 · open</div><div>Jan 19 · reminder</div><div>Jan 26 · close</div></div>
+</div>`;
+
+/* ---------- Script ---------- */
+const SCRIPT = [
+  {user:"Morning! How's our Christmas Mocha campaign doing on Polysocial?",
+   steps:[
+    {think:900},
+    {tool:'list_campaigns',label:'List campaigns',
+     input:{brand:'Starbucks Sri Lanka',status:'active'},
+     output:{campaigns:[{id:'cmp_sb_xmas_mocha',title:'Starbucks Christmas Mocha campaign',status:'active',ends_in_days:10}],total:1}},
+    {tool:'get_campaign_performance',label:'Get campaign performance',
+     input:{campaign_id:'cmp_sb_xmas_mocha',include:['budget','creators','views_by_platform','review_queue']},
+     output:{budget:{spent:285000,total:500000,currency:'LKR'},creators_joined:412,posts_live:126,pending_review:14,views:1840000,views_by_platform:{tiktok:0.52,instagram:0.38,youtube:0.07,facebook:0.03},approval_time_days:1,approval_rate:0.96}},
+    {text:`<p>Here's where the <b>Christmas Mocha campaign</b> stands, with 10 days to go:</p>`},
+    {card:CARD_PERFORMANCE},
+    {text:`<p>What stands out:</p>
+<ul>
+<li><b>Spend is on pace.</b> At the current rate (about Rs. 28,500 a day) you'll finish near Rs. 470,000, leaving around Rs. 30,000 unspent.</li>
+<li><b>TikTok carries the campaign.</b> It brings 52% of views, though Instagram carousels get roughly 2× the saves per view.</li>
+<li><b>Your review queue is backing up.</b> 14 submissions are waiting and 3 have waited over 24 hours. Creators see your approval time (now 1 day) on the campaign page, so it's worth clearing.</li>
+</ul>
+<p>Want me to pull up the oldest ones?</p>`}
+  ]},
+
+  {user:"Yes, show me the ones that have waited longest.",
+   steps:[
+    {think:700},
+    {tool:'list_submissions',label:'List submissions',
+     input:{campaign_id:'cmp_sb_xmas_mocha',status:'pending_review',sort:'oldest_first',limit:3},
+     output:{submissions:[{id:'sub_8812',creator:'@kavindu.sips',type:'carousel'},{id:'sub_8830',creator:'@nethmi.eats',type:'reel'},{id:'sub_8841',creator:'@sachini.w',type:'image'}],total_pending:14}},
+    {tool:'check_submission_requirements',label:'Check submissions against campaign requirements',
+     input:{submission_ids:['sub_8812','sub_8830','sub_8841']},
+     output:{sub_8812:{passed:true},sub_8830:{passed:true},sub_8841:{passed:false,failed:['caption_must_tag_brand_handle']}}},
+    {text:`<p>These three have waited the longest. I checked each against the campaign's requirements:</p>`},
+    {card:CARD_SUBS},
+    {text:`<p><b>Kavindu</b> and <b>Nethmi</b> meet every requirement. <b>Sachini's</b> post looks great, but the caption doesn't tag <b>@starbuckslk</b>, which the campaign requires. That's a quick fix on their side, so you could request a change rather than reject it.</p>`}
+  ]},
+
+  {user:"Approve Kavindu and Nethmi. Ask Sachini to add our handle to the caption — keep it friendly.",
+   steps:[
+    {think:600},
+    {perm:'approve_submission',desc:'Approving releases the base payment to the creator.',
+     preview:'approve_submission({ submission_id: "sub_8812" })'},
+    {tool:'approve_submission',label:'Approve submission',input:{submission_id:'sub_8812'},
+     output:{status:'approved',creator:'@kavindu.sips',base_payment_released:6488,performance_pricing:'Rs. 2,000 / 1K views'},
+     after:()=>setVerdict('kavindu','<span class="badge blue">Approved · Rs. 6,488 released</span>')},
+    {tool:'approve_submission',label:'Approve submission',input:{submission_id:'sub_8830'},
+     output:{status:'approved',creator:'@nethmi.eats',base_payment_released:6488},
+     after:()=>setVerdict('nethmi','<span class="badge blue">Approved · Rs. 6,488 released</span>')},
+    {tool:'request_changes',label:'Request changes',
+     input:{submission_id:'sub_8841',reason:'caption_must_tag_brand_handle',message:"Hi Sachini! We love this shot — the Christmas Mocha looks amazing. Could you add @starbuckslk to the caption? Once it's in, we'll approve it straight away. Thank you! ☕"},
+     output:{status:'changes_requested',creator:'@sachini.w',resubmit_within_hours:48},
+     after:()=>setVerdict('sachini','<span class="badge grey">Changes requested</span>')},
+    {text:`<p>Done:</p>
+<ul>
+<li><b>Kavindu</b> and <b>Nethmi</b> are approved. Each gets the Rs. 6,488 base payment now, and performance earnings at Rs. 2,000 per 1K views from here on.</li>
+<li><b>Sachini</b> got this note and has 48 hours to update the caption:</li>
+</ul>
+<blockquote>Hi Sachini! We love this shot — the Christmas Mocha looks amazing. Could you add @starbuckslk to the caption? Once it's in, we'll approve it straight away. Thank you! ☕</blockquote>
+<p>11 submissions are still in the queue. None of them has waited more than 20 hours.</p>`}
+  ]},
+
+  {user:"Perfect. Next — I want a creator campaign for the new Toffee Nut Latte, launching in January. Budget around 750K. Mostly Colombo and Kandy, 18–30, Reels and TikToks.",
+   steps:[
+    {think:1100},
+    {tool:'get_pricing_benchmarks',label:'Get pricing benchmarks',
+     input:{category:'Food',locations:['Colombo','Kandy'],formats:['reel','tiktok'],age_range:'18-30'},
+     output:{base_price_per_content:{median:5800,p75:6500},performance_per_1k_views:{median:1900},eligible_creators:1260}},
+    {tool:'get_brand_profile',label:'Get brand profile',
+     input:{brand:'Starbucks Sri Lanka'},
+     output:{handle:'@starbuckslk',default_restrictions:5,past_campaigns:48,avg_approval_rate:0.96}},
+    {tool:'create_campaign_draft',label:'Create campaign draft',
+     input:{title:'Starbucks Toffee Nut Latte New Year launch',category:'Food',budget:750000,base_price:6000,max_earning:90000,performance_per_1k_views:2000,audience:{gender:'all',age:'18-30',locations:['Colombo','Kandy']},formats:['reel','tiktok'],platforms:['tiktok','instagram'],starts:'2027-01-05',ends:'2027-01-26'},
+     output:{id:'cmp_sb_toffee_nut_26',status:'draft',visible_to_creators:false}},
+    {text:`<p>I've set up a <b>draft</b>. Creators can't see it yet. This is how it will look to them on Polysocial:</p>`},
+    {card:draftCard({final:false})},
+    {text:`<p>How I set it up:</p>
+<ul>
+<li><b>Pricing</b> follows Polysocial's Food benchmarks for Colombo and Kandy (median base price Rs. 5,800), nudged up a little because January is a busy month for creators. At these rates, Rs. 750,000 should fund about <b>70–90 creators</b>.</li>
+<li><b>Dates:</b> I assumed a 3-week run from Monday, Jan 5.</li>
+<li><b>Restrictions</b> are your five standard ones from past campaigns.</li>
+</ul>
+<p>Anything you'd like to change before I schedule it?</p>`}
+  ]},
+
+  {user:"Looks great. Drop performance pricing to 1,800 per 1K views, and add a restriction: no other coffee brands in frame. Then schedule it.",
+   steps:[
+    {think:700},
+    {tool:'update_campaign',label:'Update campaign',
+     input:{campaign_id:'cmp_sb_toffee_nut_26',performance_per_1k_views:1800,add_restrictions:['No other coffee brands in the frame']},
+     output:{id:'cmp_sb_toffee_nut_26',status:'draft',updated:['performance_pricing','restrictions']}},
+    {perm:'schedule_campaign',desc:'This publishes the campaign to creators on the start date and holds Rs. 750,000 from your Polysocial balance.',
+     preview:'schedule_campaign({ campaign_id: "cmp_sb_toffee_nut_26", opens_at: "2027-01-05T09:00+05:30" })',once:true},
+    {tool:'schedule_campaign',label:'Schedule campaign',
+     input:{campaign_id:'cmp_sb_toffee_nut_26',opens_at:'2027-01-05T09:00:00+05:30',closes_at:'2027-01-26T23:59:00+05:30'},
+     output:{status:'upcoming',budget_held:750000,opens_at:'2027-01-05T09:00:00+05:30'}},
+    {text:`<p>Scheduled ✓ The <b>Toffee Nut Latte New Year launch</b> now appears under <b>Upcoming</b> in your Polysocial dashboard:</p>`},
+    {card:CARD_SCHEDULED},
+    {card:draftCard({final:true})},
+    {text:`<p>Polysocial is holding Rs. 750,000 from your balance until the campaign opens. You can still edit or unschedule it any time before Jan 5.</p>
+<p>Would you like a performance summary of both campaigns here every Monday morning?</p>`}
+  ]}
+];
+
+/* ---------- Player ---------- */
+const $ = (s) => document.querySelector(s);
+const thread = $('#thread'), scroller = $('#scroll'), ta = $('#ta'), sendBtn = $('#send');
+const btnNext = $('#next'), btnPlay = $('#play'), btnAll = $('#all'), btnRestart = $('#restart'), stepEl = $('#step');
+const introHTML = $('#intro').outerHTML;
+
+let turn = 0, busy = false, autoplay = false, run = 0, instant = false;
+const CANCEL = Symbol('cancel');
+
+function sleep(ms, id){
+  return new Promise((res, rej) => {
+    if (instant) return id === run ? res() : rej(CANCEL);
+    setTimeout(() => id === run ? res() : rej(CANCEL), ms);
+  });
+}
+function nearBottom(){ return scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight < 220; }
+function toBottom(force){ if (force || nearBottom()) scroller.scrollTop = scroller.scrollHeight; }
+function esc(s){ return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function json(o){ return esc(JSON.stringify(o, null, 2)); }
+function setVerdict(id, html){ document.querySelectorAll(`[data-verdict="${id}"]`).forEach(el => el.innerHTML = html); }
+function updateUI(){
+  stepEl.textContent = `${turn}/${SCRIPT.length}`;
+  const done = turn >= SCRIPT.length;
+  btnNext.disabled = busy || done;
+  btnAll.disabled = done && !busy;
+  btnPlay.disabled = done && !busy;
+  btnPlay.querySelector('.lbl').textContent = autoplay ? 'Pause' : 'Play';
+  btnPlay.querySelector('svg').innerHTML = autoplay ? '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>' : '<path d="M6 4l14 8-14 8z"/>';
+}
+
+async function typeUser(text, id){
+  ta.textContent = '';
+  if (!instant){
+    const caret = '<span class="caret"></span>';
+    for (let i = 1; i <= text.length; i++){
+      ta.innerHTML = esc(text.slice(0, i)) + caret;
+      sendBtn.classList.add('ready');
+      await sleep(text[i-1] === ' ' ? 26 : 16, id);
+    }
+    await sleep(350, id);
+  }
+  ta.textContent = ''; sendBtn.classList.remove('ready');
+  const m = document.createElement('div');
+  m.className = 'msg user';
+  m.innerHTML = `<div class="b">${esc(text)}</div>`;
+  thread.appendChild(m);
+  toBottom(true);
+}
+
+function toolEl(s){
+  const el = document.createElement('div');
+  el.className = 'tool blk';
+  el.innerHTML = `<button type="button" aria-expanded="false">${PS_ICON}<span><span class="nm">${s.label}</span> <span class="srv">· Polysocial</span></span><span class="st"><span class="spinner"></span><span class="lab">Running</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></span></button>
+  <div class="io"><h5>Request · ${s.tool}</h5><pre>${json(s.input)}</pre><h5>Response</h5><pre class="out">…</pre></div>`;
+  const b = el.querySelector('button');
+  b.addEventListener('click', () => { el.classList.toggle('open'); b.setAttribute('aria-expanded', el.classList.contains('open')); });
+  return el;
+}
+function finishTool(el, s){
+  el.querySelector('.spinner').outerHTML = '<svg class="tick" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
+  el.querySelector('.lab').textContent = 'Done';
+  el.querySelector('.out').innerHTML = json(s.output);
+}
+
+function permEl(s){
+  const el = document.createElement('div');
+  el.className = 'perm blk';
+  el.innerHTML = `<div class="q">${PS_ICON}<div><b>Claude wants to use <code>${s.perm}</code> from Polysocial</b> <span class="res"></span><p>${s.desc}</p></div></div>
+  <pre>${esc(s.preview)}</pre>
+  <div class="acts">${s.once?'':'<button type="button" data-a="always">Always allow</button>'}<button type="button" class="yes" data-a="once">Allow once</button><button type="button" data-a="deny">Deny</button></div>`;
+  return el;
+}
+function waitPerm(el, s, id){
+  return new Promise((res, rej) => {
+    const target = el.querySelector(s.once ? '[data-a="once"]' : '[data-a="always"]');
+    let t;
+    const done = (a) => {
+      clearTimeout(t);
+      if (id !== run) return rej(CANCEL);
+      el.classList.add('done');
+      el.querySelector('.res').textContent = a === 'deny' ? '— denied' : a === 'always' ? '— always allowed' : '— allowed once';
+      res(a);
+    };
+    if (instant) return done(s.once ? 'once' : 'always');
+    el.querySelectorAll('[data-a]').forEach(b => b.addEventListener('click', () => done(b.dataset.a === 'deny' ? (s.once ? 'once' : 'always') : b.dataset.a)));
+    target.classList.add('pulse');
+    if (autoplay) t = setTimeout(() => done(s.once ? 'once' : 'always'), 2200);
+  });
+}
+
+async function streamText(el, html, id){
+  el.innerHTML = html;
+  if (instant) return;
+  // Reveal word by word: hide text nodes, then fill them back in.
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+  const full = nodes.map(n => n.textContent); nodes.forEach(n => n.textContent = '');
+  for (let i = 0; i < nodes.length; i++){
+    const words = full[i].split(/(\s+)/);
+    let acc = '';
+    for (let w = 0; w < words.length; w += 2){
+      acc += words[w] + (words[w+1] || '');
+      nodes[i].textContent = acc;
+      if (words[w]) { toBottom(); await sleep(14, id); }
+    }
+  }
+}
+
+async function claudeTurn(steps, id){
+  const m = document.createElement('div');
+  m.className = 'msg claude';
+  m.innerHTML = `<div class="head"><svg class="spark spin" viewBox="0 0 24 24" aria-hidden="true"><use href="#spark"/></svg><span class="thinking"><span class="shimmer">Thinking…</span></span></div><div class="body"></div>`;
+  thread.appendChild(m); toBottom(true);
+  const head = m.querySelector('.head'), body = m.querySelector('.body');
+  let group = null;
+  for (const s of steps){
+    if (s.think){ await sleep(s.think, id); head.querySelector('.thinking').style.display = 'none'; continue; }
+    if (s.tool){
+      if (!group){ group = document.createElement('div'); group.className = 'tools-group blk'; body.appendChild(group); }
+      const el = toolEl(s); el.classList.remove('blk'); group.appendChild(el); toBottom();
+      await sleep(650 + Math.random()*350, id);
+      finishTool(el, s); if (s.after) s.after();
+      await sleep(200, id);
+      continue;
+    }
+    group = null;
+    if (s.perm){
+      const el = permEl(s); body.appendChild(el); toBottom(true);
+      await waitPerm(el, s, id); await sleep(250, id); continue;
+    }
+    if (s.text){
+      const el = document.createElement('div'); el.className = 'txt blk'; body.appendChild(el);
+      await streamText(el, s.text, id); await sleep(150, id); continue;
+    }
+    if (s.card){
+      const el = document.createElement('div'); el.className = 'blk'; el.style.animation = 'rise .4s ease both';
+      el.innerHTML = s.card; body.appendChild(el);
+      requestAnimationFrame(() => el.querySelectorAll('.track i').forEach(i => i.style.width = i.dataset.w));
+      toBottom(); await sleep(600, id); continue;
+    }
+  }
+  head.querySelector('.spark').classList.remove('spin');
+  head.querySelector('.thinking').style.display = 'none';
+}
+
+async function playTurn(){
+  if (busy || turn >= SCRIPT.length) return;
+  const intro = $('#intro'); if (intro) intro.remove();
+  busy = true; updateUI();
+  const id = run;
+  try {
+    await typeUser(SCRIPT[turn].user, id);
+    await sleep(300, id);
+    await claudeTurn(SCRIPT[turn].steps, id);
+    turn++;
+  } catch (e) { if (e !== CANCEL) throw e; return; }
+  busy = false; updateUI();
+  if (autoplay && turn < SCRIPT.length){ try { await sleep(1800, id); } catch(e){ return; } if (autoplay && id === run) playTurn(); }
+  else if (turn >= SCRIPT.length){ autoplay = false; updateUI(); }
+}
+
+function reset(){
+  run++; busy = false; autoplay = false; instant = false; turn = 0;
+  thread.innerHTML = introHTML; ta.textContent = ''; sendBtn.classList.remove('ready');
+  $('#start').addEventListener('click', playTurn);
+  scroller.scrollTop = 0; updateUI();
+}
+
+async function showAll(){
+  run++; autoplay = false; busy = false;
+  // Rebuild from scratch so a half-played turn isn't left behind.
+  thread.innerHTML = ''; turn = 0; instant = true;
+  const id = run;
+  for (const t of SCRIPT){ await typeUser(t.user, id); await claudeTurn(t.steps, id); turn++; }
+  instant = false; updateUI(); toBottom(true);
+}
+
+btnNext.addEventListener('click', playTurn);
+btnPlay.addEventListener('click', () => { autoplay = !autoplay; updateUI(); if (autoplay && !busy) playTurn(); });
+btnAll.addEventListener('click', showAll);
+btnRestart.addEventListener('click', reset);
+document.addEventListener('keydown', (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+  if (e.key === ' ' || e.key === 'ArrowRight'){ e.preventDefault(); playTurn(); }
+  else if (e.key === 'p' || e.key === 'P') btnPlay.click();
+  else if (e.key === 'a' || e.key === 'A') showAll();
+  else if (e.key === 'r' || e.key === 'R') reset();
+});
+reset();
+</script>
+</body>
+</html>
