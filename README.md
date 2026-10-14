@@ -5,7 +5,25 @@ through the **Polysocial MCP connector**. Open `index.html` in a browser — no 
 
 ## The conversations
 
-The sidebar (or the chat picker on mobile) switches between two chats. Link straight to one with `#avurudu` or `#mocha`.
+The sidebar (or the chat picker on mobile) switches between four chats. Link straight to one with `#self`, `#strat`,
+`#avurudu` or `#mocha`.
+
+### Campaign creation flow — two paths
+
+Both chats follow the same flow: check the brand is connected → requirement and timeline → who designs it →
+budget → go live. They start the same way and split at "Who should design the campaign?".
+
+**Cold Brew launch — our own brief (`#self`, opens by default).** The brand designs the campaign itself.
+`check_brand_connection` and `get_brand_profile` confirm Starbucks Sri Lanka is connected. The marketing manager
+gives the goal and dates and pastes the team's brief (hook, script beats, audience, platforms). `check_brief` and
+`create_campaign_draft` turn it into the campaign and flag the missing budget. `set_campaign_budget` and
+`estimate_reach` add it, then `publish_campaign` (with approval) takes it live.
+
+**Kandy store opening — with a strategist (`#strat`).** The brand has no time to design it. After the same
+connection check, `get_strategist_options` explains the service, and the budget is set first because a strategist
+can't be requested without one. `request_brand_strategist` (with approval) assigns Ishara Fernando. Two days later
+`get_strategist_design` returns the design, `send_strategist_feedback` gets a revised version 2, and
+`approve_strategist_design` + `publish_campaign` take it live, with the strategist running it.
 
 ### Avurudu creator campaign (`#avurudu`, opens by default)
 

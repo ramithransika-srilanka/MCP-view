@@ -237,8 +237,8 @@ img{display:block;}
 .sub.dim .media img{filter:saturate(.85);}
 
 /* campaign page (draft) — the middle column of the creator-facing campaign page */
-.cp-hero{position:relative;aspect-ratio:16/7;background:#000;}
-.cp-hero img{width:100%;height:100%;object-fit:cover;opacity:.92;}
+.cp-hero{position:relative;aspect-ratio:16/7;background:#000;overflow:hidden;}
+.cp-hero > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.92;}
 .cp-hero .brand{position:absolute;left:14px;bottom:12px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.92);color:#121212;border-radius:99px;padding:4px 10px 4px 4px;font-size:12px;font-weight:600;}
 .cp-hero .brand img{width:22px;height:22px;border-radius:50%;object-fit:cover;opacity:1;}
 .cp-hero .stat{position:absolute;right:14px;top:12px;}
@@ -281,6 +281,7 @@ img{display:block;}
 .brandrow > img{width:40px;height:40px;border-radius:50%;object-fit:cover;}
 .brandrow > div:nth-child(2) b{display:block;font-size:14px;}
 .brandrow > div:nth-child(2) span{display:block;font-size:11.5px;color:var(--ps-g600);}
+.brandrow > div:nth-child(2) span.badge{display:inline-flex;font-size:11px;color:var(--ok);vertical-align:1px;}
 .bstats{display:flex;gap:18px;margin-left:auto;}
 .bstats b{display:block;font-size:14px;font-variant-numeric:tabular-nums;}
 .bstats span{display:block;font-size:11px;color:var(--ps-g600);}
@@ -334,6 +335,51 @@ img{display:block;}
 .side li .new{font-size:10px;font-weight:600;color:var(--clay-ink);margin-left:6px;}
 .chatsel{display:none;border:1px solid var(--line-2);background:var(--panel);color:var(--text);border-radius:8px;padding:5px 8px;font:inherit;font-size:13px;}
 
+
+/* ---------- Campaign flow chats ---------- */
+.opts.big{flex-direction:row;align-items:stretch;}
+.opts.big button{flex:1 1 220px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border-radius:12px;padding:10px 14px;}
+.opts.big button b{display:inline;margin:0;font-size:14px;font-weight:600;}
+.opts.big button span{font-size:12.5px;color:var(--muted);line-height:1.4;}
+.opts.big button.sel span{color:rgba(255,255,255,.88);}
+.stepper{list-style:none;margin:0;padding:14px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+.stepper li{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;font-size:12px;}
+.stepper li::after{content:"";position:absolute;top:11px;left:30px;right:-4px;height:2px;background:var(--ps-g100);}
+.stepper li:last-child::after{display:none;}
+.stepper li.done::after{background:var(--ps-blue);}
+.stepper i{font-style:normal;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11.5px;font-weight:700;background:var(--ps-g100);color:var(--ps-g600);position:relative;z-index:1;}
+.stepper li.done i{background:var(--ps-blue);color:#fff;}
+.stepper li.active i{background:var(--ps-card);color:var(--ps-blue);box-shadow:inset 0 0 0 2px var(--ps-blue);}
+.stepper b{font-size:12px;font-weight:600;line-height:1.3;margin-top:4px;}
+.stepper span{font-size:11px;color:var(--ps-g600);}
+.stepper li.active span{color:var(--ps-blue);font-weight:600;}
+.beats{display:flex;flex-direction:column;gap:0;}
+.beats div{display:flex;gap:12px;padding:6px 0;border-bottom:1px dashed var(--line);}
+.beats div:last-child{border-bottom:0;}
+.beats em{font-style:normal;font-weight:600;font-variant-numeric:tabular-nums;min-width:46px;color:var(--ps-blue);}
+.beats span{color:var(--ps-g800);}
+.hook{font-size:15px;font-weight:600;letter-spacing:-.01em;padding:8px 12px;border-radius:10px;background:var(--ps-g100);}
+.mini{display:flex;gap:18px;flex-wrap:wrap;}
+.mini b{display:block;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;}
+.mini span{display:block;font-size:11px;color:var(--ps-g600);}
+.how{margin:0;padding:12px 14px 12px 34px;display:flex;flex-direction:column;gap:8px;}
+.how li b{display:block;font-size:13px;}
+.how li span{display:block;font-size:12px;color:var(--ps-g600);}
+.strat{display:flex;align-items:center;gap:12px;padding:14px;flex-wrap:wrap;}
+.sav{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#1548eb,#f433ab);color:#fff;display:grid;place-items:center;font-weight:700;font-size:15px;flex:none;}
+.strat .nm{flex:1;min-width:180px;}
+.strat .nm b{display:block;font-size:14px;}
+.strat .nm span{display:block;font-size:11.5px;color:var(--ps-g600);}
+.livepill{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:10px;background:var(--ok-soft);color:var(--ok);font-weight:700;font-size:12px;letter-spacing:.06em;flex:none;}
+.livepill i{width:8px;height:8px;border-radius:50%;background:currentColor;animation:pulse2 1.6s ease infinite;}
+@keyframes pulse2{50%{opacity:.35;}}
+.msg.user{flex-direction:column;align-items:flex-end;gap:6px;}
+.paste{max-width:82%;width:520px;border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden;}
+.paste .ph{font-size:11.5px;color:var(--muted);padding:6px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;}
+.paste pre{margin:0;padding:10px 12px;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;color:var(--text);}
+.divider{display:flex;align-items:center;gap:12px;margin:6px 0 26px;color:var(--faint);font-size:12px;}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line);}
+
 /* ---------- Responsive ---------- */
 @media (max-width:900px){
   .app{grid-template-columns:1fr;}
@@ -356,6 +402,11 @@ img{display:block;}
   .two{grid-template-columns:1fr;}
   .two > .sec:first-child{border-right:0;}
   .concepts{grid-template-columns:1fr;}
+  .stepper{grid-template-columns:1fr;gap:10px;}
+  .stepper li{flex-direction:row;align-items:center;gap:10px;}
+  .stepper li::after{display:none;}
+  .stepper b{margin:0;}
+  .paste{max-width:100%;}
   .hide-s{display:none;}
   .bstats{margin-left:0;width:100%;}
   .hist th,.hist td{padding:8px 10px;}
@@ -375,7 +426,9 @@ img{display:block;}
     <button class="newchat" type="button"><span class="plus">+</span>New chat</button>
     <h4>Recents</h4>
     <ul>
-      <li data-chat="avurudu">Avurudu creator campaign<span class="new">NEW</span></li>
+      <li data-chat="self">Cold Brew launch — our own brief<span class="new">NEW</span></li>
+      <li data-chat="strat">Kandy store opening — with a strategist<span class="new">NEW</span></li>
+      <li data-chat="avurudu">Avurudu creator campaign</li>
       <li data-chat="mocha">Christmas Mocha review &amp; January launch</li>
       <li>Q4 influencer budget split</li>
       <li>Caption ideas — Pumpkin Spice</li>
@@ -389,7 +442,7 @@ img{display:block;}
   <main class="main">
     <div class="bar">
       <div class="title" id="chatTitle"></div>
-      <select class="chatsel" id="chatSel" aria-label="Choose chat"><option value="avurudu">Avurudu campaign</option><option value="mocha">Christmas Mocha review</option></select>
+      <select class="chatsel" id="chatSel" aria-label="Choose chat"><option value="self">Cold Brew — own brief</option><option value="strat">Kandy — with strategist</option><option value="avurudu">Avurudu campaign</option><option value="mocha">Christmas Mocha review</option></select>
       <span class="conn" title="Polysocial MCP connector is connected"><span class="ps-mark"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial<span class="dot"></span></span>
       <span class="spacer"></span>
       <div class="ctrls" role="group" aria-label="Demo controls">
@@ -941,7 +994,344 @@ const AVURUDU = [
   ]}
 ];
 
+/* =====================================================================
+   Campaign creation flow — two paths
+   1. Brand is connected? → 2. Requirement & timeline →
+   3a. Brand designs it (hook, script, audience)   or
+   3b. Brand sets a budget, then requests a Polysocial brand strategist →
+   4. Budget defined, design done → 5. Go live
+   ===================================================================== */
+
+const CARD_CONNECTED = `
+<div class="ps">
+  ${psHead('Brand connection')}
+  <div class="brandrow">
+    <img src="images/starbucks.png" alt="">
+    <div><b>Starbucks Sri Lanka <span class="badge ok" style="margin-left:4px">✓ Connected</span></b><span>Verified brand · @starbuckslk · you're an admin</span></div>
+    <div class="bstats"><div><b>4</b><span>past campaigns</span></div><div><b>Rs. 3.4M</b><span>balance</span></div><div><b>12</b><span>brand assets</span></div></div>
+  </div>
+</div>`;
+
+const ASK_PATH = `
+<div class="ask">
+  <div class="ask-q">
+    <b>Who should design the campaign?</b>
+    <div class="opts big">
+      <button type="button" data-opt="self"><b>We'll design it</b><span>You share the hook, script and target audience. I turn them into the campaign.</span></button>
+      <button type="button" data-opt="strategist"><b>Request a brand strategist</b><span>A Polysocial strategist designs and runs it for you. Needs a budget first.</span></button>
+    </div>
+  </div>
+</div>`;
+
+const STEPS = ['Brand connected','Requirement & timeline','Campaign design','Budget','Go live'];
+const stepper = (states, design) => `
+<div class="ps">
+  ${psHead('Campaign setup')}
+  <ol class="stepper">${STEPS.map((s,i)=>`<li class="${states[i]}"><i>${states[i]==='done'?'✓':i+1}</i><b>${s}</b><span>${(i===2&&design)||({done:'Done',active:'In progress',todo:'Next'}[states[i]])}</span></li>`).join('')}</ol>
+</div>`;
+
+const beats = (rows) => `<div class="beats">${rows.map(r=>`<div><em>${r[0]}</em><span>${r[1]}</span></div>`).join('')}</div>`;
+
+/* ---------- Path A: the brand designs it ---------- */
+const BRIEF_A = `Hook: "POV: you found the only coffee that beats Colombo heat"
+Script (15–30s):
+0–3s   Hot, sweaty moment outdoors (tuk-tuk, beach, campus)
+3–8s   Walk into Starbucks, order the Coconut Cold Brew
+8–15s  First sip, slow-mo reaction, cup to camera
+15s+   Cool-down shot + "Coconut Cold Brew, now at Starbucks"
+Audience: 18–28, students & young professionals, Colombo + Galle
+Platforms: TikTok, Instagram Reels
+Must show: cup with the Coconut Cold Brew label, store or logo
+Tone: fun, sunny, not too polished`;
+
+const CARD_BRIEF_A = `
+<div class="ps">
+  ${psHead('Campaign draft · creative brief')}
+  <div class="cp-hero" style="aspect-ratio:16/6">
+    <img src="images/sbContent1.jpg" alt="">
+    <span class="brand"><img src="images/starbucks.png" alt="">Starbucks Sri Lanka</span>
+    <span class="stat badge on-img grey">Designed by your team</span>
+  </div>
+  <div class="cp-body">
+    <h3>Coconut Cold Brew — Beat the Colombo heat</h3>
+    <div class="meta">Food · Oct 19 – Nov 8, 2026 · 3 weeks · Goal: trial</div>
+  </div>
+  <div class="sec"><h6>Hook</h6><div class="hook">“POV: you found the only coffee that beats Colombo heat”</div></div>
+  <div class="sec"><h6>Script · 15–30s reel</h6>${beats([['0–3s','Hot, sweaty moment outdoors — tuk-tuk, beach or campus'],['3–8s','Walk into Starbucks and order the Coconut Cold Brew'],['8–15s','First sip, slow-mo reaction, cup to camera'],['15s+','Cool-down shot + “Coconut Cold Brew, now at Starbucks”']])}</div>
+  <div class="two">
+    <div class="sec"><h6>Target audience</h6><div class="tags"><span>18–28 age</span><span>Students</span><span>Young professionals</span><span>Colombo</span><span>Galle</span></div></div>
+    <div class="sec"><h6>Deliverable</h6><div class="tags"><span>1 reel · 15–30s</span><span>TikTok</span><span>Instagram</span></div></div>
+  </div>
+  <div class="sec">
+    <h6>Brand visibility</h6><p>Cup with the Coconut Cold Brew label, plus the store or Starbucks logo</p>
+    <h6 style="margin-top:10px">Caption CTA <span class="badge blue" style="margin-left:4px">Added by Claude</span></h6><p>Try the Coconut Cold Brew at your nearest Starbucks and tag @starbuckslk ☀️</p>
+  </div>
+  <div class="ps-f"><span>ID cmp_sb_coconut_cold_brew · <b style="color:var(--warn)">Budget missing</b></span><a href="#" onclick="return false">Edit in Polysocial ↗</a></div>
+</div>`;
+
+const CARD_BUDGET_A = `
+<div class="ps">
+  ${psHead('Budget & pricing')}
+  <div class="two">
+    <div class="sec" style="border-top:0">
+      <div class="plist">
+        <div><span>Base price per reel</span><b>Rs. 6,000</b></div>
+        <div><span>Max earning per reel</span><b>Rs. 90,000</b></div>
+        <div><span>Performance pricing</span><b>Rs. 1,800 / 1K views</b></div>
+        <div><span>Total budget</span><b>Rs. 600,000</b></div>
+      </div>
+    </div>
+    <div class="sec" style="border-top:0">
+      <div class="mini"><div><b>70–90</b><span>expected creators</span></div><div><b>1.6–2.0M</b><span>expected views</span></div><div><b>~Rs. 330</b><span>per 1K views</span></div></div>
+    </div>
+  </div>
+</div>`;
+
+const liveCard = (o) => `
+<div class="ps">
+  ${psHead('Campaign live')}
+  <div class="sched">
+    <div class="livepill"><i></i>LIVE</div>
+    <div><div class="t">${o.title}</div><div class="m">${o.meta}</div></div>
+  </div>
+  <div class="timeline">${o.steps.map((s,i)=>`<div class="${i===0?'on':''}">${s}</div>`).join('')}</div>
+  <div class="ps-f"><span>${o.id}</span><a href="#" onclick="return false">Open in Polysocial ↗</a></div>
+</div>`;
+
+const SELF = [
+  {user:"Hi Claude! We're launching our new Coconut Cold Brew and I'd like to run a creator campaign on Polysocial for it.",
+   steps:[
+    {think:900},
+    {tool:'check_brand_connection',label:'Check brand connection',
+     input:{workspace:'Starbucks Sri Lanka'},
+     output:{connected:true,brand_id:'brd_starbucks_lk',verified:true,your_role:'admin'}},
+    {tool:'get_brand_profile',label:'Get brand profile',
+     input:{brand_id:'brd_starbucks_lk'},
+     output:{handle:'@starbuckslk',past_campaigns:4,balance:3400000,brand_assets:12,default_restrictions:6}},
+    {text:`<p>Starbucks Sri Lanka is already connected to Polysocial, so I can set this up directly. Your brand details, assets and past campaigns are all there:</p>`},
+    {card:CARD_CONNECTED},
+    {text:`<p>To shape the campaign I need to know <b>what it should achieve and when it should run</b>, and one more thing:</p>`},
+    {card:ASK_PATH}
+  ]},
+
+  {user:"We'll design it ourselves. The goal is trial: get people in their 20s to try it in the first 3 weeks. Starts Monday Oct 19, ends Nov 8. Here's our brief:",
+   select:['self'], paste:BRIEF_A,
+   steps:[
+    {think:1000},
+    {tool:'check_brief',label:'Check brief',
+     input:{campaign_type:'ugc',checks:['hook','script_length','audience','deliverables','brand_visibility','budget']},
+     output:{hook:'ok',script_length:'15-30s ok',audience:'ok',deliverables:'ok',brand_visibility:'ok',budget:'missing',suggestions:['add_caption_cta']}},
+    {tool:'create_campaign_draft',label:'Create campaign draft',
+     input:{title:'Coconut Cold Brew — Beat the Colombo heat',design_source:'brand',goal:'trial',starts:'2026-10-19',ends:'2026-11-08',hook:'POV: you found the only coffee that beats Colombo heat',script_beats:4,audience:{age:'18-28',segments:['students','young_professionals'],locations:['Colombo','Galle']},platforms:['tiktok','instagram']},
+     output:{id:'cmp_sb_coconut_cold_brew',status:'draft',missing:['budget']}},
+    {text:`<p>Your brief is in great shape. Hook, script, audience and deliverable all check out. Here's the campaign as creators will see it:</p>`},
+    {card:CARD_BRIEF_A},
+    {text:`<p>I added a <b>caption CTA</b> and your six standard restrictions. Everything else is exactly as your team wrote it.</p>
+<p><b>The one thing missing before it can go live is the budget.</b> For Food campaigns in Colombo and Galle, I'd suggest <b>Rs. 6,000 per reel</b> plus <b>Rs. 1,800 per 1K views</b>. What budget do you have in mind?</p>`}
+  ]},
+
+  {user:"Let's do 600K with the pricing you suggested.",
+   steps:[
+    {think:600},
+    {tool:'set_campaign_budget',label:'Set campaign budget',
+     input:{campaign_id:'cmp_sb_coconut_cold_brew',budget:600000,base_price:6000,max_earning:90000,performance_per_1k_views:1800},
+     output:{status:'ready_to_publish',budget:600000}},
+    {tool:'estimate_reach',label:'Estimate reach',
+     input:{campaign_id:'cmp_sb_coconut_cold_brew'},
+     output:{expected_creators:[70,90],expected_views:[1600000,2000000]}},
+    {card:CARD_BUDGET_A},
+    {card:stepper(['done','done','done','done','todo'],'By your team')},
+    {text:`<p>The design is done and the budget is set, so it's ready to go live. Creators can join straight away, and posting starts on Monday, Oct 19. Shall I publish it?</p>`}
+  ]},
+
+  {user:"Yes, go live!",
+   steps:[
+    {think:500},
+    {tool:'validate_campaign',label:'Validate campaign',input:{campaign_id:'cmp_sb_coconut_cold_brew'},output:{ready:true,warnings:[]}},
+    {perm:'publish_campaign',desc:'This makes the campaign visible to creators now and holds Rs. 600,000 from your Polysocial balance.',
+     preview:'publish_campaign({ campaign_id: "cmp_sb_coconut_cold_brew", go_live: "now" })',once:true},
+    {tool:'publish_campaign',label:'Publish campaign',
+     input:{campaign_id:'cmp_sb_coconut_cold_brew',go_live:'now',posting_starts:'2026-10-19'},
+     output:{status:'live',visible_to_creators:true,budget_held:600000,eligible_creators_notified:1480}},
+    {text:`<p>It's live 🎉 Polysocial has notified <b>1,480 matching creators</b> in Colombo and Galle.</p>`},
+    {card:liveCard({title:'Coconut Cold Brew — Beat the Colombo heat',meta:'Creators can join now · posting Oct 19 – Nov 8 · Budget held: Rs. 600,000',steps:['Today · live','Oct 19 · posting starts','Oct 26 · first report','Nov 8 · close'],id:'ID cmp_sb_coconut_cold_brew'})},
+    {card:stepper(['done','done','done','done','done'],'By your team')},
+    {text:`<p>Since your team designed it, content approvals will come to you. Want a ping here when the first 10 creators join?</p>`}
+  ]}
+];
+
+/* ---------- Path B: a brand strategist designs it ---------- */
+const CARD_HOW_STRAT = `
+<div class="ps">
+  ${psHead('Brand strategist · how it works')}
+  <ol class="how">
+    <li><b>You set the budget</b><span>The strategist designs the creative, creator mix and pricing within it.</span></li>
+    <li><b>A strategist is assigned</b><span>Food &amp; beverage specialists, matched to your city. First design in 2 working days.</span></li>
+    <li><b>You approve the design</b><span>Ask for changes as often as you like. The fee is only charged once you approve.</span></li>
+    <li><b>It goes live and they run it</b><span>Creator approvals and weekly reports are handled for you.</span></li>
+  </ol>
+  <div class="ps-f"><span>Strategist fee: 8% of the campaign budget, taken from the same budget</span><span>3 strategists available in Kandy</span></div>
+</div>`;
+
+const CARD_STRATEGIST = `
+<div class="ps">
+  ${psHead('Strategist assigned')}
+  <div class="strat">
+    <div class="sav">IF</div>
+    <div class="nm"><b>Ishara Fernando</b><span>Senior Brand Strategist · Food &amp; beverage · based in Kandy</span></div>
+    <div class="mini"><div><b>38</b><span>campaigns</span></div><div><b>4.9★</b><span>brand rating</span></div><div><b>Fri, Oct 16</b><span>first design due</span></div></div>
+  </div>
+  <div class="ps-budget">
+    <div class="k" style="font-size:11.5px;color:var(--ps-g600);font-weight:500">Rs. 800,000 budget</div>
+    <div class="split"><i style="width:92%;background:#1548eb"></i><i style="width:8%;background:#f433ab"></i></div>
+    <div class="legend"><span><em style="background:#1548eb"></em>Creators Rs. 736,000</span><span><em style="background:#f433ab"></em>Strategist fee Rs. 64,000 · charged on approval</span></div>
+  </div>
+  <div class="ps-f"><span>Shared with Ishara: brief, brand kit, results of your 4 past campaigns</span><a href="#" onclick="return false">Message Ishara ↗</a></div>
+</div>`;
+
+const designCard = (v2) => `
+<div class="ps">
+  ${psHead(v2 ? 'Strategist design · version 2' : 'Strategist design · version 1')}
+  <div class="cp-hero" style="aspect-ratio:16/6">
+    <img src="images/sbContent2.jpg" alt="">
+    <span class="brand"><img src="images/starbucks.png" alt="">Starbucks Sri Lanka</span>
+    <span class="stat badge on-img blue">Designed by Ishara Fernando</span>
+  </div>
+  <div class="cp-body">
+    <h3>Starbucks Kandy — First brew in the hills</h3>
+    <div class="meta">Store opening · Teasers Nov 28 – Dec 4 · Opening week Dec 5 – 14 · Goal: store visits</div>
+  </div>
+  <div class="sec"><h6>Hook</h6><div class="hook">“I found the coziest new coffee spot in Kandy 👀”</div></div>
+  <div class="sec"><h6>Script · 20–30s reel</h6>${beats([['0–3s','Walking by Kandy Lake or along Dalada Veediya, misty morning'],['3–10s','Step into the new store, a slow pan of the interior'],['10–20s','Order, first sip by the window, honest reaction'],['20s+','“Now open on Dalada Veediya. Show this video for a free upsize in opening week.”']])}</div>
+  <div class="two">
+    <div class="sec"><h6>Creator mix</h6>
+      <div class="plist">
+        <div class="${v2?'chg':''}"><span>Kandy macro creators (50K+) · teasers</span><b>${v2?'<s>6</s>4':'6'} × Rs. 40,000</b></div>
+        <div class="${v2?'chg':''}"><span>Micro creators (5–20K) · opening week</span><b>${v2?'<s>40</s>52':'40'} creators</b></div>
+        <div><span>Micro pricing</span><b>Rs. 6,500 + Rs. 1,500 / 1K views</b></div>
+      </div>
+    </div>
+    <div class="sec"><h6>Audience</h6><div class="tags"><span>18–35 age</span><span>Kandy</span><span>Central Province</span><span>Students</span><span>Tourists</span></div>
+      <h6 style="margin-top:10px">Measured by</h6><p>Free-upsize redemptions at the Kandy store</p></div>
+  </div>
+  <div class="sec"><h6>Budget split</h6>
+    <div class="plist">
+      <div class="${v2?'chg':''}"><span>Macro creators</span><b>${v2?'<s>Rs. 240,000</s>':''}Rs. ${v2?'160,000':'240,000'}</b></div>
+      <div class="${v2?'chg':''}"><span>Micro creators (base + performance)</span><b>${v2?'<s>Rs. 496,000</s>':''}Rs. ${v2?'576,000':'496,000'}</b></div>
+      <div><span>Strategist fee</span><b>Rs. 64,000</b></div>
+      <div><span>Total</span><b>Rs. 800,000</b></div>
+    </div>
+  </div>
+  <div class="ps-f"><span>${v2?'Revised 40 min after your feedback':'Sent Fri, Oct 16 · 9:12 AM'}</span><a href="#" onclick="return false">Open full design ↗</a></div>
+</div>`;
+
+const STRAT = [
+  {user:"Hi Claude, we're opening a new Starbucks in Kandy on Dec 5 and want a creator campaign to bring people in. My team is swamped with the holiday season, though.",
+   steps:[
+    {think:900},
+    {tool:'check_brand_connection',label:'Check brand connection',
+     input:{workspace:'Starbucks Sri Lanka'},
+     output:{connected:true,brand_id:'brd_starbucks_lk',verified:true,your_role:'admin'}},
+    {tool:'get_brand_profile',label:'Get brand profile',
+     input:{brand_id:'brd_starbucks_lk'},
+     output:{handle:'@starbuckslk',past_campaigns:4,balance:3400000,brand_assets:12}},
+    {text:`<p>Starbucks Sri Lanka is already connected to Polysocial, so there's nothing to set up on that side:</p>`},
+    {card:CARD_CONNECTED},
+    {text:`<p>So the requirement is <b>bringing people into the new Kandy store</b>, which opens <b>Dec 5</b>. Since your team is stretched, it matters who designs this:</p>`},
+    {card:ASK_PATH}
+  ]},
+
+  {user:"Let's get a brand strategist to design and run it.",
+   select:['strategist'],
+   steps:[
+    {think:700},
+    {tool:'get_strategist_options',label:'Get strategist options',
+     input:{category:'Food',city:'Kandy',campaign_type:'store_opening'},
+     output:{available:3,fee_rate:0.08,first_design_working_days:2,requires:['budget']}},
+    {text:`<p>Good call for a busy season. Here's how it works on Polysocial:</p>`},
+    {card:CARD_HOW_STRAT},
+    {text:`<p><b>Before I can request a strategist, the campaign needs a budget.</b> The strategist plans everything within it. What's the total you'd like to spend, including the 8% fee?</p>`}
+  ]},
+
+  {user:"800K all-in.",
+   steps:[
+    {think:700},
+    {tool:'create_campaign_draft',label:'Create campaign draft',
+     input:{title:'Starbucks Kandy store opening',design_source:'strategist',goal:'store_visits',location:'Kandy',key_date:'2026-12-05'},
+     output:{id:'cmp_sb_kandy_opening',status:'draft'}},
+    {tool:'set_campaign_budget',label:'Set campaign budget',
+     input:{campaign_id:'cmp_sb_kandy_opening',budget:800000,includes_strategist_fee:true},
+     output:{creator_budget:736000,strategist_fee:64000}},
+    {perm:'request_brand_strategist',desc:'This assigns a strategist to the campaign. The Rs. 64,000 fee is charged only when you approve their design.',
+     preview:'request_brand_strategist({ campaign_id: "cmp_sb_kandy_opening", share: ["brief", "brand_kit", "past_results"] })',once:true},
+    {tool:'request_brand_strategist',label:'Request brand strategist',
+     input:{campaign_id:'cmp_sb_kandy_opening',brief:{goal:'store_visits',store:'Dalada Veediya, Kandy',opening:'2026-12-05'},share:['brief','brand_kit','past_campaign_results']},
+     output:{strategist:'Ishara Fernando',status:'designing',first_design_due:'2026-10-16'}},
+    {text:`<p>Done. Your budget is set and a strategist is on it:</p>`},
+    {card:CARD_STRATEGIST},
+    {card:stepper(['done','done','active','done','todo'],'Strategist designing')},
+    {text:`<p>Ishara has your brief, brand kit and the results from your past campaigns. I'll let you know as soon as the design comes in.</p>`}
+  ]},
+
+  {divider:'Friday, Oct 16',
+   user:"Has the strategist sent the design yet?",
+   steps:[
+    {think:600},
+    {tool:'get_strategist_design',label:'Get strategist design',
+     input:{campaign_id:'cmp_sb_kandy_opening'},
+     output:{version:1,status:'awaiting_brand_approval',sent_at:'2026-10-16T09:12:00+05:30'}},
+    {text:`<p>Yes, Ishara sent it this morning. Here's the design:</p>`},
+    {card:designCard(false)},
+    {text:`<p>What stands out:</p>
+<ul>
+<li><b>Two phases.</b> A few big Kandy creators build buzz the week before opening, then lots of smaller creators fill opening week.</li>
+<li><b>Store visits are measurable.</b> The "show this video for a free upsize" offer lets you count visits at the store.</li>
+<li><b>One thing to weigh:</b> 30% of the budget goes to 6 macro creators. In your past campaigns, Kandy micro creators were your cheapest views.</li>
+</ul>
+<p>Approve it as it is, or send Ishara feedback?</p>`}
+  ]},
+
+  {user:"Can we move some of the macro money to more micro creators?",
+   steps:[
+    {think:600},
+    {tool:'send_strategist_feedback',label:'Send strategist feedback',
+     input:{campaign_id:'cmp_sb_kandy_opening',message:'Please shift some of the macro budget to more micro creators for opening week.'},
+     output:{status:'revision_requested'}},
+    {tool:'get_strategist_design',label:'Get strategist design',
+     input:{campaign_id:'cmp_sb_kandy_opening',version:2},
+     output:{version:2,status:'awaiting_brand_approval',changes:['macro_creators: 6 → 4','micro_creators: 40 → 52']}},
+    {text:`<p>I passed that on, and Ishara sent a revised version 40 minutes later:</p>`},
+    {card:designCard(true)},
+    {text:`<p>Ishara dropped two macro creators and moved <b>Rs. 80,000</b> to 12 more micro creators. That should lift expected opening-week views by about 25%. The total stays at Rs. 800,000.</p>`}
+  ]},
+
+  {user:"Perfect, approve it and go live.",
+   steps:[
+    {think:500},
+    {tool:'approve_strategist_design',label:'Approve strategist design',
+     input:{campaign_id:'cmp_sb_kandy_opening',version:2},
+     output:{status:'approved',strategist_fee_charged:64000}},
+    {perm:'publish_campaign',desc:'This makes the campaign visible to creators now and holds the Rs. 736,000 creator budget from your Polysocial balance.',
+     preview:'publish_campaign({ campaign_id: "cmp_sb_kandy_opening", go_live: "now" })',once:true},
+    {tool:'publish_campaign',label:'Publish campaign',
+     input:{campaign_id:'cmp_sb_kandy_opening',go_live:'now'},
+     output:{status:'live',managed_by:'Ishara Fernando',macro_invites_sent:4,eligible_creators_notified:610}},
+    {text:`<p>It's live 🎉 Ishara has sent invites to the 4 macro creators, and 610 micro creators in the Kandy area have been notified.</p>`},
+    {card:liveCard({title:'Starbucks Kandy — First brew in the hills',meta:'Managed by Ishara Fernando · Budget held: Rs. 736,000 for creators',steps:['Today · live','Nov 28 · teasers','Dec 5 · store opens','Dec 14 · close'],id:'ID cmp_sb_kandy_opening'})},
+    {card:stepper(['done','done','done','done','done'],'By Ishara Fernando')},
+    {text:`<p>From here Ishara runs it day to day: creator approvals, the upsize tracking and a weekly report. You'll only be asked about budget changes. Want the weekly report sent here every Monday?</p>`}
+  ]}
+];
+
 const CHATS = {
+  self:{title:'Cold Brew launch — our own brief',script:SELF,
+    greet:'Good morning, Dinithi',
+    blurb:'Path 1 of the campaign flow: the brand is connected, shares the requirement and timeline, designs the campaign itself (hook, script, audience), sets the budget and goes live.',
+    chips:['Check brand connection','Requirement &amp; timeline','Brand shares hook, script, audience','Set budget','Go live']},
+  strat:{title:'Kandy store opening — with a strategist',script:STRAT,
+    greet:'Good morning, Dinithi',
+    blurb:'Path 2 of the campaign flow: the brand has no time to design the campaign, so it sets a budget and requests a Polysocial brand strategist, who designs it. The brand reviews, approves and goes live.',
+    chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Request a brand strategist','Review &amp; revise design','Approve &amp; go live']},
   avurudu:{title:'Avurudu creator campaign',script:AVURUDU,
     greet:'Good afternoon, Dinithi',
     blurb:'A brand that has run campaigns on Polysocial before asks Claude for a new one. Claude reads their past results, suggests concepts, drafts the campaign, invites the best returning creators and publishes it.',
@@ -983,7 +1373,7 @@ function updateUI(){
   btnPlay.querySelector('svg').innerHTML = autoplay ? '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>' : '<path d="M6 4l14 8-14 8z"/>';
 }
 
-async function typeUser(text, id){
+async function typeUser(text, id, paste){
   ta.textContent = '';
   if (!instant){
     const caret = '<span class="caret"></span>';
@@ -997,7 +1387,7 @@ async function typeUser(text, id){
   ta.textContent = ''; sendBtn.classList.remove('ready');
   const m = document.createElement('div');
   m.className = 'msg user';
-  m.innerHTML = `<div class="b">${esc(text)}</div>`;
+  m.innerHTML = (paste ? `<div class="paste"><div class="ph">Pasted text · ${paste.split('\n').length} lines</div><pre>${esc(paste)}</pre></div>` : '') + `<div class="b">${esc(text)}</div>`;
   thread.appendChild(m);
   toBottom(true);
 }
@@ -1104,8 +1494,8 @@ async function playTurn(){
   busy = true; updateUI();
   const id = run;
   try {
-    if (SCRIPT[turn].select) await selectOpts(SCRIPT[turn].select, id);
-    await typeUser(SCRIPT[turn].user, id);
+    await preTurn(SCRIPT[turn], id);
+    await typeUser(SCRIPT[turn].user, id, SCRIPT[turn].paste);
     await sleep(300, id);
     await claudeTurn(SCRIPT[turn].steps, id);
     turn++;
@@ -1130,7 +1520,7 @@ async function showAll(){
   // Rebuild from scratch so a half-played turn isn't left behind.
   thread.innerHTML = ''; turn = 0; instant = true;
   const id = run;
-  for (const t of SCRIPT){ if (t.select) await selectOpts(t.select, id); await typeUser(t.user, id); await claudeTurn(t.steps, id); turn++; }
+  for (const t of SCRIPT){ await preTurn(t, id); await typeUser(t.user, id, t.paste); await claudeTurn(t.steps, id); turn++; }
   instant = false; updateUI(); toBottom(true);
 }
 
@@ -1147,6 +1537,10 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 'a' || e.key === 'A') showAll();
   else if (e.key === 'r' || e.key === 'R') reset();
 });
+async function preTurn(t, id){
+  if (t.select) await selectOpts(t.select, id);
+  if (t.divider){ const d = document.createElement('div'); d.className = 'divider'; d.textContent = t.divider; thread.appendChild(d); toBottom(true); await sleep(500, id); }
+}
 async function selectOpts(keys, id){
   const asks = thread.querySelectorAll('.ask'), card = asks[asks.length - 1];
   if (!card) return;
@@ -1162,7 +1556,7 @@ thread.addEventListener('click', (e) => {
 });
 
 function openChat(key){
-  if (!CHATS[key]) key = 'avurudu';
+  if (!CHATS[key]) key = 'self';
   chatKey = key; SCRIPT = CHATS[key].script;
   document.querySelectorAll('.side li[data-chat]').forEach(li => li.classList.toggle('on', li.dataset.chat === key));
   $('#chatTitle').innerHTML = CHATS[key].title; $('#chatSel').value = key;
@@ -1173,7 +1567,7 @@ function openChat(key){
 document.querySelectorAll('.side li[data-chat]').forEach(li => li.addEventListener('click', () => openChat(li.dataset.chat)));
 $('#chatSel').addEventListener('change', (e) => openChat(e.target.value));
 window.addEventListener('hashchange', () => { const k = location.hash.slice(1); if (k !== chatKey) openChat(k); });
-openChat(location.hash.slice(1) || 'avurudu');
+openChat(location.hash.slice(1) || 'self');
 </script>
 </body>
 </html>
