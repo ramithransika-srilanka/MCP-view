@@ -1,14 +1,11 @@
 # Polysocial in Claude — campaign chat prototype
 
-A clickable prototype for stakeholders: a brand's marketing manager runs Polysocial campaigns from a Claude chat
+A clickable prototype for stakeholders: a brand's marketing manager creates a Polysocial campaign from a Claude chat
 through the **Polysocial MCP connector**. Open `index.html` in a browser — no build step.
 
 ## The conversations
 
-The sidebar (or the chat picker on mobile) switches between four chats. Link straight to one with `#self`, `#strat`,
-`#avurudu` or `#mocha`.
-
-### Campaign creation flow — two paths
+The sidebar (or the chat picker on mobile) switches between two chats. Link straight to one with `#self` or `#strat`.
 
 Both chats follow the same flow: check the brand is connected → requirement and timeline → who designs it →
 cover image and inspiration posts (always requested from the brand) → budget → go live. They start the same way and split at "Do you need to hire a creative strategist to design your campaign?" (Yes / No).
@@ -27,34 +24,6 @@ which are shared with the strategist as the visual direction. `request_creative_
 Ishara Fernando. Two days later
 `get_strategist_design` returns the design, `send_strategist_feedback` gets a revised version 2, and
 `approve_strategist_design` + `publish_campaign` take it live, with the strategist running it.
-
-### Avurudu creator campaign (`#avurudu`, opens by default)
-
-Starbucks Sri Lanka has run campaigns on Polysocial before. Its marketing manager asks Claude for a new one for
-Avurudu (Sinhala & Tamil New Year, April):
-
-1. **Read the history** — `get_brand_profile`, `list_campaigns`, `get_campaign_results`. Claude compares the four past
-   campaigns, pulls out what worked (group content, cheaper creators outside Colombo) and pitches three concepts.
-2. **Quick questions** — Claude asks where creators should be based and which product leads; the answers are picked
-   as chips.
-3. **Draft** — `get_pricing_benchmarks`, `estimate_reach`, `create_campaign_draft`: "Starbucks Avurudu Table",
-   Rs. 1.2M, Apr 1–21, island-wide, shown in creator view with a reach estimate.
-4. **Early access** — `list_top_creators` and `set_early_access` give the 12 best returning creators 48 hours first.
-5. **Publish** — `validate_campaign`, a one-time approval for `publish_campaign`, invites sent and the launch timeline.
-
-### Christmas Mocha review & January launch (`#mocha`)
-
-Dinithi Rajapaksa, Marketing Manager at Starbucks Sri Lanka, talks to Claude in five turns:
-
-1. **Check performance** — Claude calls `list_campaigns` and `get_campaign_performance`, shows budget, creators,
-   views by platform and flags the backed-up review queue.
-2. **Review submissions** — `list_submissions` + `check_submission_requirements` return the three oldest posts,
-   each checked against the campaign's requirements.
-3. **Approve and request changes** — a permission prompt for `approve_submission`, two approvals (base payment
-   released) and a friendly `request_changes` note for the post missing the brand handle.
-4. **Draft a new campaign** — `get_pricing_benchmarks`, `get_brand_profile`, `create_campaign_draft`; the draft is
-   shown as creators would see it on the campaign page.
-5. **Edit and schedule** — `update_campaign`, then a one-time approval for `schedule_campaign` because it holds the budget.
 
 Each tool call can be expanded to show its request and response.
 

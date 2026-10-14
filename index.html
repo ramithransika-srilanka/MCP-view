@@ -180,10 +180,6 @@ img{display:block;}
 :root[data-theme="dark"] .ps-f a{color:#7391f3;}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ps-f a{color:#7391f3;}}
 
-.ps-camp{display:flex;gap:12px;padding:14px;align-items:center;}
-.ps-camp img{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:none;}
-.ps-camp .t{font-size:15px;font-weight:600;letter-spacing:-.01em;line-height:1.3;}
-.ps-camp .m{color:var(--ps-g600);font-size:12px;margin-top:2px;}
 .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;}
 .badge.blue{background:var(--ps-blue-100);color:var(--ps-blue-600);}
 :root[data-theme="dark"] .badge.blue{color:#a1b6f7;}
@@ -192,19 +188,11 @@ img{display:block;}
 .badge.warn{background:var(--warn-soft);color:var(--warn);}
 .badge.grey{background:var(--ps-g100);color:var(--ps-g600);}
 
-.ps-stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);}
-.ps-stats > div{padding:12px 14px;border-right:1px solid var(--line);}
-.ps-stats > div:last-child{border-right:0;}
-.ps-stats .k{font-size:11.5px;color:var(--ps-g600);font-weight:500;}
-.ps-stats .v{font-size:18px;font-weight:600;letter-spacing:-.015em;font-variant-numeric:tabular-nums;margin-top:2px;}
-.ps-stats .s{font-size:11.5px;color:var(--ps-g600);font-variant-numeric:tabular-nums;}
 .ps-budget{padding:12px 14px;border-top:1px solid var(--line);}
 .ps-budget .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-variant-numeric:tabular-nums;}
 .ps-budget .spent{font-size:16px;font-weight:600;}
 .ps-budget .of{color:var(--ps-g600);font-weight:500;}
 .ps-budget .pct{color:var(--ps-blue);font-weight:600;}
-.track{height:6px;border-radius:99px;background:var(--ps-g100);overflow:hidden;margin:8px 0 6px;}
-.track i{display:block;height:100%;background:var(--ps-blue);border-radius:99px;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1);}
 .ps-budget .ft{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ps-g600);font-variant-numeric:tabular-nums;}
 .split{display:flex;height:8px;border-radius:99px;overflow:hidden;gap:2px;margin:8px 0;}
 .split i{display:block;height:100%;}
@@ -212,29 +200,10 @@ img{display:block;}
 .legend span{display:inline-flex;align-items:center;gap:5px;}
 .legend em{width:8px;height:8px;border-radius:2px;display:inline-block;}
 
-.subs{display:grid;grid-template-columns:repeat(3,1fr);gap:0;}
-.sub{border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0;}
-.sub:last-child{border-right:0;}
-.sub .media{position:relative;aspect-ratio:4/5;background:var(--ps-g100);overflow:hidden;}
-.sub .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-.sub .media img.alt{transform:scale(1.6);object-position:70% 40%;}
 .on-img{background:rgba(255,255,255,.94)!important;box-shadow:0 1px 3px rgba(0,0,0,.2);}
 .on-img.warn{color:#8a4e0c!important;}
 .on-img.blue{color:#123bbd!important;}
 .on-img.grey{color:#414141!important;}
-.sub .media .type{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.55);color:#fff;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:99px;}
-.sub .media .wait{position:absolute;top:8px;right:8px;}
-.sub .who{display:flex;align-items:center;gap:8px;padding:10px 12px 4px;}
-.sub .who img{width:28px;height:28px;border-radius:50%;object-fit:cover;}
-.sub .who b{display:block;font-size:12.5px;line-height:1.2;}
-.sub .who span{display:block;font-size:11px;color:var(--ps-g600);}
-.sub .cap{padding:0;margin:2px 12px 8px;font-size:11.5px;color:var(--ps-g600);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
-.sub .checks{list-style:none;margin:auto 0 0;padding:8px 12px 12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:4px;font-size:11.5px;}
-.sub .checks li{display:flex;gap:6px;align-items:flex-start;}
-.sub .checks .y{color:var(--ok);font-weight:700;}
-.sub .checks .n{color:var(--warn);font-weight:700;}
-.sub .verdict{padding:0 12px 12px;}
-.sub.dim .media img{filter:saturate(.85);}
 
 /* campaign page (draft) — the middle column of the creator-facing campaign page */
 .cp-hero{position:relative;aspect-ratio:16/7;background:#000;overflow:hidden;}
@@ -285,28 +254,6 @@ img{display:block;}
 .bstats{display:flex;gap:18px;margin-left:auto;}
 .bstats b{display:block;font-size:14px;font-variant-numeric:tabular-nums;}
 .bstats span{display:block;font-size:11px;color:var(--ps-g600);}
-.hist{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;}
-.hist th{text-align:left;font-size:11px;font-weight:500;color:var(--ps-g600);padding:8px 14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-.hist td{padding:8px 14px;border-bottom:1px solid var(--line);font-size:12.5px;white-space:nowrap;}
-.hist tr:last-child td{border-bottom:0;}
-.hist tr.best td{background:rgba(21,72,235,.05);}
-.hist tr.best td:first-child{box-shadow:inset 3px 0 0 var(--ps-blue);}
-.hc{display:flex;align-items:center;gap:10px;white-space:normal;}
-.hc img{width:34px;height:34px;border-radius:8px;object-fit:cover;flex:none;}
-.hc img.alt{object-position:80% 30%;}
-.hc b{display:block;font-size:12.5px;font-weight:600;line-height:1.3;}
-.hc span{display:block;font-size:11px;color:var(--ps-g600);}
-.hc em{font-style:normal;font-size:10px;padding:1px 6px;}
-.concepts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;font-family:var(--ps-font);}
-.concept{position:relative;border:1px solid var(--line);border-radius:12px;background:var(--ps-card);padding:14px;font-size:12.5px;line-height:1.45;color:var(--ps-g800);}
-.concept.rec{border-color:var(--ps-blue);box-shadow:0 0 0 1px var(--ps-blue);}
-.concept .num{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--ps-g100);font-weight:700;font-size:12px;}
-.concept.rec .num{background:var(--ps-blue);color:#fff;}
-.concept .badge{position:absolute;top:14px;right:14px;}
-.concept h4{margin:10px 0 4px;font-size:14px;font-weight:600;letter-spacing:-.01em;}
-.concept p{margin:0 0 8px;color:var(--ps-g600);}
-.concept ul{margin:0;padding-left:16px;color:var(--ps-g600);}
-.concept li{margin:2px 0;}
 .ask{border:1px solid var(--line-2);border-radius:14px;background:var(--panel);padding:4px 16px;box-shadow:var(--shadow);}
 .ask-q{padding:12px 0;}
 .ask-q + .ask-q{border-top:1px solid var(--line);}
@@ -315,22 +262,6 @@ img{display:block;}
 .opts button{border:1px solid var(--line-2);background:transparent;border-radius:999px;padding:5px 13px;font-size:13.5px;transition:background .2s,border-color .2s,color .2s;}
 .opts button:hover{border-color:var(--clay);}
 .opts button.sel{background:var(--clay);border-color:var(--clay);color:#fff;}
-.toplist{display:flex;flex-direction:column;}
-.tc{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);}
-.tc:last-child{border-bottom:0;}
-.tc .rank{width:16px;font-size:12px;font-weight:600;color:var(--ps-g600);text-align:center;}
-.tc img{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;}
-.tc .nm{flex:1;min-width:0;}
-.tc .nm b{display:block;font-size:13px;}
-.tc .nm span{display:block;font-size:11px;color:var(--ps-g600);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.tc .m{text-align:right;min-width:68px;}
-.tc .m b{display:block;font-size:12.5px;font-variant-numeric:tabular-nums;}
-.tc .m span{display:block;font-size:10.5px;color:var(--ps-g600);}
-.tc .inv{font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:99px;border:1px solid var(--ps-g200);color:var(--ps-g600);white-space:nowrap;transition:all .3s;}
-.tc .inv.on{background:var(--ps-blue);border-color:var(--ps-blue);color:#fff;}
-.pchecks{list-style:none;margin:0;padding:12px 14px;display:flex;flex-direction:column;gap:6px;font-size:12.5px;}
-.pchecks li{display:flex;gap:8px;}
-.pchecks .y{color:var(--ok);font-weight:700;}
 .side li[data-chat]{cursor:pointer;}
 .side li .new{font-size:10px;font-weight:600;color:var(--clay-ink);margin-left:6px;}
 .chatsel{display:none;border:1px solid var(--line-2);background:var(--panel);color:var(--text);border-radius:8px;padding:5px 8px;font:inherit;font-size:13px;}
@@ -418,16 +349,8 @@ img{display:block;}
   .bar .spacer{display:none;}
   .thread{padding:20px 16px 32px;}
   .composer{padding:0 16px 12px;}
-  .ps-stats{grid-template-columns:1fr 1fr;}
-  .ps-stats > div:nth-child(2){border-right:0;}
-  .ps-stats > div:nth-child(-n+2){border-bottom:1px solid var(--line);}
-  .subs{grid-template-columns:1fr;}
-  .sub{border-right:0;border-bottom:1px solid var(--line);}
-  .sub:last-child{border-bottom:0;}
-  .sub .media{aspect-ratio:16/10;}
   .two{grid-template-columns:1fr;}
   .two > .sec:first-child{border-right:0;}
-  .concepts{grid-template-columns:1fr;}
   .stepper{grid-template-columns:1fr;gap:10px;}
   .stepper li{flex-direction:row;align-items:center;gap:10px;}
   .stepper li::after{display:none;}
@@ -439,7 +362,6 @@ img{display:block;}
   .att{max-width:100%;flex:1 1 100%;}
   .hide-s{display:none;}
   .bstats{margin-left:0;width:100%;}
-  .hist th,.hist td{padding:8px 10px;}
   .msg.user .b{max-width:92%;}
   .ctrls .lbl{display:none;}
 }
@@ -458,8 +380,6 @@ img{display:block;}
     <ul>
       <li data-chat="self">Cold Brew launch — our own brief<span class="new">NEW</span></li>
       <li data-chat="strat">Kandy store opening — with a strategist<span class="new">NEW</span></li>
-      <li data-chat="avurudu">Avurudu creator campaign</li>
-      <li data-chat="mocha">Christmas Mocha review &amp; January launch</li>
       <li>Q4 influencer budget split</li>
       <li>Caption ideas — Pumpkin Spice</li>
       <li>Creator brief template</li>
@@ -472,7 +392,7 @@ img{display:block;}
   <main class="main">
     <div class="bar">
       <div class="title" id="chatTitle"></div>
-      <select class="chatsel" id="chatSel" aria-label="Choose chat"><option value="self">Cold Brew — own brief</option><option value="strat">Kandy — with strategist</option><option value="avurudu">Avurudu campaign</option><option value="mocha">Christmas Mocha review</option></select>
+      <select class="chatsel" id="chatSel" aria-label="Choose chat"><option value="self">Cold Brew — own brief</option><option value="strat">Kandy — with strategist</option></select>
       <span class="conn" title="Polysocial MCP connector is connected"><span class="ps-mark"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial<span class="dot"></span></span>
       <span class="spacer"></span>
       <div class="ctrls" role="group" aria-label="Demo controls">
@@ -521,508 +441,12 @@ img{display:block;}
 
 <script>
 /* =====================================================================
-   Polysocial × Claude — scripted conversation
-   Campaign, creator and pricing data follow the brand web app demo set
-   (Starbucks Christmas Mocha campaign, base Rs. 6,488 per content,
-   Rs. 2,000 / 1K views performance pricing, Rs. 500,000 budget).
+   Polysocial × Claude — scripted conversations
+   Brand, creator and pricing data follow the brand web app demo set.
    ===================================================================== */
 
 const PS_ICON = '<span class="ps-mark"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>';
 const psHead = (label) => `<div class="ps-h">${PS_ICON}Polysocial · ${label}<span class="live"><i></i>Live</span></div>`;
-
-/* ---------- Cards ---------- */
-const CARD_PERFORMANCE = `
-<div class="ps">
-  ${psHead('Campaign performance')}
-  <div class="ps-camp">
-    <img src="images/sbHero.jpg" alt="">
-    <div style="min-width:0">
-      <div class="t">Starbucks Christmas Mocha campaign</div>
-      <div class="m">Food · Colombo · Reels · 10 days left</div>
-    </div>
-    <span class="badge blue" style="margin-left:auto">Active</span>
-  </div>
-  <div class="ps-budget">
-    <div class="row"><span><span class="spent">Rs. 285,000</span> <span class="of">/ Rs. 500,000</span></span><span class="pct">57%</span></div>
-    <div class="track"><i data-w="57%"></i></div>
-    <div class="ft"><span>Spent</span><span>Rs. 215,000 available</span></div>
-  </div>
-  <div class="ps-stats">
-    <div><div class="k">Creators joined</div><div class="v">412</div><div class="s">+38 this week</div></div>
-    <div><div class="k">Posts live</div><div class="v">126</div><div class="s">14 awaiting review</div></div>
-    <div><div class="k">Total views</div><div class="v">1.84M</div><div class="s">Rs. 155 / 1K views</div></div>
-    <div><div class="k">Approval time</div><div class="v">1 d</div><div class="s">96% approval rate</div></div>
-  </div>
-  <div class="ps-budget">
-    <div class="k" style="font-size:11.5px;color:var(--ps-g600);font-weight:500">Views by platform</div>
-    <div class="split"><i style="width:52%;background:#1548eb"></i><i style="width:38%;background:#f433ab"></i><i style="width:7%;background:#7391f3"></i><i style="width:3%;background:#b3b3b3"></i></div>
-    <div class="legend"><span><em style="background:#1548eb"></em>TikTok 52%</span><span><em style="background:#f433ab"></em>Instagram 38%</span><span><em style="background:#7391f3"></em>YouTube 7%</span><span><em style="background:#b3b3b3"></em>Facebook 3%</span></div>
-  </div>
-  <div class="ps-f"><span>Updated just now</span><a href="#" onclick="return false">Open in Polysocial ↗</a></div>
-</div>`;
-
-const sub = (o) => `
-<div class="sub">
-  <div class="media"><img src="images/${o.img}"${o.alt?' class="alt"':''} alt="${o.name}'s post"><span class="type">${o.type}</span><span class="wait badge on-img ${o.waitCls||'grey'}">${o.wait}</span></div>
-  <div class="who"><img src="images/${o.av}" alt=""><div><b>${o.name}</b><span>${o.handle} · ${o.followers}</span></div></div>
-  <div class="cap">${o.caption}</div>
-  <ul class="checks">${o.checks.map(c=>`<li><span class="${c[0]?'y':'n'}">${c[0]?'✓':'!'}</span>${c[1]}</li>`).join('')}</ul>
-  <div class="verdict" data-verdict="${o.id}">${o.verdict}</div>
-</div>`;
-
-const SUBS = [
-  {id:'kavindu',img:'sbContent2.jpg',type:'Carousel · 3',wait:'Waiting 31 h',waitCls:'warn',av:'av2.jpg',name:'Kavindu Jayasuriya',handle:'@kavindu.sips',followers:'45K followers',
-   caption:'First Christmas Mocha of the season ☕🎄 Cheers to the holidays, swipe for the whole cup. @starbuckslk #StarbucksLK #ChristmasMocha',
-   checks:[[1,'Cup &amp; Christmas Mocha label visible'],[1,'Brand handle tagged'],[1,'Original audio'],[1,'No competitor brands']],
-   verdict:'<span class="badge ok">Meets all requirements</span>'},
-  {id:'nethmi',img:'sbContent1.jpg',type:'Reel · 0:18',wait:'Waiting 27 h',waitCls:'warn',av:'av1.jpg',name:'Nethmi Perera',handle:'@nethmi.eats',followers:'45.2K followers',
-   caption:'Rainy Colombo afternoon fixed 🌧️☕ Christmas Mocha with extra whip, rating it a solid 9/10. @starbuckslk #ChristmasMocha',
-   checks:[[1,'Cup &amp; Christmas Mocha label visible'],[1,'Brand handle tagged'],[1,'Face visible'],[1,'No competitor brands']],
-   verdict:'<span class="badge ok">Meets all requirements</span>'},
-  {id:'sachini',img:'sbHero.jpg',alt:1,type:'Image',wait:'Waiting 26 h',waitCls:'warn',av:'av4.jpg',name:'Sachini Wickramasinghe',handle:'@sachini.w',followers:'38.5K followers',
-   caption:'Christmas came early at Starbucks Havelock 🎄 This mocha is dangerously good. #ChristmasMocha #ColomboCafes',
-   checks:[[1,'Cup &amp; Christmas Mocha label visible'],[0,'Brand handle not tagged in caption'],[1,'Original content'],[1,'No competitor brands']],
-   verdict:'<span class="badge warn">1 requirement missing</span>'}
-];
-const CARD_SUBS = `
-<div class="ps">
-  ${psHead('Submissions awaiting review')}
-  <div class="subs">${SUBS.map(sub).join('')}</div>
-  <div class="ps-f"><span>Showing 3 of 14 · oldest first</span><a href="#" onclick="return false">Review all in Polysocial ↗</a></div>
-</div>`;
-
-const draftCard = (v) => `
-<div class="ps">
-  ${psHead(v.final ? 'Campaign scheduled' : 'Campaign draft · creator view')}
-  <div class="cp-hero">
-    <img src="images/sbContent1.jpg" alt="">
-    <span class="brand"><img src="images/starbucks.png" alt="">Starbucks Sri Lanka</span>
-    <span class="stat badge on-img ${v.final?'blue':'grey'}">${v.final?'Upcoming · opens Jan 5':'Draft — not visible to creators'}</span>
-  </div>
-  <div class="cp-body">
-    <h3>Starbucks Toffee Nut Latte New Year launch</h3>
-    <div class="meta">Food · Jan 5 – Jan 26, 2027 · 3 weeks</div>
-  </div>
-  <div class="two">
-    <div class="sec">
-      <h6>Pricing</h6>
-      <div class="plist">
-        <div><span>Base price per content</span><b>Rs. 6,000</b></div>
-        <div><span>Max earning per content</span><b>Rs. 90,000</b></div>
-        <div class="${v.final?'chg':''}"><span>Performance pricing</span><b>${v.final?'<s>Rs. 2,000</s>':''}Rs. ${v.final?'1,800':'2,000'} / 1K views</b></div>
-        <div><span>Total budget</span><b>Rs. 750,000</b></div>
-      </div>
-    </div>
-    <div class="sec">
-      <h6>Best suited for</h6>
-      <div class="tags"><span>All genders</span><span>18–30 age</span><span>Colombo</span><span>Kandy</span><span>Reels</span><span>TikTok</span></div>
-      <h6 style="margin-top:12px">Platforms</h6>
-      <div class="tags"><span>TikTok</span><span>Instagram</span></div>
-    </div>
-  </div>
-  <div class="sec">
-    <h6>Requirements</h6>
-    <p>Show your audience the first sip of the new Toffee Nut Latte — at a Starbucks store in Colombo or Kandy, or on the go — and why it's your New Year treat.</p>
-    <p><b style="color:var(--ps-g800);font-weight:600">Brand visibility:</b> Toffee Nut Latte cup and Starbucks logo clearly visible</p>
-  </div>
-  <div class="two">
-    <div class="sec">
-      <h6>Suggested CTAs</h6>
-      <div class="ctas"><span>Start the year with a Toffee Nut Latte.</span><span>New year, new favourite — try it today.</span><span>Show us your first sip and tag @starbuckslk.</span></div>
-    </div>
-    <div class="sec">
-      <h6>Restrictions</h6>
-      <ol>
-        <li>No AI generated content</li>
-        <li>Face must be visible in the content</li>
-        <li>Caption must tag the brand handle</li>
-        <li>Use only licensed or original audio</li>
-        <li>Keep the post live for at least 30 days</li>
-        ${v.final?'<li class="new">No other coffee brands in the frame</li>':''}
-      </ol>
-    </div>
-  </div>
-  <div class="ps-f"><span>${v.final?'ID cmp_sb_toffee_nut_26':'Draft saved · ID cmp_sb_toffee_nut_26'}</span><a href="#" onclick="return false">${v.final?'View in Upcoming ↗':'Edit in Polysocial ↗'}</a></div>
-</div>`;
-
-const CARD_SCHEDULED = `
-<div class="ps">
-  ${psHead('Schedule')}
-  <div class="sched">
-    <div class="cal"><div>JAN</div><b>5</b></div>
-    <div><div class="t">Opens to creators Mon, Jan 5 · 9:00 AM</div><div class="m">Closes Mon, Jan 26 · Budget held: Rs. 750,000 · Listed under <b>Upcoming</b></div></div>
-  </div>
-  <div class="timeline"><div class="on">Today · scheduled</div><div>Jan 5 · open</div><div>Jan 19 · reminder</div><div>Jan 26 · close</div></div>
-</div>`;
-
-/* ---------- Script ---------- */
-const MOCHA = [
-  {user:"Morning! How's our Christmas Mocha campaign doing on Polysocial?",
-   steps:[
-    {think:900},
-    {tool:'list_campaigns',label:'List campaigns',
-     input:{brand:'Starbucks Sri Lanka',status:'active'},
-     output:{campaigns:[{id:'cmp_sb_xmas_mocha',title:'Starbucks Christmas Mocha campaign',status:'active',ends_in_days:10}],total:1}},
-    {tool:'get_campaign_performance',label:'Get campaign performance',
-     input:{campaign_id:'cmp_sb_xmas_mocha',include:['budget','creators','views_by_platform','review_queue']},
-     output:{budget:{spent:285000,total:500000,currency:'LKR'},creators_joined:412,posts_live:126,pending_review:14,views:1840000,views_by_platform:{tiktok:0.52,instagram:0.38,youtube:0.07,facebook:0.03},approval_time_days:1,approval_rate:0.96}},
-    {text:`<p>Here's where the <b>Christmas Mocha campaign</b> stands, with 10 days to go:</p>`},
-    {card:CARD_PERFORMANCE},
-    {text:`<p>What stands out:</p>
-<ul>
-<li><b>Spend is on pace.</b> At the current rate (about Rs. 28,500 a day) you'll finish near Rs. 470,000, leaving around Rs. 30,000 unspent.</li>
-<li><b>TikTok carries the campaign.</b> It brings 52% of views, though Instagram carousels get roughly 2× the saves per view.</li>
-<li><b>Your review queue is backing up.</b> 14 submissions are waiting and 3 have waited over 24 hours. Creators see your approval time (now 1 day) on the campaign page, so it's worth clearing.</li>
-</ul>
-<p>Want me to pull up the oldest ones?</p>`}
-  ]},
-
-  {user:"Yes, show me the ones that have waited longest.",
-   steps:[
-    {think:700},
-    {tool:'list_submissions',label:'List submissions',
-     input:{campaign_id:'cmp_sb_xmas_mocha',status:'pending_review',sort:'oldest_first',limit:3},
-     output:{submissions:[{id:'sub_8812',creator:'@kavindu.sips',type:'carousel'},{id:'sub_8830',creator:'@nethmi.eats',type:'reel'},{id:'sub_8841',creator:'@sachini.w',type:'image'}],total_pending:14}},
-    {tool:'check_submission_requirements',label:'Check submissions against campaign requirements',
-     input:{submission_ids:['sub_8812','sub_8830','sub_8841']},
-     output:{sub_8812:{passed:true},sub_8830:{passed:true},sub_8841:{passed:false,failed:['caption_must_tag_brand_handle']}}},
-    {text:`<p>These three have waited the longest. I checked each against the campaign's requirements:</p>`},
-    {card:CARD_SUBS},
-    {text:`<p><b>Kavindu</b> and <b>Nethmi</b> meet every requirement. <b>Sachini's</b> post looks great, but the caption doesn't tag <b>@starbuckslk</b>, which the campaign requires. That's a quick fix on their side, so you could request a change rather than reject it.</p>`}
-  ]},
-
-  {user:"Approve Kavindu and Nethmi. Ask Sachini to add our handle to the caption — keep it friendly.",
-   steps:[
-    {think:600},
-    {perm:'approve_submission',desc:'Approving releases the base payment to the creator.',
-     preview:'approve_submission({ submission_id: "sub_8812" })'},
-    {tool:'approve_submission',label:'Approve submission',input:{submission_id:'sub_8812'},
-     output:{status:'approved',creator:'@kavindu.sips',base_payment_released:6488,performance_pricing:'Rs. 2,000 / 1K views'},
-     after:()=>setVerdict('kavindu','<span class="badge blue">Approved · Rs. 6,488 released</span>')},
-    {tool:'approve_submission',label:'Approve submission',input:{submission_id:'sub_8830'},
-     output:{status:'approved',creator:'@nethmi.eats',base_payment_released:6488},
-     after:()=>setVerdict('nethmi','<span class="badge blue">Approved · Rs. 6,488 released</span>')},
-    {tool:'request_changes',label:'Request changes',
-     input:{submission_id:'sub_8841',reason:'caption_must_tag_brand_handle',message:"Hi Sachini! We love this shot — the Christmas Mocha looks amazing. Could you add @starbuckslk to the caption? Once it's in, we'll approve it straight away. Thank you! ☕"},
-     output:{status:'changes_requested',creator:'@sachini.w',resubmit_within_hours:48},
-     after:()=>setVerdict('sachini','<span class="badge grey">Changes requested</span>')},
-    {text:`<p>Done:</p>
-<ul>
-<li><b>Kavindu</b> and <b>Nethmi</b> are approved. Each gets the Rs. 6,488 base payment now, and performance earnings at Rs. 2,000 per 1K views from here on.</li>
-<li><b>Sachini</b> got this note and has 48 hours to update the caption:</li>
-</ul>
-<blockquote>Hi Sachini! We love this shot — the Christmas Mocha looks amazing. Could you add @starbuckslk to the caption? Once it's in, we'll approve it straight away. Thank you! ☕</blockquote>
-<p>11 submissions are still in the queue. None of them has waited more than 20 hours.</p>`}
-  ]},
-
-  {user:"Perfect. Next — I want a creator campaign for the new Toffee Nut Latte, launching in January. Budget around 750K. Mostly Colombo and Kandy, 18–30, Reels and TikToks.",
-   steps:[
-    {think:1100},
-    {tool:'get_pricing_benchmarks',label:'Get pricing benchmarks',
-     input:{category:'Food',locations:['Colombo','Kandy'],formats:['reel','tiktok'],age_range:'18-30'},
-     output:{base_price_per_content:{median:5800,p75:6500},performance_per_1k_views:{median:1900},eligible_creators:1260}},
-    {tool:'get_brand_profile',label:'Get brand profile',
-     input:{brand:'Starbucks Sri Lanka'},
-     output:{handle:'@starbuckslk',default_restrictions:5,past_campaigns:48,avg_approval_rate:0.96}},
-    {tool:'create_campaign_draft',label:'Create campaign draft',
-     input:{title:'Starbucks Toffee Nut Latte New Year launch',category:'Food',budget:750000,base_price:6000,max_earning:90000,performance_per_1k_views:2000,audience:{gender:'all',age:'18-30',locations:['Colombo','Kandy']},formats:['reel','tiktok'],platforms:['tiktok','instagram'],starts:'2027-01-05',ends:'2027-01-26'},
-     output:{id:'cmp_sb_toffee_nut_26',status:'draft',visible_to_creators:false}},
-    {text:`<p>I've set up a <b>draft</b>. Creators can't see it yet. This is how it will look to them on Polysocial:</p>`},
-    {card:draftCard({final:false})},
-    {text:`<p>How I set it up:</p>
-<ul>
-<li><b>Pricing</b> follows Polysocial's Food benchmarks for Colombo and Kandy (median base price Rs. 5,800), nudged up a little because January is a busy month for creators. At these rates, Rs. 750,000 should fund about <b>70–90 creators</b>.</li>
-<li><b>Dates:</b> I assumed a 3-week run from Monday, Jan 5.</li>
-<li><b>Restrictions</b> are your five standard ones from past campaigns.</li>
-</ul>
-<p>Anything you'd like to change before I schedule it?</p>`}
-  ]},
-
-  {user:"Looks great. Drop performance pricing to 1,800 per 1K views, and add a restriction: no other coffee brands in frame. Then schedule it.",
-   steps:[
-    {think:700},
-    {tool:'update_campaign',label:'Update campaign',
-     input:{campaign_id:'cmp_sb_toffee_nut_26',performance_per_1k_views:1800,add_restrictions:['No other coffee brands in the frame']},
-     output:{id:'cmp_sb_toffee_nut_26',status:'draft',updated:['performance_pricing','restrictions']}},
-    {perm:'schedule_campaign',desc:'This publishes the campaign to creators on the start date and holds Rs. 750,000 from your Polysocial balance.',
-     preview:'schedule_campaign({ campaign_id: "cmp_sb_toffee_nut_26", opens_at: "2027-01-05T09:00+05:30" })',once:true},
-    {tool:'schedule_campaign',label:'Schedule campaign',
-     input:{campaign_id:'cmp_sb_toffee_nut_26',opens_at:'2027-01-05T09:00:00+05:30',closes_at:'2027-01-26T23:59:00+05:30'},
-     output:{status:'upcoming',budget_held:750000,opens_at:'2027-01-05T09:00:00+05:30'}},
-    {text:`<p>Scheduled ✓ The <b>Toffee Nut Latte New Year launch</b> now appears under <b>Upcoming</b> in your Polysocial dashboard:</p>`},
-    {card:CARD_SCHEDULED},
-    {card:draftCard({final:true})},
-    {text:`<p>Polysocial is holding Rs. 750,000 from your balance until the campaign opens. You can still edit or unschedule it any time before Jan 5.</p>
-<p>Would you like a performance summary of both campaigns here every Monday morning?</p>`}
-  ]}
-];
-
-/* =====================================================================
-   Chat 2 — create a new campaign from the brand's history
-   Starbucks Sri Lanka has run campaigns on Polysocial before; Claude
-   reads their results and builds an Avurudu (April) creator campaign.
-   ===================================================================== */
-
-const PAST = [
-  {img:'sbContent1.jpg',name:'Iced Shaken Espresso — Beat the heat',when:'Apr 2026',creators:96,views:'1.10M',cpm:'Rs. 364',fmt:'TikTok'},
-  {img:'sbContent2.jpg',name:'Frappuccino Happy Hour',when:'Jun 2026',creators:140,views:'2.40M',cpm:'Rs. 250',fmt:'Reels · groups',best:1},
-  {img:'sbHero.jpg',alt:1,name:'Pumpkin Spice Latte',when:'Sep 2026',creators:118,views:'1.50M',cpm:'Rs. 300',fmt:'Carousel'},
-  {img:'sbHero.jpg',name:'Christmas Mocha',when:'Live now',creators:412,views:'1.84M',cpm:'Rs. 155',fmt:'TikTok',live:1}
-];
-const CARD_HISTORY = `
-<div class="ps">
-  ${psHead('Starbucks Sri Lanka · campaign history')}
-  <div class="brandrow">
-    <img src="images/starbucks.png" alt="">
-    <div><b>Starbucks Sri Lanka</b><span>On Polysocial since Mar 2026 · @starbuckslk</span></div>
-    <div class="bstats"><div><b>Rs. 2.6M</b><span>paid to creators</span></div><div><b>96%</b><span>approval rate</span></div><div><b>2 hrs</b><span>response time</span></div></div>
-  </div>
-  <table class="hist">
-    <thead><tr><th>Campaign</th><th>Creators</th><th>Views</th><th>Cost / 1K views</th><th class="hide-s">Best format</th></tr></thead>
-    <tbody>${PAST.map(p=>`<tr class="${p.best?'best':''}"><td><div class="hc"><img src="images/${p.img}"${p.alt?' class="alt"':''} alt=""><div><b>${p.name}</b><span>${p.when}${p.live?' · <em class="badge blue">Active</em>':''}</span></div></div></td><td>${p.creators}</td><td>${p.views}</td><td>${p.cpm}</td><td class="hide-s">${p.fmt}</td></tr>`).join('')}</tbody>
-  </table>
-  <div class="ps-f"><span>Also scheduled: Toffee Nut Latte New Year launch · Jan 5–26</span><a href="#" onclick="return false">All campaigns ↗</a></div>
-</div>`;
-
-const CARD_CONCEPTS = `
-<div class="concepts">
-  <div class="concept">
-    <span class="num">A</span>
-    <h4>First sip after the Nekath</h4>
-    <p>Creators film the auspicious moments of Avurudu morning and the coffee break that follows.</p>
-    <ul><li>Strong cultural hook</li><li>Short window — the rituals happen on one or two days</li></ul>
-  </div>
-  <div class="concept rec">
-    <span class="num">B</span><span class="badge blue">Recommended</span>
-    <h4>The Avurudu Table</h4>
-    <p>Creators bring Starbucks to the family Avurudu table — kokis, kavum, kiribath and a round of coffee for everyone.</p>
-    <ul><li>Group content, your best format (Happy Hour: 2.3× views)</li><li>Works for 3 weeks, not just Apr 13–14</li><li>Families reach new, older audiences</li></ul>
-  </div>
-  <div class="concept">
-    <span class="num">C</span>
-    <h4>Kokis &amp; Coffee pairing challenge</h4>
-    <p>Creators rate Avurudu sweets with different Starbucks drinks in a quick taste-test format.</p>
-    <ul><li>Fun, easy-to-copy TikTok format</li><li>Weaker brand-visibility in past taste tests</li></ul>
-  </div>
-</div>`;
-
-const CARD_ASK = `
-<div class="ask" id="ask-avurudu">
-  <div class="ask-q">
-    <b>Where should creators be based?</b>
-    <div class="opts"><button type="button" data-opt="colombo">Colombo only</button><button type="button" data-opt="ck">Colombo + Kandy</button><button type="button" data-opt="island">Island-wide</button></div>
-  </div>
-  <div class="ask-q">
-    <b>Which product should lead the content?</b>
-    <div class="opts"><button type="button" data-opt="latte">Kithul Caramel Latte</button><button type="button" data-opt="box">Avurudu sweets box</button><button type="button" data-opt="both">Both</button></div>
-  </div>
-</div>`;
-
-const CARD_PLAN = `
-<div class="ps">
-  ${psHead('Reach estimate')}
-  <div class="ps-stats">
-    <div><div class="k">Eligible creators</div><div class="v">2,140</div><div class="s">Island-wide · 18–45</div></div>
-    <div><div class="k">Expected creators</div><div class="v">120–150</div><div class="s">at Rs. 7,000 base</div></div>
-    <div><div class="k">Expected views</div><div class="v">2.8–3.4M</div><div class="s">TikTok, IG, Facebook</div></div>
-    <div><div class="k">Cost / 1K views</div><div class="v">~Rs. 380</div><div class="s">your avg: Rs. 290</div></div>
-  </div>
-  <div class="ps-budget">
-    <div class="k" style="font-size:11.5px;color:var(--ps-g600);font-weight:500">Where the Rs. 1,200,000 goes (estimate)</div>
-    <div class="split"><i style="width:72%;background:#1548eb"></i><i style="width:23%;background:#7391f3"></i><i style="width:5%;background:#b3b3b3"></i></div>
-    <div class="legend"><span><em style="background:#1548eb"></em>Base payments 72%</span><span><em style="background:#7391f3"></em>Performance payments 23%</span><span><em style="background:#b3b3b3"></em>Buffer 5%</span></div>
-  </div>
-</div>`;
-
-const avDraft = (final) => `
-<div class="ps">
-  ${psHead(final ? 'Campaign published' : 'Campaign draft · creator view')}
-  <div class="cp-hero">
-    <img src="images/sbContent2.jpg" alt="">
-    <span class="brand"><img src="images/starbucks.png" alt="">Starbucks Sri Lanka</span>
-    <span class="stat badge on-img ${final?'blue':'grey'}">${final?'Upcoming · opens Apr 1':'Draft — not visible to creators'}</span>
-  </div>
-  <div class="cp-body">
-    <h3>Starbucks Avurudu Table</h3>
-    <div class="meta">Food · Apr 1 – Apr 21, 2027 · 3 weeks · Sinhala &amp; Tamil New Year</div>
-  </div>
-  <div class="two">
-    <div class="sec">
-      <h6>Pricing</h6>
-      <div class="plist">
-        <div><span>Base price per content</span><b>Rs. 7,000</b></div>
-        <div><span>Max earning per content</span><b>Rs. 120,000</b></div>
-        <div><span>Performance pricing</span><b>Rs. 1,600 / 1K views</b></div>
-        <div><span>Total budget</span><b>Rs. 1,200,000</b></div>
-      </div>
-    </div>
-    <div class="sec">
-      <h6>Best suited for</h6>
-      <div class="tags"><span>All genders</span><span>18–45 age</span><span>Island-wide</span><span>Family</span><span>Reels</span><span>Carousel</span></div>
-      <h6 style="margin-top:12px">Platforms</h6>
-      <div class="tags"><span>TikTok</span><span>Instagram</span><span>Facebook</span></div>
-    </div>
-  </div>
-  <div class="sec">
-    <h6>Requirements</h6>
-    <p>Bring Starbucks to your family's Avurudu table. Show the kokis, kavum and kiribath, the people around the table, and the moment everyone pauses for a Kithul Caramel Latte or opens the Avurudu sweets box.</p>
-    <p><b style="color:var(--ps-g800);font-weight:600">Brand visibility:</b> Starbucks cup or Avurudu sweets box with the logo clearly visible</p>
-    <p><b style="color:var(--ps-g800);font-weight:600">Must include:</b> at least 2 people in the content</p>
-  </div>
-  <div class="two">
-    <div class="sec">
-      <h6>Suggested CTAs</h6>
-      <div class="ctas"><span>Bring Starbucks to your Avurudu table.</span><span>Share the Avurudu sweets box with the whole family.</span><span>Show us your Avurudu table and tag @starbuckslk.</span></div>
-    </div>
-    <div class="sec">
-      <h6>Restrictions</h6>
-      <ol>
-        <li>No AI generated content</li>
-        <li>Face must be visible in the content</li>
-        <li>Caption must tag the brand handle</li>
-        <li>Use only licensed or original audio</li>
-        <li>Keep the post live for at least 30 days</li>
-        <li>No other coffee brands in the frame</li>
-        <li>No alcohol in the frame</li>
-      </ol>
-    </div>
-  </div>
-  ${final?`<div class="sec"><h6>Early access</h6><p>12 invited creators can join from <b style="color:var(--ps-g800)">Mar 30</b>, 48 hours before the campaign opens to everyone.</p></div>`:''}
-  <div class="ps-f"><span>ID cmp_sb_avurudu_27</span><a href="#" onclick="return false">${final?'View in Upcoming ↗':'Edit in Polysocial ↗'}</a></div>
-</div>`;
-
-const TOP = [
-  {av:'av1.jpg',name:'Nethmi Perera',handle:'@nethmi.eats',past:'3 campaigns',views:'412K',cpm:'Rs. 182',note:'Best on Happy Hour'},
-  {av:'av2.jpg',name:'Kavindu Jayasuriya',handle:'@kavindu.sips',past:'4 campaigns',views:'338K',cpm:'Rs. 205',note:'Carousel specialist'},
-  {av:'av3.jpg',name:'Dilan Fernando',handle:'@dilan.bites',past:'2 campaigns',views:'296K',cpm:'Rs. 214',note:'Group reels, Kandy'},
-  {av:'pfAvatar.jpg',name:'Tharindu Silva',handle:'@tharindu.eats',past:'2 campaigns',views:'241K',cpm:'Rs. 226',note:'Family content, Galle'},
-  {av:'av4.jpg',name:'Sachini Wickramasinghe',handle:'@sachini.w',past:'3 campaigns',views:'207K',cpm:'Rs. 238',note:'1 caption fix, then approved'}
-];
-const CARD_TOP = `
-<div class="ps">
-  ${psHead('Top creators from your past campaigns')}
-  <div class="toplist">${TOP.map((c,i)=>`
-    <div class="tc"><span class="rank">${i+1}</span><img src="images/${c.av}" alt=""><div class="nm"><b>${c.name}</b><span>${c.handle} · ${c.note}</span></div>
-    <div class="m hide-s"><b>${c.past}</b><span>with you</span></div><div class="m"><b>${c.views}</b><span>avg views</span></div><div class="m hide-s"><b>${c.cpm}</b><span>/ 1K views</span></div>
-    <span class="inv" data-inv>Invite</span></div>`).join('')}
-  </div>
-  <div class="ps-f"><span>Showing 5 of 12 · ranked by cost per 1K views, min. 2 campaigns, 100% approved</span><a href="#" onclick="return false">See all 12 ↗</a></div>
-</div>`;
-
-const CARD_CHECKS = `
-<div class="ps">
-  ${psHead('Pre-publish check')}
-  <ul class="pchecks">
-    <li><span class="y">✓</span>Budget of Rs. 1,200,000 available in your Polysocial balance</li>
-    <li><span class="y">✓</span>Requirements, CTAs and 7 restrictions complete</li>
-    <li><span class="y">✓</span>Brand assets attached: logo, Kithul Caramel Latte and sweets box photos</li>
-    <li><span class="y">✓</span>No overlap with Toffee Nut Latte (ends Jan 26)</li>
-    <li><span class="y">✓</span>Early access list: 12 creators</li>
-  </ul>
-</div>`;
-
-const CARD_LAUNCH = `
-<div class="ps">
-  ${psHead('Launch plan')}
-  <div class="sched">
-    <div class="cal"><div>APR</div><b>1</b></div>
-    <div><div class="t">Opens to all creators Thu, Apr 1 · 9:00 AM</div><div class="m">Early access for 12 invited creators from Mar 30 · Closes Wed, Apr 21 · Budget held: Rs. 1,200,000</div></div>
-  </div>
-  <div class="timeline"><div class="on">Today · published</div><div>Mar 30 · early access</div><div>Apr 1 · open</div><div>Apr 13–14 · Avurudu</div><div>Apr 21 · close</div></div>
-</div>`;
-
-const AVURUDU = [
-  {user:"We want to do something for Avurudu next April. Can you look at how our past campaigns on Polysocial went and suggest a creator campaign?",
-   steps:[
-    {think:1000},
-    {tool:'get_brand_profile',label:'Get brand profile',
-     input:{brand:'Starbucks Sri Lanka'},
-     output:{id:'brd_starbucks_lk',handle:'@starbuckslk',member_since:'2026-03',total_paid:2600000,approval_rate:0.96,responds_within_hours:2,brand_assets:12}},
-    {tool:'list_campaigns',label:'List campaigns',
-     input:{brand_id:'brd_starbucks_lk',status:['completed','active','upcoming']},
-     output:{completed:3,active:1,upcoming:1}},
-    {tool:'get_campaign_results',label:'Get campaign results',
-     input:{campaign_ids:['cmp_sb_iced_shaken','cmp_sb_happy_hour','cmp_sb_pumpkin_spice','cmp_sb_xmas_mocha'],breakdown:['format','people_in_frame','city']},
-     output:{best_campaign:'cmp_sb_happy_hour',group_content_view_lift:2.3,cheapest_cities:['Kandy','Galle'],city_cost_saving:0.3,top_format:'reel'}},
-    {text:`<p>You've run four campaigns with Polysocial so far. Here's how they compare:</p>`},
-    {card:CARD_HISTORY},
-    {text:`<p>Three things to carry into Avurudu:</p>
-<ul>
-<li><b>Content with groups of people wins.</b> Reels with 2 or more people got <b>2.3× the views</b>, which is why Frappuccino Happy Hour was your most efficient campaign.</li>
-<li><b>Creators outside Colombo cost less per view.</b> Kandy and Galle creators delivered views about 30% cheaper.</li>
-<li><b>A higher base price brings bigger creators.</b> Pumpkin Spice paid Rs. 6,000 a post and attracted mostly creators under 10K followers.</li>
-</ul>
-<p>With that in mind, here are three ideas:</p>`},
-    {card:CARD_CONCEPTS},
-    {text:`<p>I'd go with <b>B, The Avurudu Table</b>. It's built around groups of people, it runs for three weeks rather than one or two days, and family content reaches people your café-focused campaigns haven't. Want me to set it up?</p>`}
-  ]},
-
-  {user:"Love the Avurudu Table idea, let's do it. Budget is 1.2M, and since it's about families, go wider on age.",
-   steps:[
-    {think:700},
-    {text:`<p>Great choice. Two quick questions before I draft it:</p>`},
-    {card:CARD_ASK}
-  ]},
-
-  {user:"Island-wide, and both — the Kithul Caramel Latte and the Avurudu sweets box.",
-   select:['island','both'],
-   steps:[
-    {think:900},
-    {tool:'get_pricing_benchmarks',label:'Get pricing benchmarks',
-     input:{category:'Food',locations:'island_wide',age_range:'18-45',formats:['reel','carousel'],season:'avurudu'},
-     output:{base_price_per_content:{median:6200,p75:7400},performance_per_1k_views:{median:1700},avurudu_demand:'high'}},
-    {tool:'estimate_reach',label:'Estimate reach',
-     input:{budget:1200000,base_price:7000,performance_per_1k_views:1600,locations:'island_wide',age_range:'18-45',platforms:['tiktok','instagram','facebook']},
-     output:{eligible_creators:2140,expected_creators:[120,150],expected_views:[2800000,3400000]}},
-    {tool:'create_campaign_draft',label:'Create campaign draft',
-     input:{title:'Starbucks Avurudu Table',budget:1200000,base_price:7000,max_earning:120000,performance_per_1k_views:1600,audience:{gender:'all',age:'18-45',locations:'island_wide'},platforms:['tiktok','instagram','facebook'],starts:'2027-04-01',ends:'2027-04-21',restrictions:'brand_defaults+["No alcohol in the frame"]'},
-     output:{id:'cmp_sb_avurudu_27',status:'draft',visible_to_creators:false}},
-    {text:`<p>Here's the draft, as creators will see it. They can't see it yet:</p>`},
-    {card:avDraft(false)},
-    {card:CARD_PLAN},
-    {text:`<p>How I set it up:</p>
-<ul>
-<li><b>Base price Rs. 7,000.</b> That's slightly above the Avurudu benchmark, because demand for creators is high in April and you want the larger ones.</li>
-<li><b>Ages 18–45 and Facebook added.</b> That's where family audiences are. Expect cost per view to be a little above your average while you reach new people.</li>
-<li><b>"At least 2 people"</b> is a requirement, to build on what worked in Happy Hour.</li>
-<li><b>Restrictions:</b> your standard five, "no other coffee brands" from the Toffee Nut campaign, and "no alcohol in the frame" for a family occasion.</li>
-</ul>
-<p>Apr 1–21 covers the build-up and the week after New Year.</p>`}
-  ]},
-
-  {user:"This is great. Can the creators who did best for us before get first access, before it opens to everyone?",
-   steps:[
-    {think:700},
-    {tool:'list_top_creators',label:'List top creators',
-     input:{brand_id:'brd_starbucks_lk',rank_by:'cost_per_1k_views',min_campaigns:2,min_approval_rate:1.0,limit:12},
-     output:{creators:12,avg_cost_per_1k_views:214}},
-    {text:`<p>12 creators have done at least two campaigns with you with every post approved. Here are the top five:</p>`},
-    {card:CARD_TOP},
-    {tool:'set_early_access',label:'Set early access',
-     input:{campaign_id:'cmp_sb_avurudu_27',creator_list:'top_12',opens_at:'2027-03-30T09:00:00+05:30'},
-     output:{early_access:true,creators:12,hours_before_public:48}},
-    {text:`<p>Done. I've set up a <b>48-hour early access window</b> for all 12, starting Mar 30. They'll get the invite when you publish. Ready to publish?</p>`}
-  ]},
-
-  {user:"Yes, publish it.",
-   steps:[
-    {think:600},
-    {tool:'validate_campaign',label:'Validate campaign',
-     input:{campaign_id:'cmp_sb_avurudu_27'},
-     output:{ready:true,warnings:[]}},
-    {card:CARD_CHECKS},
-    {perm:'publish_campaign',desc:'This publishes the campaign, sends early-access invites to 12 creators and holds Rs. 1,200,000 from your Polysocial balance.',
-     preview:'publish_campaign({ campaign_id: "cmp_sb_avurudu_27", opens_at: "2027-04-01T09:00+05:30", notify_early_access: true })',once:true},
-    {tool:'publish_campaign',label:'Publish campaign',
-     input:{campaign_id:'cmp_sb_avurudu_27',opens_at:'2027-04-01T09:00:00+05:30',closes_at:'2027-04-21T23:59:00+05:30',notify_early_access:true},
-     output:{status:'upcoming',invites_sent:12,budget_held:1200000},
-     after:()=>document.querySelectorAll('[data-inv]').forEach(el=>{el.textContent='Invited ✓';el.classList.add('on');})},
-    {text:`<p>Published ✓ <b>Starbucks Avurudu Table</b> is now under <b>Upcoming</b>, and the 12 early-access invites have gone out.</p>`},
-    {card:CARD_LAUNCH},
-    {card:avDraft(true)},
-    {text:`<p>You can still edit anything before Mar 30. Want me to draft an Avurudu greeting from Starbucks for the invited creators, and send you a weekly report once the campaign is live?</p>`}
-  ]}
-];
 
 /* =====================================================================
    Campaign creation flow — two paths
@@ -1431,15 +855,7 @@ const CHATS = {
   strat:{title:'Kandy store opening — with a strategist',script:STRAT,
     greet:'Good morning, Dinithi',
     blurb:'Path 2 of the campaign flow: the brand has no time to design the campaign, so it sets a budget, uploads a cover image and inspiration posts, and requests a Polysocial creative strategist, who designs it. The brand reviews, approves and goes live.',
-    chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Upload cover &amp; inspiration','Request a creative strategist','Review &amp; revise design','Approve &amp; go live']},
-  avurudu:{title:'Avurudu creator campaign',script:AVURUDU,
-    greet:'Good afternoon, Dinithi',
-    blurb:'A brand that has run campaigns on Polysocial before asks Claude for a new one. Claude reads their past results, suggests concepts, drafts the campaign, invites the best returning creators and publishes it.',
-    chips:['Read campaign history','Suggest concepts','Ask quick questions','Draft &amp; estimate reach','Early access for top creators','Publish with approval']},
-  mocha:{title:'Christmas Mocha review &amp; January launch',script:MOCHA,
-    greet:'Good morning, Dinithi',
-    blurb:'A walkthrough of a brand marketing manager running Polysocial campaigns from Claude through the Polysocial MCP connector. Nothing here touches live data.',
-    chips:['Check campaign performance','Review creator submissions','Approve &amp; request changes','Draft a new campaign','Schedule with approval']}
+    chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Upload cover &amp; inspiration','Request a creative strategist','Review &amp; revise design','Approve &amp; go live']}
 };
 
 /* ---------- Player ---------- */
@@ -1448,7 +864,7 @@ const thread = $('#thread'), scroller = $('#scroll'), ta = $('#ta'), sendBtn = $
 const btnNext = $('#next'), btnPlay = $('#play'), btnAll = $('#all'), btnRestart = $('#restart'), stepEl = $('#step');
 const introHTML = $('#intro').outerHTML;
 
-let SCRIPT = MOCHA, chatKey = 'mocha';
+let SCRIPT = SELF, chatKey = 'self';
 let turn = 0, busy = false, autoplay = false, run = 0, instant = false;
 const CANCEL = Symbol('cancel');
 
@@ -1462,7 +878,6 @@ function nearBottom(){ return scroller.scrollHeight - scroller.scrollTop - scrol
 function toBottom(force){ if (force || nearBottom()) scroller.scrollTop = scroller.scrollHeight; }
 function esc(s){ return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
 function json(o){ return esc(JSON.stringify(o, null, 2)); }
-function setVerdict(id, html){ document.querySelectorAll(`[data-verdict="${id}"]`).forEach(el => el.innerHTML = html); }
 function updateUI(){
   stepEl.textContent = `${turn}/${SCRIPT.length}`;
   const done = turn >= SCRIPT.length;
