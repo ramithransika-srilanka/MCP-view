@@ -11,7 +11,7 @@ The sidebar (or the chat picker on mobile) switches between four chats. Link str
 ### Campaign creation flow — two paths
 
 Both chats follow the same flow: check the brand is connected → requirement and timeline → who designs it →
-cover image and inspiration posts (always requested from the brand) → budget → go live. They start the same way and split at "Who should design the campaign?".
+cover image and inspiration posts (always requested from the brand) → budget → go live. They start the same way and split at "Do you need to hire a creative strategist to design your campaign?" (Yes / No).
 
 **Cold Brew launch — our own brief (`#self`, opens by default).** The brand designs the campaign itself.
 `check_brand_connection` and `get_brand_profile` confirm Starbucks Sri Lanka is connected. The marketing manager
@@ -23,7 +23,7 @@ Then `set_campaign_budget` and `estimate_reach` add the budget, and `publish_cam
 **Kandy store opening — with a strategist (`#strat`).** The brand has no time to design it. After the same
 connection check, `get_strategist_options` explains the service, and the budget is set first because a strategist
 can't be requested without one. Claude then asks for a **cover image and inspiration posts** (`upload_cover_image`, `add_inspiration_posts`),
-which are shared with the strategist as the visual direction. `request_brand_strategist` (with approval) assigns
+which are shared with the strategist as the visual direction. `request_creative_strategist` (with approval) assigns
 Ishara Fernando. Two days later
 `get_strategist_design` returns the design, `send_strategist_feedback` gets a revised version 2, and
 `approve_strategist_design` + `publish_campaign` take it live, with the strategist running it.

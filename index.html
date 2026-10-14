@@ -1028,7 +1028,7 @@ const AVURUDU = [
    Campaign creation flow — two paths
    1. Brand is connected? → 2. Requirement & timeline →
    3a. Brand designs it (hook, script, audience)   or
-   3b. Brand sets a budget, then requests a Polysocial brand strategist →
+   3b. Brand sets a budget, then requests a Polysocial creative strategist →
    4. Budget defined, design done → 5. Go live
    ===================================================================== */
 
@@ -1045,10 +1045,10 @@ const CARD_CONNECTED = `
 const ASK_PATH = `
 <div class="ask">
   <div class="ask-q">
-    <b>Who should design the campaign?</b>
+    <b>Do you need to hire a creative strategist to design your campaign?</b>
     <div class="opts big">
-      <button type="button" data-opt="self"><b>We'll design it</b><span>You share the hook, script and target audience. I turn them into the campaign.</span></button>
-      <button type="button" data-opt="strategist"><b>Request a brand strategist</b><span>A Polysocial strategist designs and runs it for you. Needs a budget first.</span></button>
+      <button type="button" data-opt="strategist"><b>Yes</b><span>A Polysocial creative strategist designs and runs it for you. You set the budget first.</span></button>
+      <button type="button" data-opt="self"><b>No</b><span>You share the hook, script and target audience, and I turn them into the campaign.</span></button>
     </div>
   </div>
 </div>`;
@@ -1163,11 +1163,11 @@ const SELF = [
      output:{handle:'@starbuckslk',past_campaigns:4,balance:3400000,brand_assets:12,default_restrictions:6}},
     {text:`<p>Starbucks Sri Lanka is already connected to Polysocial, so I can set this up directly. Your brand details, assets and past campaigns are all there:</p>`},
     {card:CARD_CONNECTED},
-    {text:`<p>To shape the campaign I need to know <b>what it should achieve and when it should run</b>, and one more thing:</p>`},
+    {text:`<p>To shape the campaign I need to know <b>what it should achieve and when it should run</b>. And one question first:</p>`},
     {card:ASK_PATH}
   ]},
 
-  {user:"We'll design it ourselves. The goal is trial: get people in their 20s to try it in the first 3 weeks. Starts Monday Oct 19, ends Nov 8. Here's our brief:",
+  {user:"No, we'll design it ourselves. The goal is trial: get people in their 20s to try it in the first 3 weeks. Starts Monday Oct 19, ends Nov 8. Here's our brief:",
    select:['self'], paste:BRIEF_A,
    steps:[
     {think:1000},
@@ -1236,10 +1236,10 @@ const SELF = [
   ]}
 ];
 
-/* ---------- Path B: a brand strategist designs it ---------- */
+/* ---------- Path B: a creative strategist designs it ---------- */
 const CARD_HOW_STRAT = `
 <div class="ps">
-  ${psHead('Brand strategist · how it works')}
+  ${psHead('Creative strategist · how it works')}
   <ol class="how">
     <li><b>You set the budget</b><span>The strategist designs the creative, creator mix and pricing within it.</span></li>
     <li><b>A strategist is assigned</b><span>Food &amp; beverage specialists, matched to your city. First design in 2 working days.</span></li>
@@ -1254,7 +1254,7 @@ const CARD_STRATEGIST = `
   ${psHead('Strategist assigned')}
   <div class="strat">
     <div class="sav">IF</div>
-    <div class="nm"><b>Ishara Fernando</b><span>Senior Brand Strategist · Food &amp; beverage · based in Kandy</span></div>
+    <div class="nm"><b>Ishara Fernando</b><span>Senior Creative Strategist · Food &amp; beverage · based in Kandy</span></div>
     <div class="mini"><div><b>38</b><span>campaigns</span></div><div><b>4.9★</b><span>brand rating</span></div><div><b>Fri, Oct 16</b><span>first design due</span></div></div>
   </div>
   <div class="ps-budget">
@@ -1314,11 +1314,11 @@ const STRAT = [
      output:{handle:'@starbuckslk',past_campaigns:4,balance:3400000,brand_assets:12}},
     {text:`<p>Starbucks Sri Lanka is already connected to Polysocial, so there's nothing to set up on that side:</p>`},
     {card:CARD_CONNECTED},
-    {text:`<p>So the requirement is <b>bringing people into the new Kandy store</b>, which opens <b>Dec 5</b>. Since your team is stretched, it matters who designs this:</p>`},
+    {text:`<p>So the requirement is <b>bringing people into the new Kandy store</b>, which opens <b>Dec 5</b>. Since your team is stretched, this question matters:</p>`},
     {card:ASK_PATH}
   ]},
 
-  {user:"Let's get a brand strategist to design and run it.",
+  {user:"Yes, let's hire a creative strategist to design and run it.",
    select:['strategist'],
    steps:[
     {think:700},
@@ -1361,9 +1361,9 @@ const STRAT = [
       {img:'sbHero.jpg',crop:'70% 30%',pl:'Instagram',handle:'@kandy.eats',why:'Slow pan of a café interior'},
       {img:'sbContent1.jpg',pl:'TikTok',handle:'@hillcountry.diaries',why:'Misty Kandy morning as the opener'},
       {img:'sbContent2.jpg',crop:'80% 60%',zoom:1.6,pl:'Instagram',handle:'@nethmi.eats',why:'First sip by the window'}]})},
-    {perm:'request_brand_strategist',desc:'This assigns a strategist to the campaign. The Rs. 64,000 fee is charged only when you approve their design.',
-     preview:'request_brand_strategist({ campaign_id: "cmp_sb_kandy_opening", share: ["brief", "brand_kit", "past_results", "cover_image", "inspiration_posts"] })',once:true},
-    {tool:'request_brand_strategist',label:'Request brand strategist',
+    {perm:'request_creative_strategist',desc:'This assigns a strategist to the campaign. The Rs. 64,000 fee is charged only when you approve their design.',
+     preview:'request_creative_strategist({ campaign_id: "cmp_sb_kandy_opening", share: ["brief", "brand_kit", "past_results", "cover_image", "inspiration_posts"] })',once:true},
+    {tool:'request_creative_strategist',label:'Request creative strategist',
      input:{campaign_id:'cmp_sb_kandy_opening',brief:{goal:'store_visits',store:'Dalada Veediya, Kandy',opening:'2026-12-05'},share:['brief','brand_kit','past_campaign_results','cover_image','inspiration_posts']},
      output:{strategist:'Ishara Fernando',status:'designing',first_design_due:'2026-10-16'}},
     {text:`<p>Both added, and a strategist is on it:</p>`},
@@ -1430,8 +1430,8 @@ const CHATS = {
     chips:['Check brand connection','Requirement &amp; timeline','Brand shares hook, script, audience','Upload cover &amp; inspiration','Set budget','Go live']},
   strat:{title:'Kandy store opening — with a strategist',script:STRAT,
     greet:'Good morning, Dinithi',
-    blurb:'Path 2 of the campaign flow: the brand has no time to design the campaign, so it sets a budget, uploads a cover image and inspiration posts, and requests a Polysocial brand strategist, who designs it. The brand reviews, approves and goes live.',
-    chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Upload cover &amp; inspiration','Request a brand strategist','Review &amp; revise design','Approve &amp; go live']},
+    blurb:'Path 2 of the campaign flow: the brand has no time to design the campaign, so it sets a budget, uploads a cover image and inspiration posts, and requests a Polysocial creative strategist, who designs it. The brand reviews, approves and goes live.',
+    chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Upload cover &amp; inspiration','Request a creative strategist','Review &amp; revise design','Approve &amp; go live']},
   avurudu:{title:'Avurudu creator campaign',script:AVURUDU,
     greet:'Good afternoon, Dinithi',
     blurb:'A brand that has run campaigns on Polysocial before asks Claude for a new one. Claude reads their past results, suggests concepts, drafts the campaign, invites the best returning creators and publishes it.',
