@@ -342,7 +342,7 @@ img{display:block;}
 .opts.big button b{display:inline;margin:0;font-size:14px;font-weight:600;}
 .opts.big button span{font-size:12.5px;color:var(--muted);line-height:1.4;}
 .opts.big button.sel span{color:rgba(255,255,255,.88);}
-.stepper{list-style:none;margin:0;padding:14px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+.stepper{list-style:none;margin:0;padding:14px;display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
 .stepper li{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;font-size:12px;}
 .stepper li::after{content:"";position:absolute;top:11px;left:30px;right:-4px;height:2px;background:var(--ps-g100);}
 .stepper li:last-child::after{display:none;}
@@ -380,6 +380,32 @@ img{display:block;}
 .divider{display:flex;align-items:center;gap:12px;margin:6px 0 26px;color:var(--faint);font-size:12px;}
 .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line);}
 
+/* ---------- Cover & inspiration ---------- */
+.drops{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;}
+.drop{border:1.5px dashed var(--ps-g200);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:4px;}
+.drop .dz{width:34px;height:34px;border-radius:10px;background:var(--ps-blue-100);color:var(--ps-blue);display:grid;place-items:center;margin-bottom:4px;}
+.drop .dz svg{width:18px;height:18px;}
+.drop b{font-size:13.5px;}
+.drop span{font-size:12px;color:var(--ps-g600);}
+.cp-hero.empty{background:var(--ps-g100);display:grid;place-items:center;}
+.cp-hero.empty .ph{display:flex;align-items:center;gap:8px;color:var(--ps-g600);font-size:13px;font-weight:600;border:1.5px dashed var(--ps-g200);border-radius:10px;padding:10px 14px;}
+.cp-hero.empty .ph svg{width:18px;height:18px;}
+.insp{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.ip b{display:block;font-size:12px;margin-top:6px;}
+.ip > span{display:block;font-size:11.5px;color:var(--ps-g600);line-height:1.35;}
+.ip .th{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:var(--ps-g100);}
+.ip .th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.ip .pl{position:absolute;left:6px;bottom:6px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;}
+.atts{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;max-width:82%;}
+.att{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:6px 10px 6px 6px;max-width:260px;}
+.att .th{position:relative;width:44px;height:44px;border-radius:8px;overflow:hidden;flex:none;background:var(--bubble);}
+.att .th img{width:100%;height:100%;object-fit:cover;}
+.att .play{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:12px;background:rgba(0,0,0,.25);}
+.att .tx{min-width:0;}
+.att .tx b{display:block;font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.att .tx span{display:block;font-size:11px;color:var(--muted);}
+.att.link .tx b{color:var(--ps-blue);}
+
 /* ---------- Responsive ---------- */
 @media (max-width:900px){
   .app{grid-template-columns:1fr;}
@@ -407,6 +433,10 @@ img{display:block;}
   .stepper li::after{display:none;}
   .stepper b{margin:0;}
   .paste{max-width:100%;}
+  .drops{grid-template-columns:1fr;}
+  .insp{grid-template-columns:repeat(3,1fr);gap:6px;}
+  .atts{max-width:100%;}
+  .att{max-width:100%;flex:1 1 100%;}
   .hide-s{display:none;}
   .bstats{margin-left:0;width:100%;}
   .hist th,.hist td{padding:8px 10px;}
@@ -1023,7 +1053,31 @@ const ASK_PATH = `
   </div>
 </div>`;
 
-const STEPS = ['Brand connected','Requirement & timeline','Campaign design','Budget','Go live'];
+const STEPS = ['Brand connected','Requirement & timeline','Campaign design','Cover & inspiration','Budget','Go live'];
+
+const ASK_MEDIA = (why) => `
+<div class="ps">
+  ${psHead('Media needed from you')}
+  <div class="drops">
+    <div class="drop"><div class="dz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg></div><b>Cover image</b><span>Shown at the top of the campaign page and in creators' feeds. Landscape, at least 1600 px wide.</span></div>
+    <div class="drop"><div class="dz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="9" rx="1.5"/><rect x="3" y="15" width="7" height="6" rx="1.5"/><rect x="14" y="15" width="7" height="6" rx="1.5"/></svg></div><b>Inspiration posts</b><span>2–4 posts or reels in the style you want. Paste links or upload files.</span></div>
+  </div>
+  <div class="ps-f"><span>${why}</span><span>Drag files into the chat or paste links</span></div>
+</div>`;
+
+const mediaCard = (o) => `
+<div class="ps">
+  ${psHead('Cover &amp; inspiration added')}
+  <div class="cp-hero" style="aspect-ratio:16/6">
+    <img src="images/${o.cover}" alt="">
+    <span class="brand"><img src="images/starbucks.png" alt="">Starbucks Sri Lanka</span>
+    <span class="stat badge on-img blue">Cover image</span>
+  </div>
+  <div class="sec"><h6>Inspiration posts · shown to creators as “the style we're after”</h6>
+    <div class="insp">${o.posts.map(q=>`<div class="ip"><div class="th"><img src="images/${q.img}" alt=""${q.crop?` style="object-position:${q.crop};transform:scale(${q.zoom||1.4})"`:''}><span class="pl">${q.pl}</span></div><b>${q.handle}</b><span>${q.why}</span></div>`).join('')}</div>
+  </div>
+  <div class="ps-f"><span>${o.foot}</span><a href="#" onclick="return false">Manage media ↗</a></div>
+</div>`;
 const stepper = (states, design) => `
 <div class="ps">
   ${psHead('Campaign setup')}
@@ -1047,9 +1101,8 @@ Tone: fun, sunny, not too polished`;
 const CARD_BRIEF_A = `
 <div class="ps">
   ${psHead('Campaign draft · creative brief')}
-  <div class="cp-hero" style="aspect-ratio:16/6">
-    <img src="images/sbContent1.jpg" alt="">
-    <span class="brand"><img src="images/starbucks.png" alt="">Starbucks Sri Lanka</span>
+  <div class="cp-hero empty" style="aspect-ratio:16/5">
+    <div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg>Cover image needed</div>
     <span class="stat badge on-img grey">Designed by your team</span>
   </div>
   <div class="cp-body">
@@ -1066,7 +1119,7 @@ const CARD_BRIEF_A = `
     <h6>Brand visibility</h6><p>Cup with the Coconut Cold Brew label, plus the store or Starbucks logo</p>
     <h6 style="margin-top:10px">Caption CTA <span class="badge blue" style="margin-left:4px">Added by Claude</span></h6><p>Try the Coconut Cold Brew at your nearest Starbucks and tag @starbuckslk ☀️</p>
   </div>
-  <div class="ps-f"><span>ID cmp_sb_coconut_cold_brew · <b style="color:var(--warn)">Budget missing</b></span><a href="#" onclick="return false">Edit in Polysocial ↗</a></div>
+  <div class="ps-f"><span>ID cmp_sb_coconut_cold_brew · <b style="color:var(--warn)">Missing: cover image, inspiration posts, budget</b></span><a href="#" onclick="return false">Edit in Polysocial ↗</a></div>
 </div>`;
 
 const CARD_BUDGET_A = `
@@ -1119,15 +1172,38 @@ const SELF = [
    steps:[
     {think:1000},
     {tool:'check_brief',label:'Check brief',
-     input:{campaign_type:'ugc',checks:['hook','script_length','audience','deliverables','brand_visibility','budget']},
-     output:{hook:'ok',script_length:'15-30s ok',audience:'ok',deliverables:'ok',brand_visibility:'ok',budget:'missing',suggestions:['add_caption_cta']}},
+     input:{campaign_type:'ugc',checks:['hook','script_length','audience','deliverables','brand_visibility','cover_image','inspiration_posts','budget']},
+     output:{hook:'ok',script_length:'15-30s ok',audience:'ok',deliverables:'ok',brand_visibility:'ok',cover_image:'missing',inspiration_posts:'missing',budget:'missing',suggestions:['add_caption_cta']}},
     {tool:'create_campaign_draft',label:'Create campaign draft',
      input:{title:'Coconut Cold Brew — Beat the Colombo heat',design_source:'brand',goal:'trial',starts:'2026-10-19',ends:'2026-11-08',hook:'POV: you found the only coffee that beats Colombo heat',script_beats:4,audience:{age:'18-28',segments:['students','young_professionals'],locations:['Colombo','Galle']},platforms:['tiktok','instagram']},
-     output:{id:'cmp_sb_coconut_cold_brew',status:'draft',missing:['budget']}},
+     output:{id:'cmp_sb_coconut_cold_brew',status:'draft',missing:['cover_image','inspiration_posts','budget']}},
     {text:`<p>Your brief is in great shape. Hook, script, audience and deliverable all check out. Here's the campaign as creators will see it:</p>`},
     {card:CARD_BRIEF_A},
     {text:`<p>I added a <b>caption CTA</b> and your six standard restrictions. Everything else is exactly as your team wrote it.</p>
-<p><b>The one thing missing before it can go live is the budget.</b> For Food campaigns in Colombo and Galle, I'd suggest <b>Rs. 6,000 per reel</b> plus <b>Rs. 1,800 per 1K views</b>. What budget do you have in mind?</p>`}
+<p>Before it can go live I need three more things from you: a <b>cover image</b>, a few <b>inspiration posts</b> and the <b>budget</b>. Let's start with the visuals:</p>`},
+    {card:ASK_MEDIA('Creators decide whether to join from these, so they matter as much as the brief')}
+  ]},
+
+  {user:"Here's the cover from our launch shoot, and three reels that have the vibe we want.",
+   files:[{img:'sbContent1.jpg',name:'cold_brew_cover.jpg',sub:'Image · 2.4 MB'},
+          {img:'sbContent2.jpg',name:'tiktok.com/@kavindu.sips/video/7428…',sub:'TikTok reel',link:1,crop:'30% 40%'},
+          {img:'sbHero.jpg',name:'instagram.com/reel/C9xk2…',sub:'Instagram reel',link:1},
+          {img:'sbContent1.jpg',name:'tiktok.com/@dilan.bites/video/7431…',sub:'TikTok reel',link:1,crop:'50% 70%'}],
+   steps:[
+    {think:800},
+    {tool:'upload_cover_image',label:'Upload cover image',
+     input:{campaign_id:'cmp_sb_coconut_cold_brew',file:'cold_brew_cover.jpg'},
+     output:{status:'uploaded',width:2400,height:1350,meets_requirements:true}},
+    {tool:'add_inspiration_posts',label:'Add inspiration posts',
+     input:{campaign_id:'cmp_sb_coconut_cold_brew',urls:['tiktok.com/@kavindu.sips/video/7428…','instagram.com/reel/C9xk2…','tiktok.com/@dilan.bites/video/7431…']},
+     output:{added:3,all_public:true,analysed:['hook_timing','framing','tone']}},
+    {text:`<p>Both added. The cover is the right size, and all three reels are public, so creators can open them. Here's what creators will see:</p>`},
+    {card:mediaCard({cover:'sbContent1.jpg',foot:'3 inspiration posts · creators can open each one',posts:[
+      {img:'sbContent2.jpg',crop:'30% 40%',pl:'TikTok',handle:'@kavindu.sips',why:'Hook lands in the first 2 seconds'},
+      {img:'sbHero.jpg',pl:'Instagram',handle:'@nethmi.eats',why:'Cup-to-camera close-up, label readable'},
+      {img:'sbContent1.jpg',crop:'50% 70%',pl:'TikTok',handle:'@dilan.bites',why:'Unpolished, handheld feel — matches your tone'}]})},
+    {text:`<p>The reels fit your brief well: quick hooks, the cup front and centre, nothing too polished.</p>
+<p><b>Last thing: the budget.</b> For Food campaigns in Colombo and Galle, I'd suggest <b>Rs. 6,000 per reel</b> plus <b>Rs. 1,800 per 1K views</b>. What budget do you have in mind?</p>`}
   ]},
 
   {user:"Let's do 600K with the pricing you suggested.",
@@ -1140,8 +1216,8 @@ const SELF = [
      input:{campaign_id:'cmp_sb_coconut_cold_brew'},
      output:{expected_creators:[70,90],expected_views:[1600000,2000000]}},
     {card:CARD_BUDGET_A},
-    {card:stepper(['done','done','done','done','todo'],'By your team')},
-    {text:`<p>The design is done and the budget is set, so it's ready to go live. Creators can join straight away, and posting starts on Monday, Oct 19. Shall I publish it?</p>`}
+    {card:stepper(['done','done','done','done','done','todo'],'By your team')},
+    {text:`<p>The design, cover, inspiration posts and budget are all in, so it's ready to go live. Creators can join straight away, and posting starts on Monday, Oct 19. Shall I publish it?</p>`}
   ]},
 
   {user:"Yes, go live!",
@@ -1155,7 +1231,7 @@ const SELF = [
      output:{status:'live',visible_to_creators:true,budget_held:600000,eligible_creators_notified:1480}},
     {text:`<p>It's live 🎉 Polysocial has notified <b>1,480 matching creators</b> in Colombo and Galle.</p>`},
     {card:liveCard({title:'Coconut Cold Brew — Beat the Colombo heat',meta:'Creators can join now · posting Oct 19 – Nov 8 · Budget held: Rs. 600,000',steps:['Today · live','Oct 19 · posting starts','Oct 26 · first report','Nov 8 · close'],id:'ID cmp_sb_coconut_cold_brew'})},
-    {card:stepper(['done','done','done','done','done'],'By your team')},
+    {card:stepper(['done','done','done','done','done','done'],'By your team')},
     {text:`<p>Since your team designed it, content approvals will come to you. Want a ping here when the first 10 creators join?</p>`}
   ]}
 ];
@@ -1186,7 +1262,7 @@ const CARD_STRATEGIST = `
     <div class="split"><i style="width:92%;background:#1548eb"></i><i style="width:8%;background:#f433ab"></i></div>
     <div class="legend"><span><em style="background:#1548eb"></em>Creators Rs. 736,000</span><span><em style="background:#f433ab"></em>Strategist fee Rs. 64,000 · charged on approval</span></div>
   </div>
-  <div class="ps-f"><span>Shared with Ishara: brief, brand kit, results of your 4 past campaigns</span><a href="#" onclick="return false">Message Ishara ↗</a></div>
+  <div class="ps-f"><span>Shared with Ishara: brief, brand kit, past results, cover image, 3 inspiration posts</span><a href="#" onclick="return false">Message Ishara ↗</a></div>
 </div>`;
 
 const designCard = (v2) => `
@@ -1194,7 +1270,7 @@ const designCard = (v2) => `
   ${psHead(v2 ? 'Strategist design · version 2' : 'Strategist design · version 1')}
   <div class="cp-hero" style="aspect-ratio:16/6">
     <img src="images/sbContent2.jpg" alt="">
-    <span class="brand"><img src="images/starbucks.png" alt="">Starbucks Sri Lanka</span>
+    <span class="brand"><img src="images/starbucks.png" alt="">Starbucks Sri Lanka · your cover</span>
     <span class="stat badge on-img blue">Designed by Ishara Fernando</span>
   </div>
   <div class="cp-body">
@@ -1212,7 +1288,8 @@ const designCard = (v2) => `
       </div>
     </div>
     <div class="sec"><h6>Audience</h6><div class="tags"><span>18–35 age</span><span>Kandy</span><span>Central Province</span><span>Students</span><span>Tourists</span></div>
-      <h6 style="margin-top:10px">Measured by</h6><p>Free-upsize redemptions at the Kandy store</p></div>
+      <h6 style="margin-top:10px">Measured by</h6><p>Free-upsize redemptions at the Kandy store</p>
+      <h6 style="margin-top:10px">Built from your inspiration</h6><p>Misty-morning opener, slow interior pan, first sip by the window</p></div>
   </div>
   <div class="sec"><h6>Budget split</h6>
     <div class="plist">
@@ -1258,19 +1335,41 @@ const STRAT = [
     {think:700},
     {tool:'create_campaign_draft',label:'Create campaign draft',
      input:{title:'Starbucks Kandy store opening',design_source:'strategist',goal:'store_visits',location:'Kandy',key_date:'2026-12-05'},
-     output:{id:'cmp_sb_kandy_opening',status:'draft'}},
+     output:{id:'cmp_sb_kandy_opening',status:'draft',missing:['cover_image','inspiration_posts']}},
     {tool:'set_campaign_budget',label:'Set campaign budget',
      input:{campaign_id:'cmp_sb_kandy_opening',budget:800000,includes_strategist_fee:true},
      output:{creator_budget:736000,strategist_fee:64000}},
+    {text:`<p>The budget is set: <b>Rs. 736,000 for creators</b> and <b>Rs. 64,000 for the strategist</b>.</p>
+<p>Before I request the strategist, I need two things only you can provide: a <b>cover image</b> and a few <b>inspiration posts</b>. The strategist uses them as the visual direction, and creators see the cover first.</p>`},
+    {card:ASK_MEDIA('The strategist designs the hook and script around these')}
+  ]},
+
+  {user:"Here's a photo from the new store for the cover, and a few posts we like.",
+   files:[{img:'sbContent2.jpg',name:'kandy_store_interior.jpg',sub:'Image · 3.1 MB'},
+          {img:'sbHero.jpg',name:'instagram.com/reel/DA41m…',sub:'Instagram reel',link:1,crop:'70% 30%'},
+          {img:'sbContent1.jpg',name:'tiktok.com/@hillcountry.diaries/video/7419…',sub:'TikTok reel',link:1},
+          {img:'sbContent2.jpg',name:'instagram.com/reel/C8pQz…',sub:'Instagram reel',link:1,crop:'80% 60%'}],
+   steps:[
+    {think:800},
+    {tool:'upload_cover_image',label:'Upload cover image',
+     input:{campaign_id:'cmp_sb_kandy_opening',file:'kandy_store_interior.jpg'},
+     output:{status:'uploaded',width:3000,height:2000,meets_requirements:true}},
+    {tool:'add_inspiration_posts',label:'Add inspiration posts',
+     input:{campaign_id:'cmp_sb_kandy_opening',urls:['instagram.com/reel/DA41m…','tiktok.com/@hillcountry.diaries/video/7419…','instagram.com/reel/C8pQz…']},
+     output:{added:3,all_public:true,analysed:['hook_timing','framing','tone']}},
+    {card:mediaCard({cover:'sbContent2.jpg',foot:'3 inspiration posts · will be shared with the strategist',posts:[
+      {img:'sbHero.jpg',crop:'70% 30%',pl:'Instagram',handle:'@kandy.eats',why:'Slow pan of a café interior'},
+      {img:'sbContent1.jpg',pl:'TikTok',handle:'@hillcountry.diaries',why:'Misty Kandy morning as the opener'},
+      {img:'sbContent2.jpg',crop:'80% 60%',zoom:1.6,pl:'Instagram',handle:'@nethmi.eats',why:'First sip by the window'}]})},
     {perm:'request_brand_strategist',desc:'This assigns a strategist to the campaign. The Rs. 64,000 fee is charged only when you approve their design.',
-     preview:'request_brand_strategist({ campaign_id: "cmp_sb_kandy_opening", share: ["brief", "brand_kit", "past_results"] })',once:true},
+     preview:'request_brand_strategist({ campaign_id: "cmp_sb_kandy_opening", share: ["brief", "brand_kit", "past_results", "cover_image", "inspiration_posts"] })',once:true},
     {tool:'request_brand_strategist',label:'Request brand strategist',
-     input:{campaign_id:'cmp_sb_kandy_opening',brief:{goal:'store_visits',store:'Dalada Veediya, Kandy',opening:'2026-12-05'},share:['brief','brand_kit','past_campaign_results']},
+     input:{campaign_id:'cmp_sb_kandy_opening',brief:{goal:'store_visits',store:'Dalada Veediya, Kandy',opening:'2026-12-05'},share:['brief','brand_kit','past_campaign_results','cover_image','inspiration_posts']},
      output:{strategist:'Ishara Fernando',status:'designing',first_design_due:'2026-10-16'}},
-    {text:`<p>Done. Your budget is set and a strategist is on it:</p>`},
+    {text:`<p>Both added, and a strategist is on it:</p>`},
     {card:CARD_STRATEGIST},
-    {card:stepper(['done','done','active','done','todo'],'Strategist designing')},
-    {text:`<p>Ishara has your brief, brand kit and the results from your past campaigns. I'll let you know as soon as the design comes in.</p>`}
+    {card:stepper(['done','done','active','done','done','todo'],'Strategist designing')},
+    {text:`<p>Ishara has your brief, brand kit, past results, cover image and inspiration posts. I'll let you know as soon as the design comes in.</p>`}
   ]},
 
   {divider:'Friday, Oct 16',
@@ -1285,6 +1384,7 @@ const STRAT = [
     {text:`<p>What stands out:</p>
 <ul>
 <li><b>Two phases.</b> A few big Kandy creators build buzz the week before opening, then lots of smaller creators fill opening week.</li>
+<li><b>It follows your inspiration posts.</b> The misty-morning opener, slow interior pan and window-seat sip all come from the three reels you shared.</li>
 <li><b>Store visits are measurable.</b> The "show this video for a free upsize" offer lets you count visits at the store.</li>
 <li><b>One thing to weigh:</b> 30% of the budget goes to 6 macro creators. In your past campaigns, Kandy micro creators were your cheapest views.</li>
 </ul>
@@ -1318,7 +1418,7 @@ const STRAT = [
      output:{status:'live',managed_by:'Ishara Fernando',macro_invites_sent:4,eligible_creators_notified:610}},
     {text:`<p>It's live 🎉 Ishara has sent invites to the 4 macro creators, and 610 micro creators in the Kandy area have been notified.</p>`},
     {card:liveCard({title:'Starbucks Kandy — First brew in the hills',meta:'Managed by Ishara Fernando · Budget held: Rs. 736,000 for creators',steps:['Today · live','Nov 28 · teasers','Dec 5 · store opens','Dec 14 · close'],id:'ID cmp_sb_kandy_opening'})},
-    {card:stepper(['done','done','done','done','done'],'By Ishara Fernando')},
+    {card:stepper(['done','done','done','done','done','done'],'By Ishara Fernando')},
     {text:`<p>From here Ishara runs it day to day: creator approvals, the upsize tracking and a weekly report. You'll only be asked about budget changes. Want the weekly report sent here every Monday?</p>`}
   ]}
 ];
@@ -1326,12 +1426,12 @@ const STRAT = [
 const CHATS = {
   self:{title:'Cold Brew launch — our own brief',script:SELF,
     greet:'Good morning, Dinithi',
-    blurb:'Path 1 of the campaign flow: the brand is connected, shares the requirement and timeline, designs the campaign itself (hook, script, audience), sets the budget and goes live.',
-    chips:['Check brand connection','Requirement &amp; timeline','Brand shares hook, script, audience','Set budget','Go live']},
+    blurb:'Path 1 of the campaign flow: the brand is connected, shares the requirement and timeline, designs the campaign itself (hook, script, audience), uploads a cover image and inspiration posts, sets the budget and goes live.',
+    chips:['Check brand connection','Requirement &amp; timeline','Brand shares hook, script, audience','Upload cover &amp; inspiration','Set budget','Go live']},
   strat:{title:'Kandy store opening — with a strategist',script:STRAT,
     greet:'Good morning, Dinithi',
-    blurb:'Path 2 of the campaign flow: the brand has no time to design the campaign, so it sets a budget and requests a Polysocial brand strategist, who designs it. The brand reviews, approves and goes live.',
-    chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Request a brand strategist','Review &amp; revise design','Approve &amp; go live']},
+    blurb:'Path 2 of the campaign flow: the brand has no time to design the campaign, so it sets a budget, uploads a cover image and inspiration posts, and requests a Polysocial brand strategist, who designs it. The brand reviews, approves and goes live.',
+    chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Upload cover &amp; inspiration','Request a brand strategist','Review &amp; revise design','Approve &amp; go live']},
   avurudu:{title:'Avurudu creator campaign',script:AVURUDU,
     greet:'Good afternoon, Dinithi',
     blurb:'A brand that has run campaigns on Polysocial before asks Claude for a new one. Claude reads their past results, suggests concepts, drafts the campaign, invites the best returning creators and publishes it.',
@@ -1373,7 +1473,7 @@ function updateUI(){
   btnPlay.querySelector('svg').innerHTML = autoplay ? '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>' : '<path d="M6 4l14 8-14 8z"/>';
 }
 
-async function typeUser(text, id, paste){
+async function typeUser(text, id, paste, files){
   ta.textContent = '';
   if (!instant){
     const caret = '<span class="caret"></span>';
@@ -1387,7 +1487,7 @@ async function typeUser(text, id, paste){
   ta.textContent = ''; sendBtn.classList.remove('ready');
   const m = document.createElement('div');
   m.className = 'msg user';
-  m.innerHTML = (paste ? `<div class="paste"><div class="ph">Pasted text · ${paste.split('\n').length} lines</div><pre>${esc(paste)}</pre></div>` : '') + `<div class="b">${esc(text)}</div>`;
+  m.innerHTML = (files ? `<div class="atts">${files.map(f=>`<div class="att${f.link?' link':''}"><div class="th"><img src="images/${f.img}" alt=""${f.crop?` style="object-position:${f.crop};transform:scale(1.4)"`:''}>${f.link?'<span class="play">▶</span>':''}</div><div class="tx"><b>${esc(f.name)}</b><span>${f.sub}</span></div></div>`).join('')}</div>` : '') + (paste ? `<div class="paste"><div class="ph">Pasted text · ${paste.split('\n').length} lines</div><pre>${esc(paste)}</pre></div>` : '') + `<div class="b">${esc(text)}</div>`;
   thread.appendChild(m);
   toBottom(true);
 }
@@ -1495,7 +1595,7 @@ async function playTurn(){
   const id = run;
   try {
     await preTurn(SCRIPT[turn], id);
-    await typeUser(SCRIPT[turn].user, id, SCRIPT[turn].paste);
+    await typeUser(SCRIPT[turn].user, id, SCRIPT[turn].paste, SCRIPT[turn].files);
     await sleep(300, id);
     await claudeTurn(SCRIPT[turn].steps, id);
     turn++;
@@ -1520,7 +1620,7 @@ async function showAll(){
   // Rebuild from scratch so a half-played turn isn't left behind.
   thread.innerHTML = ''; turn = 0; instant = true;
   const id = run;
-  for (const t of SCRIPT){ await preTurn(t, id); await typeUser(t.user, id, t.paste); await claudeTurn(t.steps, id); turn++; }
+  for (const t of SCRIPT){ await preTurn(t, id); await typeUser(t.user, id, t.paste, t.files); await claudeTurn(t.steps, id); turn++; }
   instant = false; updateUI(); toBottom(true);
 }
 
