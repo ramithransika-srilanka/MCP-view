@@ -337,6 +337,44 @@ img{display:block;}
 .att .tx span{display:block;font-size:11px;color:var(--muted);}
 .att.link .tx b{color:var(--ps-blue);}
 
+/* ---------- Strategist choice, invite & commission chat ---------- */
+.opts.people{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.opts.people button{display:flex;flex-direction:column;align-items:stretch;gap:10px;text-align:left;border-radius:12px;padding:12px;}
+.opts.people .ptop{display:flex;align-items:center;gap:10px;position:relative;}
+.opts.people .ptop .sav{width:36px;height:36px;font-size:13px;display:grid;place-items:center;color:#fff;font-weight:700;flex:none;}
+.opts.people .ptop b{display:block;margin:0;font-size:13.5px;font-weight:600;}
+.opts.people .ptop div span{display:block;font-size:11.5px;color:var(--muted);line-height:1.35;}
+.opts.people .rec{align-self:flex-start;font-style:normal;font-size:10.5px;margin-bottom:-4px;}
+.opts.people .rec.ph{visibility:hidden;padding:2px 0;}
+.opts.people .pstats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px 0;}
+.opts.people .pstats b{display:block;margin:0;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;}
+.opts.people .pstats span{display:block;font-size:10.5px;color:var(--muted);}
+.opts.people .pfit{font-size:12px;color:var(--muted);line-height:1.4;}
+.opts.people button.sel .ptop div span,.opts.people button.sel .pstats span,.opts.people button.sel .pfit{color:rgba(255,255,255,.88);}
+.opts.people button.sel .pstats{border-color:rgba(255,255,255,.3);}
+.opts.people button.sel em{background:#fff;}
+.inv{margin:14px;border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.inv .ih{display:flex;align-items:center;gap:10px;}
+.inv .ih img{width:36px;height:36px;border-radius:50%;object-fit:cover;}
+.inv .ih b{display:block;font-size:14px;}
+.inv .ih span{display:block;font-size:11.5px;color:var(--ps-g600);}
+.inv .ih .st{margin-left:auto;text-align:right;}
+.inv p{margin:0;color:var(--ps-g600);font-size:12.5px;}
+.inv .if{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:10px;}
+.inv .cd{font-size:12px;font-weight:600;color:var(--warn);}
+.inv .btn{font-size:12.5px;font-weight:600;background:var(--ps-blue);color:#fff;border-radius:99px;padding:6px 14px;}
+.xchat{display:flex;flex-direction:column;gap:6px;padding:14px;}
+.xsys,.xauto{text-align:center;font-size:11px;color:var(--ps-g600);}
+.xauto{margin-bottom:2px;}
+.xm{max-width:78%;font-size:12.5px;line-height:1.45;padding:8px 12px;border-radius:14px;}
+.xm.out{align-self:flex-end;background:var(--ps-blue);color:#fff;border-bottom-right-radius:4px;}
+.xm.in{align-self:flex-start;display:flex;gap:8px;align-items:flex-end;background:none;padding:0;max-width:86%;}
+.xm.in > div{background:var(--ps-g100);padding:8px 12px;border-radius:14px;border-bottom-left-radius:4px;}
+.xm .xa{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#1548eb,#f433ab);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;flex:none;}
+.xfiles{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.xfiles span{background:rgba(255,255,255,.18);border-radius:8px;padding:3px 8px;font-size:11.5px;}
+.plist small{font-weight:400;color:var(--ps-g600);}
+
 /* ---------- Responsive ---------- */
 @media (max-width:900px){
   .app{grid-template-columns:1fr;}
@@ -357,6 +395,9 @@ img{display:block;}
   .stepper b{margin:0;}
   .paste{max-width:100%;}
   .drops{grid-template-columns:1fr;}
+  .opts.people{grid-template-columns:1fr;}
+  .opts.people .rec.ph{display:none;}
+  .xm{max-width:92%;}
   .insp{grid-template-columns:repeat(3,1fr);gap:6px;}
   .atts{max-width:100%;}
   .att{max-width:100%;flex:1 1 100%;}
@@ -452,7 +493,8 @@ const psHead = (label) => `<div class="ps-h">${PS_ICON}Polysocial · ${label}<sp
    Campaign creation flow — two paths
    1. Brand is connected? → 2. Requirement & timeline →
    3a. Brand designs it (hook, script, audience)   or
-   3b. Brand sets a budget, then requests a Polysocial creative strategist →
+   3b. Brand sets a budget, picks one of 3 creative strategists, invites them
+       and agrees the commission in chat →
    4. Budget defined, design done → 5. Go live
    ===================================================================== */
 
@@ -660,33 +702,118 @@ const SELF = [
   ]}
 ];
 
-/* ---------- Path B: a creative strategist designs it ---------- */
+/* ---------- Path B: a creative strategist designs it ----------
+   Mirrors the collaborators web app: the brand sends a strategist an
+   invite (tags, brief, "Closes in" countdown); when the strategist starts
+   a chat, Polysocial sends the brand's opening messages (summary, files,
+   budget, timeline) and asks what commission they expect. The commission
+   is agreed in that chat before the strategist starts designing. */
+
 const CARD_HOW_STRAT = `
 <div class="ps">
   ${psHead('Creative strategist · how it works')}
   <ol class="how">
-    <li><b>You set the budget</b><span>The strategist designs the creative, creator mix and pricing within it.</span></li>
-    <li><b>A strategist is assigned</b><span>Food &amp; beverage specialists, matched to your city. First design in 2 working days.</span></li>
-    <li><b>You approve the design</b><span>Ask for changes as often as you like. The fee is only charged once you approve.</span></li>
-    <li><b>It goes live and they run it</b><span>Creator approvals and weekly reports are handled for you.</span></li>
+    <li><b>You set the budget</b><span>The strategist plans the creative, creator mix and pricing within it.</span></li>
+    <li><b>You pick one of 3 matched strategists</b><span>Matched to your category, city and campaign type. They get your invite in the Polysocial collaborator app.</span></li>
+    <li><b>You agree the commission in chat</b><span>Strategists propose their commission and you can negotiate. It's paid from the campaign budget.</span></li>
+    <li><b>They design, you approve, they run it</b><span>First design in 2 working days. Creator approvals and weekly reports are handled for you.</span></li>
   </ol>
-  <div class="ps-f"><span>Strategist fee: 8% of the campaign budget, taken from the same budget</span><span>3 strategists available in Kandy</span></div>
+  <div class="ps-f"><span>Typical commission for Food campaigns: 10–15% of the budget</span><span>Charged only when you approve the design</span></div>
+</div>`;
+
+const STRATS = [
+  {id:'ishara',ini:'IF',grad:'#1548eb,#f433ab',name:'Ishara Fernando',role:'Senior Creative Strategist · Food &amp; beverage',city:'Kandy',
+   stats:[['38','campaigns'],['4.9★','brand rating'],['12–15%','usual commission']],
+   fit:'Based in Kandy, ran 3 café openings. Works with ~50 local creators.',rec:1},
+  {id:'ravindu',ini:'RP',grad:'#0f2d8f,#7391f3',name:'Ravindu Perera',role:'Creative Strategist · Lifestyle &amp; retail',city:'Colombo',
+   stats:[['24','campaigns'],['4.7★','brand rating'],['10–12%','usual commission']],
+   fit:'Lowest commission. Strong with big TikTok creators, fewer contacts in Kandy.'},
+  {id:'malsha',ini:'HC',grad:'#a8641a,#f433ab',name:'Malsha Gunawardena',role:'Agency lead · Hill Country Creators',city:'Kandy &amp; Nuwara Eliya',
+   stats:[['61','campaigns'],['4.8★','brand rating'],['15–18%','usual commission']],
+   fit:'Full-service agency with 120 creators and its own production crew. Highest cost.'}
+];
+
+const CARD_STRAT_OPTIONS = `
+<div class="ask">
+  <div class="ask-q">
+    <b>Which strategist would you like to invite?</b>
+    <div class="opts people">${STRATS.map(p=>`
+      <button type="button" data-opt="${p.id}">
+        ${p.rec?'<em class="badge blue rec">Best match</em>':'<em class="rec ph">&nbsp;</em>'}
+        <div class="ptop"><span class="sav" style="background:linear-gradient(135deg,${p.grad})">${p.ini}</span><div><b>${p.name}</b><span>${p.role} · ${p.city}</span></div></div>
+        <div class="pstats">${p.stats.map(s=>`<div><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}</div>
+        <span class="pfit">${p.fit}</span>
+      </button>`).join('')}
+    </div>
+  </div>
+</div>`;
+
+const CARD_INVITE = `
+<div class="ps">
+  ${psHead('Invite sent · as Ishara sees it in the collaborator app')}
+  <div class="inv">
+    <div class="ih"><img src="images/starbucks.png" alt=""><div><b>Starbucks Sri Lanka</b><span>Food · Posted just now</span></div><div class="st"><span>Starts</span><b>Nov 28</b></div></div>
+    <div class="tags"><span>One time project</span><span>Commission based</span><span>Store opening</span></div>
+    <p>Creator campaign for the new Starbucks store in Kandy, opening Dec 5. Design and run the campaign to drive store visits, with a total budget of Rs. 800,000.</p>
+    <div class="if"><span class="cd">Closes in 23 h 59 m</span><span class="btn">Start Chat</span></div>
+  </div>
+  <div class="ps-f"><span>Sent to Ishara Fernando · invite ID inv_8f21</span><span>Includes your cover image and 3 inspiration posts</span></div>
+</div>`;
+
+const xm = (who, html) => `<div class="xm ${who}">${html}</div>`;
+const CARD_CHAT1 = `
+<div class="ps">
+  ${psHead('Chat with Ishara Fernando')}
+  <div class="xchat">
+    <div class="xsys">Ishara started a chat about your invite · 10:42 AM</div>
+    <div class="xauto">Sent automatically by Polysocial on your behalf</div>
+    ${xm('out','Hi! Thanks for your interest in working with Starbucks Sri Lanka. Here’s a quick summary of the campaign.')}
+    ${xm('out','We’re opening a new store on Dalada Veediya, Kandy on Dec 5. We want creators to build buzz the week before and bring people into the store in opening week.')}
+    ${xm('out','I’ve attached the files you’ll need.<div class="xfiles"><span>📎 kandy_store_interior.jpg</span><span>🔗 3 inspiration posts</span><span>📎 Campaign brief.pdf</span></div>')}
+    ${xm('out','The total budget for this campaign is Rs. 800,000.')}
+    ${xm('out','Here’s the timeline:<br>Teasers – Nov 28 to Dec 4<br>Store opens – Dec 5<br>Campaign ends – Dec 14')}
+    ${xm('out','What commission would you expect for managing this campaign?')}
+    ${xm('in','<span class="xa">IF</span><div>Thanks for the invite, love this one! I’d expect a <b>15% commission</b>. That covers the creative design, managing around 50 Kandy creators, store-visit tracking and weekly reports.</div>')}
+  </div>
+</div>`;
+
+const CARD_COMMISSION = `
+<div class="ps">
+  ${psHead('Commission check')}
+  <div class="sec" style="border-top:0">
+    <div class="plist">
+      <div><span>Ishara’s ask · 15%</span><b>Rs. 120,000 <small>· creators get Rs. 680,000</small></b></div>
+      <div><span>Ishara’s last 5 campaigns</span><b>12–15% · avg 13%</b></div>
+      <div><span>Food strategists on Polysocial</span><b>10–15% · median 12%</b></div>
+      <div class="chg"><span>Suggested counter · 12%</span><b>Rs. 96,000 <small>· creators get Rs. 704,000</small></b></div>
+    </div>
+  </div>
+  <div class="ps-f"><span>12% frees Rs. 24,000, about 3 more micro creators in opening week</span></div>
+</div>`;
+
+const CARD_CHAT2 = `
+<div class="ps">
+  ${psHead('Chat with Ishara Fernando')}
+  <div class="xchat">
+    ${xm('out','Thanks Ishara! Our budget is fixed at Rs. 800,000 and we’d like to keep as much as possible for creators. Could you do 12%, including the weekly reports and store-visit tracking?')}
+    ${xm('in','<span class="xa">IF</span><div>That works. <b>12%</b> with weekly reports and store-visit tracking included. I can have the first design to you by Friday.</div>')}
+  </div>
 </div>`;
 
 const CARD_STRATEGIST = `
 <div class="ps">
-  ${psHead('Strategist assigned')}
+  ${psHead('Strategist hired')}
   <div class="strat">
     <div class="sav">IF</div>
     <div class="nm"><b>Ishara Fernando</b><span>Senior Creative Strategist · Food &amp; beverage · based in Kandy</span></div>
-    <div class="mini"><div><b>38</b><span>campaigns</span></div><div><b>4.9★</b><span>brand rating</span></div><div><b>Fri, Oct 16</b><span>first design due</span></div></div>
+    <div class="mini"><div><b>12%</b><span>commission agreed</span></div><div><b>4.9★</b><span>brand rating</span></div><div><b>Fri, Oct 16</b><span>first design due</span></div></div>
   </div>
   <div class="ps-budget">
     <div class="k" style="font-size:11.5px;color:var(--ps-g600);font-weight:500">Rs. 800,000 budget</div>
-    <div class="split"><i style="width:92%;background:#1548eb"></i><i style="width:8%;background:#f433ab"></i></div>
-    <div class="legend"><span><em style="background:#1548eb"></em>Creators Rs. 736,000</span><span><em style="background:#f433ab"></em>Strategist fee Rs. 64,000 · charged on approval</span></div>
+    <div class="split"><i style="width:88%;background:#1548eb"></i><i style="width:12%;background:#f433ab"></i></div>
+    <div class="legend"><span><em style="background:#1548eb"></em>Creators Rs. 704,000</span><span><em style="background:#f433ab"></em>Commission Rs. 96,000 · charged when you approve the design</span></div>
   </div>
-  <div class="ps-f"><span>Shared with Ishara: brief, brand kit, past results, cover image, 3 inspiration posts</span><a href="#" onclick="return false">Message Ishara ↗</a></div>
+  <div class="ps-f"><span>Includes: creative design, creator management, store-visit tracking, weekly reports</span><a href="#" onclick="return false">Open chat ↗</a></div>
 </div>`;
 
 const designCard = (v2) => `
@@ -707,7 +834,7 @@ const designCard = (v2) => `
     <div class="sec"><h6>Creator mix</h6>
       <div class="plist">
         <div class="${v2?'chg':''}"><span>Kandy macro creators (50K+) · teasers</span><b>${v2?'<s>6</s>4':'6'} × Rs. 40,000</b></div>
-        <div class="${v2?'chg':''}"><span>Micro creators (5–20K) · opening week</span><b>${v2?'<s>40</s>52':'40'} creators</b></div>
+        <div class="${v2?'chg':''}"><span>Micro creators (5–20K) · opening week</span><b>${v2?'<s>40</s>50':'40'} creators</b></div>
         <div><span>Micro pricing</span><b>Rs. 6,500 + Rs. 1,500 / 1K views</b></div>
       </div>
     </div>
@@ -718,8 +845,8 @@ const designCard = (v2) => `
   <div class="sec"><h6>Budget split</h6>
     <div class="plist">
       <div class="${v2?'chg':''}"><span>Macro creators</span><b>${v2?'<s>Rs. 240,000</s>':''}Rs. ${v2?'160,000':'240,000'}</b></div>
-      <div class="${v2?'chg':''}"><span>Micro creators (base + performance)</span><b>${v2?'<s>Rs. 496,000</s>':''}Rs. ${v2?'576,000':'496,000'}</b></div>
-      <div><span>Strategist fee</span><b>Rs. 64,000</b></div>
+      <div class="${v2?'chg':''}"><span>Micro creators (base + performance)</span><b>${v2?'<s>Rs. 464,000</s>':''}Rs. ${v2?'544,000':'464,000'}</b></div>
+      <div><span>Strategist commission · 12%</span><b>Rs. 96,000</b></div>
       <div><span>Total</span><b>Rs. 800,000</b></div>
     </div>
   </div>
@@ -748,23 +875,23 @@ const STRAT = [
     {think:700},
     {tool:'get_strategist_options',label:'Get strategist options',
      input:{category:'Food',city:'Kandy',campaign_type:'store_opening'},
-     output:{available:3,fee_rate:0.08,first_design_working_days:2,requires:['budget']}},
+     output:{available:3,commission_range:[0.10,0.15],first_design_working_days:2,requires:['budget','cover_image','inspiration_posts']}},
     {text:`<p>Good call for a busy season. Here's how it works on Polysocial:</p>`},
     {card:CARD_HOW_STRAT},
-    {text:`<p><b>Before I can request a strategist, the campaign needs a budget.</b> The strategist plans everything within it. What's the total you'd like to spend, including the 8% fee?</p>`}
+    {text:`<p><b>First, the campaign needs a budget.</b> Strategists plan everything within it, and their commission is paid from it too. What's the total you'd like to spend?</p>`}
   ]},
 
   {user:"800K all-in.",
    steps:[
     {think:700},
     {tool:'create_campaign_draft',label:'Create campaign draft',
-     input:{title:'Starbucks Kandy store opening',design_source:'strategist',goal:'store_visits',location:'Kandy',key_date:'2026-12-05'},
-     output:{id:'cmp_sb_kandy_opening',status:'draft',missing:['cover_image','inspiration_posts']}},
+     input:{title:'Starbucks Kandy store opening',design_source:'creative_strategist',goal:'store_visits',location:'Kandy',key_date:'2026-12-05'},
+     output:{id:'cmp_sb_kandy_opening',status:'draft',missing:['cover_image','inspiration_posts','strategist']}},
     {tool:'set_campaign_budget',label:'Set campaign budget',
-     input:{campaign_id:'cmp_sb_kandy_opening',budget:800000,includes_strategist_fee:true},
-     output:{creator_budget:736000,strategist_fee:64000}},
-    {text:`<p>The budget is set: <b>Rs. 736,000 for creators</b> and <b>Rs. 64,000 for the strategist</b>.</p>
-<p>Before I request the strategist, I need two things only you can provide: a <b>cover image</b> and a few <b>inspiration posts</b>. The strategist uses them as the visual direction, and creators see the cover first.</p>`},
+     input:{campaign_id:'cmp_sb_kandy_opening',budget:800000,includes_strategist_commission:true},
+     output:{budget:800000,includes_strategist_commission:true}},
+    {text:`<p>The budget is set at <b>Rs. 800,000</b>, including the strategist's commission, which you'll agree with them.</p>
+<p>Before I find you a strategist, I need two things only you can provide: a <b>cover image</b> and a few <b>inspiration posts</b>. The strategist uses them as the visual direction, and creators see the cover first.</p>`},
     {card:ASK_MEDIA('The strategist designs the hook and script around these')}
   ]},
 
@@ -781,19 +908,77 @@ const STRAT = [
     {tool:'add_inspiration_posts',label:'Add inspiration posts',
      input:{campaign_id:'cmp_sb_kandy_opening',urls:['instagram.com/reel/DA41m…','tiktok.com/@hillcountry.diaries/video/7419…','instagram.com/reel/C8pQz…']},
      output:{added:3,all_public:true,analysed:['hook_timing','framing','tone']}},
-    {card:mediaCard({cover:'sbContent2.jpg',foot:'3 inspiration posts · will be shared with the strategist',posts:[
+    {card:mediaCard({cover:'sbContent2.jpg',foot:'3 inspiration posts · will be shared with your strategist',posts:[
       {img:'sbHero.jpg',crop:'70% 30%',pl:'Instagram',handle:'@kandy.eats',why:'Slow pan of a café interior'},
       {img:'sbContent1.jpg',pl:'TikTok',handle:'@hillcountry.diaries',why:'Misty Kandy morning as the opener'},
       {img:'sbContent2.jpg',crop:'80% 60%',zoom:1.6,pl:'Instagram',handle:'@nethmi.eats',why:'First sip by the window'}]})},
-    {perm:'request_creative_strategist',desc:'This assigns a strategist to the campaign. The Rs. 64,000 fee is charged only when you approve their design.',
-     preview:'request_creative_strategist({ campaign_id: "cmp_sb_kandy_opening", share: ["brief", "brand_kit", "past_results", "cover_image", "inspiration_posts"] })',once:true},
-    {tool:'request_creative_strategist',label:'Request creative strategist',
-     input:{campaign_id:'cmp_sb_kandy_opening',brief:{goal:'store_visits',store:'Dalada Veediya, Kandy',opening:'2026-12-05'},share:['brief','brand_kit','past_campaign_results','cover_image','inspiration_posts']},
-     output:{strategist:'Ishara Fernando',status:'designing',first_design_due:'2026-10-16'}},
-    {text:`<p>Both added, and a strategist is on it:</p>`},
+    {tool:'list_creative_strategists',label:'List creative strategists',
+     input:{campaign_id:'cmp_sb_kandy_opening',category:'Food',city:'Kandy',campaign_type:'store_opening',budget:800000,limit:3},
+     output:{matches:[{id:'str_ishara_f',usual_commission:'12-15%'},{id:'str_ravindu_p',usual_commission:'10-12%'},{id:'str_hill_country',usual_commission:'15-18%'}]}},
+    {text:`<p>Both are added. Here are the three strategists who best fit a Kandy café opening:</p>`},
+    {card:CARD_STRAT_OPTIONS},
+    {text:`<p>I'd go with <b>Ishara</b>. She lives in Kandy, has run three café openings, and her commission is in the normal range. Ravindu is cheaper but has few contacts in Kandy. Malsha's agency can do everything, including production, but costs the most.</p>`}
+  ]},
+
+  {user:"Let's go with Ishara.",
+   select:['ishara'],
+   steps:[
+    {think:600},
+    {perm:'send_strategist_invite',desc:'Sends Ishara an invite in her Polysocial collaborator app, with your brief, budget, timeline, cover image and inspiration posts. Nothing is charged yet.',
+     preview:'send_strategist_invite({ campaign_id: "cmp_sb_kandy_opening", strategist_id: "str_ishara_f", engagement: "one_time", pricing: "commission" })',once:true},
+    {tool:'send_strategist_invite',label:'Send strategist invite',
+     input:{campaign_id:'cmp_sb_kandy_opening',strategist_id:'str_ishara_f',engagement:'one_time',pricing:'commission',starts:'2026-11-28',closes_in_hours:24},
+     output:{invite_id:'inv_8f21',status:'sent',visible_in:'collaborator_app.invites'}},
+    {text:`<p>Invite sent. This is what Ishara sees in her Polysocial collaborator app:</p>`},
+    {card:CARD_INVITE},
+    {text:`<p>When she starts a chat, Polysocial automatically sends her the summary, your files, the budget and the timeline, then asks <b>what commission she expects</b>. I'll let you know when she replies.</p>`}
+  ]},
+
+  {divider:'30 minutes later',
+   user:"Has Ishara replied?",
+   steps:[
+    {think:600},
+    {tool:'get_strategist_chat',label:'Get strategist chat',
+     input:{invite_id:'inv_8f21'},
+     output:{status:'chatting',started_at:'10:42',commission_proposed:0.15,includes:['design','creator_management','store_visit_tracking','weekly_reports']}},
+    {text:`<p>Yes, she started a chat and answered the commission question:</p>`},
+    {card:CARD_CHAT1},
+    {tool:'get_commission_benchmarks',label:'Get commission benchmarks',
+     input:{strategist_id:'str_ishara_f',category:'Food',budget:800000},
+     output:{strategist_last_5_avg:0.13,category_median:0.12,category_range:[0.10,0.15]}},
+    {card:CARD_COMMISSION},
+    {text:`<p>15% is at the top of her usual range. Her recent average is 13%, and the median for Food is 12%. I'd counter at <b>12%</b> and ask her to keep the weekly reports and store-visit tracking. That leaves Rs. 24,000 more for creators. Shall I send that?</p>`}
+  ]},
+
+  {user:"Yes, offer 12% as long as the weekly reports are included.",
+   steps:[
+    {think:500},
+    {tool:'send_strategist_message',label:'Send strategist message',
+     input:{invite_id:'inv_8f21',message:'Thanks Ishara! Our budget is fixed at Rs. 800,000 and we’d like to keep as much as possible for creators. Could you do 12%, including the weekly reports and store-visit tracking?'},
+     output:{sent:true}},
+    {text:`<p>Sent to Ishara in your Polysocial chat:</p>
+<blockquote>Thanks Ishara! Our budget is fixed at Rs. 800,000 and we'd like to keep as much as possible for creators. Could you do 12%, including the weekly reports and store-visit tracking?</blockquote>
+<p>I'll let you know what she says.</p>`}
+  ]},
+
+  {divider:'20 minutes later',
+   user:"Did she agree?",
+   steps:[
+    {think:500},
+    {tool:'get_strategist_chat',label:'Get strategist chat',
+     input:{invite_id:'inv_8f21',since:'last_message'},
+     output:{commission_proposed:0.12,includes:['design','creator_management','store_visit_tracking','weekly_reports']}},
+    {text:`<p>She did:</p>`},
+    {card:CARD_CHAT2},
+    {perm:'confirm_strategist_commission',desc:'This hires Ishara at a 12% commission (Rs. 96,000 from the campaign budget). It is charged only when you approve her design.',
+     preview:'confirm_strategist_commission({ invite_id: "inv_8f21", commission: 0.12, includes: ["weekly_reports", "store_visit_tracking"] })',once:true},
+    {tool:'confirm_strategist_commission',label:'Confirm strategist commission',
+     input:{invite_id:'inv_8f21',commission:0.12,includes:['design','creator_management','store_visit_tracking','weekly_reports']},
+     output:{status:'hired',strategist:'Ishara Fernando',commission_amount:96000,creator_budget:704000,first_design_due:'2026-10-16'}},
+    {text:`<p>Done. Ishara is hired at <b>12%</b>:</p>`},
     {card:CARD_STRATEGIST},
     {card:stepper(['done','done','active','done','done','todo'],'Strategist designing')},
-    {text:`<p>Ishara has your brief, brand kit, past results, cover image and inspiration posts. I'll let you know as soon as the design comes in.</p>`}
+    {text:`<p>She has your brief, brand kit, past results, cover image and inspiration posts. I'll let you know as soon as the design comes in.</p>`}
   ]},
 
   {divider:'Friday, Oct 16',
@@ -823,10 +1008,10 @@ const STRAT = [
      output:{status:'revision_requested'}},
     {tool:'get_strategist_design',label:'Get strategist design',
      input:{campaign_id:'cmp_sb_kandy_opening',version:2},
-     output:{version:2,status:'awaiting_brand_approval',changes:['macro_creators: 6 → 4','micro_creators: 40 → 52']}},
+     output:{version:2,status:'awaiting_brand_approval',changes:['macro_creators: 6 → 4','micro_creators: 40 → 50']}},
     {text:`<p>I passed that on, and Ishara sent a revised version 40 minutes later:</p>`},
     {card:designCard(true)},
-    {text:`<p>Ishara dropped two macro creators and moved <b>Rs. 80,000</b> to 12 more micro creators. That should lift expected opening-week views by about 25%. The total stays at Rs. 800,000.</p>`}
+    {text:`<p>Ishara dropped two macro creators and moved <b>Rs. 80,000</b> to 10 more micro creators. That should lift expected opening-week views by about 25%. The total stays at Rs. 800,000, including her 12%.</p>`}
   ]},
 
   {user:"Perfect, approve it and go live.",
@@ -834,14 +1019,14 @@ const STRAT = [
     {think:500},
     {tool:'approve_strategist_design',label:'Approve strategist design',
      input:{campaign_id:'cmp_sb_kandy_opening',version:2},
-     output:{status:'approved',strategist_fee_charged:64000}},
-    {perm:'publish_campaign',desc:'This makes the campaign visible to creators now and holds the Rs. 736,000 creator budget from your Polysocial balance.',
+     output:{status:'approved',strategist_commission_charged:96000}},
+    {perm:'publish_campaign',desc:'This makes the campaign visible to creators now and holds the Rs. 704,000 creator budget from your Polysocial balance.',
      preview:'publish_campaign({ campaign_id: "cmp_sb_kandy_opening", go_live: "now" })',once:true},
     {tool:'publish_campaign',label:'Publish campaign',
      input:{campaign_id:'cmp_sb_kandy_opening',go_live:'now'},
      output:{status:'live',managed_by:'Ishara Fernando',macro_invites_sent:4,eligible_creators_notified:610}},
-    {text:`<p>It's live 🎉 Ishara has sent invites to the 4 macro creators, and 610 micro creators in the Kandy area have been notified.</p>`},
-    {card:liveCard({title:'Starbucks Kandy — First brew in the hills',meta:'Managed by Ishara Fernando · Budget held: Rs. 736,000 for creators',steps:['Today · live','Nov 28 · teasers','Dec 5 · store opens','Dec 14 · close'],id:'ID cmp_sb_kandy_opening'})},
+    {text:`<p>It's live 🎉 Ishara has sent invites to the 4 macro creators, and 610 micro creators in the Kandy area have been notified. Her Rs. 96,000 commission was charged when you approved the design.</p>`},
+    {card:liveCard({title:'Starbucks Kandy — First brew in the hills',meta:'Managed by Ishara Fernando · 12% commission · Budget held: Rs. 704,000 for creators',steps:['Today · live','Nov 28 · teasers','Dec 5 · store opens','Dec 14 · close'],id:'ID cmp_sb_kandy_opening'})},
     {card:stepper(['done','done','done','done','done','done'],'By Ishara Fernando')},
     {text:`<p>From here Ishara runs it day to day: creator approvals, the upsize tracking and a weekly report. You'll only be asked about budget changes. Want the weekly report sent here every Monday?</p>`}
   ]}
@@ -854,8 +1039,8 @@ const CHATS = {
     chips:['Check brand connection','Requirement &amp; timeline','Brand shares hook, script, audience','Upload cover &amp; inspiration','Set budget','Go live']},
   strat:{title:'Kandy store opening — with a strategist',script:STRAT,
     greet:'Good morning, Dinithi',
-    blurb:'Path 2 of the campaign flow: the brand has no time to design the campaign, so it sets a budget, uploads a cover image and inspiration posts, and requests a Polysocial creative strategist, who designs it. The brand reviews, approves and goes live.',
-    chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Upload cover &amp; inspiration','Request a creative strategist','Review &amp; revise design','Approve &amp; go live']}
+    blurb:'Path 2 of the campaign flow: the brand has no time to design the campaign, so it sets a budget, uploads a cover image and inspiration posts, picks one of three matched creative strategists, invites them and agrees their commission in chat. The strategist designs it; the brand reviews, approves and goes live.',
+    chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Upload cover &amp; inspiration','Choose from 3 strategists','Invite &amp; agree commission','Review &amp; revise design','Approve &amp; go live']}
 };
 
 /* ---------- Player ---------- */
