@@ -419,21 +419,21 @@ img{display:block;}
     <button class="newchat" type="button"><span class="plus">+</span>New chat</button>
     <h4>Recents</h4>
     <ul>
-      <li data-chat="self">Cold Brew launch — our own brief<span class="new">NEW</span></li>
-      <li data-chat="strat">Kandy store opening — with a strategist<span class="new">NEW</span></li>
+      <li data-chat="self">Crunch Chicken launch — our own brief<span class="new">NEW</span></li>
+      <li data-chat="strat">Kandy opening — with a strategist<span class="new">NEW</span></li>
       <li>Q4 influencer budget split</li>
       <li>Caption ideas — Pumpkin Spice</li>
       <li>Creator brief template</li>
       <li>Polysocial weekly report — Nov 3</li>
       <li>Festive menu launch plan</li>
     </ul>
-    <div class="me"><div class="av">DR</div><div><b>Dinithi Rajapaksa</b><span>Marketing Manager · Starbucks Sri Lanka</span></div></div>
+    <div class="me"><div class="av">DR</div><div><b>Dinithi Rajapaksa</b><span>Marketing Manager · Patty Pop</span></div></div>
   </aside>
 
   <main class="main">
     <div class="bar">
       <div class="title" id="chatTitle"></div>
-      <select class="chatsel" id="chatSel" aria-label="Choose chat"><option value="self">Cold Brew — own brief</option><option value="strat">Kandy — with strategist</option></select>
+      <select class="chatsel" id="chatSel" aria-label="Choose chat"><option value="self">Crunch Chicken — own brief</option><option value="strat">Kandy opening — with strategist</option></select>
       <span class="conn" title="Polysocial MCP connector is connected"><span class="ps-mark"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial<span class="dot"></span></span>
       <span class="spacer"></span>
       <div class="ctrls" role="group" aria-label="Demo controls">
@@ -502,8 +502,8 @@ const CARD_CONNECTED = `
 <div class="ps">
   ${psHead('Brand connection')}
   <div class="brandrow">
-    <img src="images/starbucks.png" alt="">
-    <div><b>Starbucks Sri Lanka <span class="badge ok" style="margin-left:4px">✓ Connected</span></b><span>Verified brand · @starbuckslk · you're an admin</span></div>
+    <img src="images/pattypop.png" alt="">
+    <div><b>Patty Pop <span class="badge ok" style="margin-left:4px">✓ Connected</span></b><span>Verified brand · @pattypoplk · you're an admin</span></div>
     <div class="bstats"><div><b>4</b><span>past campaigns</span></div><div><b>Rs. 3.4M</b><span>balance</span></div><div><b>12</b><span>brand assets</span></div></div>
   </div>
 </div>`;
@@ -536,7 +536,7 @@ const mediaCard = (o) => `
   ${psHead('Cover &amp; inspiration added')}
   <div class="cp-hero" style="aspect-ratio:16/6">
     <img src="images/${o.cover}" alt="">
-    <span class="brand"><img src="images/starbucks.png" alt="">Starbucks Sri Lanka</span>
+    <span class="brand"><img src="images/pattypop.png" alt="">Patty Pop</span>
     <span class="stat badge on-img blue">Cover image</span>
   </div>
   <div class="sec"><h6>Inspiration posts · shown to creators as “the style we're after”</h6>
@@ -553,16 +553,16 @@ const stepper = (states, design) => `
 const beats = (rows) => `<div class="beats">${rows.map(r=>`<div><em>${r[0]}</em><span>${r[1]}</span></div>`).join('')}</div>`;
 
 /* ---------- Path A: the brand designs it ---------- */
-const BRIEF_A = `Hook: "POV: you found the only coffee that beats Colombo heat"
+const BRIEF_A = `Hook: "POV: you found the crunchiest burger in Colombo"
 Script (15–30s):
-0–3s   Hot, sweaty moment outdoors (tuk-tuk, beach, campus)
-3–8s   Walk into Starbucks, order the Coconut Cold Brew
-8–15s  First sip, slow-mo reaction, cup to camera
-15s+   Cool-down shot + "Coconut Cold Brew, now at Starbucks"
+0–3s   Starving moment (late-night study, after cricket, after work)
+3–8s   Walk into Patty Pop, order the Pop Crunch Chicken
+8–15s  First big bite, slow-mo crunch, burger to camera
+15s+   Happy reaction + "Pop Crunch Chicken, now at Patty Pop"
 Audience: 18–28, students & young professionals, Colombo + Galle
 Platforms: TikTok, Instagram Reels
-Must show: cup with the Coconut Cold Brew label, store or logo
-Tone: fun, sunny, not too polished`;
+Must show: the burger, the Patty Pop wrapper or logo
+Tone: fun, loud, not too polished`;
 
 const CARD_BRIEF_A = `
 <div class="ps">
@@ -572,20 +572,20 @@ const CARD_BRIEF_A = `
     <span class="stat badge on-img grey">Designed by your team</span>
   </div>
   <div class="cp-body">
-    <h3>Coconut Cold Brew — Beat the Colombo heat</h3>
+    <h3>Pop Crunch Chicken — The crunch you can hear</h3>
     <div class="meta">Food · Oct 19 – Nov 8, 2026 · 3 weeks · Goal: trial</div>
   </div>
-  <div class="sec"><h6>Hook</h6><div class="hook">“POV: you found the only coffee that beats Colombo heat”</div></div>
-  <div class="sec"><h6>Script · 15–30s reel</h6>${beats([['0–3s','Hot, sweaty moment outdoors — tuk-tuk, beach or campus'],['3–8s','Walk into Starbucks and order the Coconut Cold Brew'],['8–15s','First sip, slow-mo reaction, cup to camera'],['15s+','Cool-down shot + “Coconut Cold Brew, now at Starbucks”']])}</div>
+  <div class="sec"><h6>Hook</h6><div class="hook">“POV: you found the crunchiest burger in Colombo”</div></div>
+  <div class="sec"><h6>Script · 15–30s reel</h6>${beats([['0–3s','Starving moment — late-night study, after cricket or after work'],['3–8s','Walk into Patty Pop and order the Pop Crunch Chicken'],['8–15s','First big bite, slow-mo crunch, burger to camera'],['15s+','Happy reaction + “Pop Crunch Chicken, now at Patty Pop”']])}</div>
   <div class="two">
     <div class="sec"><h6>Target audience</h6><div class="tags"><span>18–28 age</span><span>Students</span><span>Young professionals</span><span>Colombo</span><span>Galle</span></div></div>
     <div class="sec"><h6>Deliverable</h6><div class="tags"><span>1 reel · 15–30s</span><span>TikTok</span><span>Instagram</span></div></div>
   </div>
   <div class="sec">
-    <h6>Brand visibility</h6><p>Cup with the Coconut Cold Brew label, plus the store or Starbucks logo</p>
-    <h6 style="margin-top:10px">Caption CTA <span class="badge blue" style="margin-left:4px">Added by Claude</span></h6><p>Try the Coconut Cold Brew at your nearest Starbucks and tag @starbuckslk ☀️</p>
+    <h6>Brand visibility</h6><p>The Pop Crunch Chicken up close, plus the Patty Pop wrapper or logo</p>
+    <h6 style="margin-top:10px">Caption CTA <span class="badge blue" style="margin-left:4px">Added by Claude</span></h6><p>Try the Pop Crunch Chicken at your nearest Patty Pop and tag @pattypoplk 🍔</p>
   </div>
-  <div class="ps-f"><span>ID cmp_sb_coconut_cold_brew · <b style="color:var(--warn)">Missing: cover image, inspiration posts, budget</b></span><a href="#" onclick="return false">Edit in Polysocial ↗</a></div>
+  <div class="ps-f"><span>ID cmp_pp_crunch_chicken · <b style="color:var(--warn)">Missing: cover image, inspiration posts, budget</b></span><a href="#" onclick="return false">Edit in Polysocial ↗</a></div>
 </div>`;
 
 const CARD_BUDGET_A = `
@@ -618,16 +618,16 @@ const liveCard = (o) => `
 </div>`;
 
 const SELF = [
-  {user:"Hi Claude! We're launching our new Coconut Cold Brew and I'd like to run a creator campaign on Polysocial for it.",
+  {user:"Hi Claude! We're launching our new Pop Crunch Chicken burger and I'd like to run a creator campaign on Polysocial for it.",
    steps:[
     {think:900},
     {tool:'check_brand_connection',label:'Check brand connection',
-     input:{workspace:'Starbucks Sri Lanka'},
-     output:{connected:true,brand_id:'brd_starbucks_lk',verified:true,your_role:'admin'}},
+     input:{workspace:'Patty Pop'},
+     output:{connected:true,brand_id:'brd_pattypop_lk',verified:true,your_role:'admin'}},
     {tool:'get_brand_profile',label:'Get brand profile',
-     input:{brand_id:'brd_starbucks_lk'},
-     output:{handle:'@starbuckslk',past_campaigns:4,balance:3400000,brand_assets:12,default_restrictions:6}},
-    {text:`<p>Starbucks Sri Lanka is already connected to Polysocial, so I can set this up directly. Your brand details, assets and past campaigns are all there:</p>`},
+     input:{brand_id:'brd_pattypop_lk'},
+     output:{handle:'@pattypoplk',past_campaigns:4,balance:3400000,brand_assets:12,default_restrictions:6}},
+    {text:`<p>Patty Pop is already connected to Polysocial, so I can set this up directly. Your brand details, assets and past campaigns are all there:</p>`},
     {card:CARD_CONNECTED},
     {text:`<p>To shape the campaign I need to know <b>what it should achieve and when it should run</b>. And one question first:</p>`},
     {card:ASK_PATH}
@@ -641,8 +641,8 @@ const SELF = [
      input:{campaign_type:'ugc',checks:['hook','script_length','audience','deliverables','brand_visibility','cover_image','inspiration_posts','budget']},
      output:{hook:'ok',script_length:'15-30s ok',audience:'ok',deliverables:'ok',brand_visibility:'ok',cover_image:'missing',inspiration_posts:'missing',budget:'missing',suggestions:['add_caption_cta']}},
     {tool:'create_campaign_draft',label:'Create campaign draft',
-     input:{title:'Coconut Cold Brew — Beat the Colombo heat',design_source:'brand',goal:'trial',starts:'2026-10-19',ends:'2026-11-08',hook:'POV: you found the only coffee that beats Colombo heat',script_beats:4,audience:{age:'18-28',segments:['students','young_professionals'],locations:['Colombo','Galle']},platforms:['tiktok','instagram']},
-     output:{id:'cmp_sb_coconut_cold_brew',status:'draft',missing:['cover_image','inspiration_posts','budget']}},
+     input:{title:'Pop Crunch Chicken — The crunch you can hear',design_source:'brand',goal:'trial',starts:'2026-10-19',ends:'2026-11-08',hook:'POV: you found the crunchiest burger in Colombo',script_beats:4,audience:{age:'18-28',segments:['students','young_professionals'],locations:['Colombo','Galle']},platforms:['tiktok','instagram']},
+     output:{id:'cmp_pp_crunch_chicken',status:'draft',missing:['cover_image','inspiration_posts','budget']}},
     {text:`<p>Your brief is in great shape. Hook, script, audience and deliverable all check out. Here's the campaign as creators will see it:</p>`},
     {card:CARD_BRIEF_A},
     {text:`<p>I added a <b>caption CTA</b> and your six standard restrictions. Everything else is exactly as your team wrote it.</p>
@@ -651,24 +651,24 @@ const SELF = [
   ]},
 
   {user:"Here's the cover from our launch shoot, and three reels that have the vibe we want.",
-   files:[{img:'sbContent1.jpg',name:'cold_brew_cover.jpg',sub:'Image · 2.4 MB'},
-          {img:'sbContent2.jpg',name:'tiktok.com/@kavindu.sips/video/7428…',sub:'TikTok reel',link:1,crop:'30% 40%'},
-          {img:'sbHero.jpg',name:'instagram.com/reel/C9xk2…',sub:'Instagram reel',link:1},
-          {img:'sbContent1.jpg',name:'tiktok.com/@dilan.bites/video/7431…',sub:'TikTok reel',link:1,crop:'50% 70%'}],
+   files:[{img:'ppBiteWide.jpg',name:'crunch_chicken_cover.jpg',sub:'Image · 2.4 MB'},
+          {img:'ppMeal.jpg',name:'tiktok.com/@kavindu.bites/video/7428…',sub:'TikTok reel',link:1,crop:'62% 70%'},
+          {img:'ppBite.jpg',name:'instagram.com/reel/C9xk2…',sub:'Instagram reel',link:1,crop:'50% 50%'},
+          {img:'ppMeal.jpg',name:'tiktok.com/@dilan.bites/video/7431…',sub:'TikTok reel',link:1,crop:'95% 50%'}],
    steps:[
     {think:800},
     {tool:'upload_cover_image',label:'Upload cover image',
-     input:{campaign_id:'cmp_sb_coconut_cold_brew',file:'cold_brew_cover.jpg'},
+     input:{campaign_id:'cmp_pp_crunch_chicken',file:'crunch_chicken_cover.jpg'},
      output:{status:'uploaded',width:2400,height:1350,meets_requirements:true}},
     {tool:'add_inspiration_posts',label:'Add inspiration posts',
-     input:{campaign_id:'cmp_sb_coconut_cold_brew',urls:['tiktok.com/@kavindu.sips/video/7428…','instagram.com/reel/C9xk2…','tiktok.com/@dilan.bites/video/7431…']},
+     input:{campaign_id:'cmp_pp_crunch_chicken',urls:['tiktok.com/@kavindu.bites/video/7428…','instagram.com/reel/C9xk2…','tiktok.com/@dilan.bites/video/7431…']},
      output:{added:3,all_public:true,analysed:['hook_timing','framing','tone']}},
     {text:`<p>Both added. The cover is the right size, and all three reels are public, so creators can open them. Here's what creators will see:</p>`},
-    {card:mediaCard({cover:'sbContent1.jpg',foot:'3 inspiration posts · creators can open each one',posts:[
-      {img:'sbContent2.jpg',crop:'30% 40%',pl:'TikTok',handle:'@kavindu.sips',why:'Hook lands in the first 2 seconds'},
-      {img:'sbHero.jpg',pl:'Instagram',handle:'@nethmi.eats',why:'Cup-to-camera close-up, label readable'},
-      {img:'sbContent1.jpg',crop:'50% 70%',pl:'TikTok',handle:'@dilan.bites',why:'Unpolished, handheld feel — matches your tone'}]})},
-    {text:`<p>The reels fit your brief well: quick hooks, the cup front and centre, nothing too polished.</p>
+    {card:mediaCard({cover:'ppBiteWide.jpg',foot:'3 inspiration posts · creators can open each one',posts:[
+      {img:'ppMeal.jpg',crop:'0% 40%',zoom:1,pl:'TikTok',handle:'@kavindu.bites',why:'Hook lands in the first 2 seconds'},
+      {img:'ppBite.jpg',crop:'50% 50%',pl:'Instagram',handle:'@nethmi.eats',why:'Burger-to-camera close-up, every layer visible'},
+      {img:'ppMeal.jpg',crop:'100% 50%',zoom:1,pl:'TikTok',handle:'@dilan.bites',why:'Unpolished, handheld feel — matches your tone'}]})},
+    {text:`<p>The reels fit your brief well: quick hooks, the burger front and centre, nothing too polished.</p>
 <p><b>Last thing: the budget.</b> For Food campaigns in Colombo and Galle, I'd suggest <b>Rs. 6,000 per reel</b> plus <b>Rs. 1,800 per 1K views</b>. What budget do you have in mind?</p>`}
   ]},
 
@@ -676,10 +676,10 @@ const SELF = [
    steps:[
     {think:600},
     {tool:'set_campaign_budget',label:'Set campaign budget',
-     input:{campaign_id:'cmp_sb_coconut_cold_brew',budget:600000,base_price:6000,max_earning:90000,performance_per_1k_views:1800},
+     input:{campaign_id:'cmp_pp_crunch_chicken',budget:600000,base_price:6000,max_earning:90000,performance_per_1k_views:1800},
      output:{status:'ready_to_publish',budget:600000}},
     {tool:'estimate_reach',label:'Estimate reach',
-     input:{campaign_id:'cmp_sb_coconut_cold_brew'},
+     input:{campaign_id:'cmp_pp_crunch_chicken'},
      output:{expected_creators:[70,90],expected_views:[1600000,2000000]}},
     {card:CARD_BUDGET_A},
     {card:stepper(['done','done','done','done','done','todo'],'By your team')},
@@ -689,14 +689,14 @@ const SELF = [
   {user:"Yes, go live!",
    steps:[
     {think:500},
-    {tool:'validate_campaign',label:'Validate campaign',input:{campaign_id:'cmp_sb_coconut_cold_brew'},output:{ready:true,warnings:[]}},
+    {tool:'validate_campaign',label:'Validate campaign',input:{campaign_id:'cmp_pp_crunch_chicken'},output:{ready:true,warnings:[]}},
     {perm:'publish_campaign',desc:'This makes the campaign visible to creators now and holds Rs. 600,000 from your Polysocial balance.',
-     preview:'publish_campaign({ campaign_id: "cmp_sb_coconut_cold_brew", go_live: "now" })',once:true},
+     preview:'publish_campaign({ campaign_id: "cmp_pp_crunch_chicken", go_live: "now" })',once:true},
     {tool:'publish_campaign',label:'Publish campaign',
-     input:{campaign_id:'cmp_sb_coconut_cold_brew',go_live:'now',posting_starts:'2026-10-19'},
+     input:{campaign_id:'cmp_pp_crunch_chicken',go_live:'now',posting_starts:'2026-10-19'},
      output:{status:'live',visible_to_creators:true,budget_held:600000,eligible_creators_notified:1480}},
     {text:`<p>It's live 🎉 Polysocial has notified <b>1,480 matching creators</b> in Colombo and Galle.</p>`},
-    {card:liveCard({title:'Coconut Cold Brew — Beat the Colombo heat',meta:'Creators can join now · posting Oct 19 – Nov 8 · Budget held: Rs. 600,000',steps:['Today · live','Oct 19 · posting starts','Oct 26 · first report','Nov 8 · close'],id:'ID cmp_sb_coconut_cold_brew'})},
+    {card:liveCard({title:'Pop Crunch Chicken — The crunch you can hear',meta:'Creators can join now · posting Oct 19 – Nov 8 · Budget held: Rs. 600,000',steps:['Today · live','Oct 19 · posting starts','Oct 26 · first report','Nov 8 · close'],id:'ID cmp_pp_crunch_chicken'})},
     {card:stepper(['done','done','done','done','done','done'],'By your team')},
     {text:`<p>Since your team designed it, content approvals will come to you. Want a ping here when the first 10 creators join?</p>`}
   ]}
@@ -724,7 +724,7 @@ const CARD_HOW_STRAT = `
 const STRATS = [
   {id:'ishara',ini:'IF',grad:'#1548eb,#f433ab',name:'Ishara Fernando',role:'Senior Creative Strategist · Food &amp; beverage',city:'Kandy',
    stats:[['38','campaigns'],['4.9★','brand rating'],['12–15%','usual commission']],
-   fit:'Based in Kandy, ran 3 café openings. Works with ~50 local creators.',rec:1},
+   fit:'Based in Kandy, ran 3 restaurant openings. Works with ~50 local creators.',rec:1},
   {id:'ravindu',ini:'RP',grad:'#0f2d8f,#7391f3',name:'Ravindu Perera',role:'Creative Strategist · Lifestyle &amp; retail',city:'Colombo',
    stats:[['24','campaigns'],['4.7★','brand rating'],['10–12%','usual commission']],
    fit:'Lowest commission. Strong with big TikTok creators, fewer contacts in Kandy.'},
@@ -752,9 +752,9 @@ const CARD_INVITE = `
 <div class="ps">
   ${psHead('Invite sent · as Ishara sees it in the collaborator app')}
   <div class="inv">
-    <div class="ih"><img src="images/starbucks.png" alt=""><div><b>Starbucks Sri Lanka</b><span>Food · Posted just now</span></div><div class="st"><span>Starts</span><b>Nov 28</b></div></div>
+    <div class="ih"><img src="images/pattypop.png" alt=""><div><b>Patty Pop</b><span>Food · Posted just now</span></div><div class="st"><span>Starts</span><b>Nov 28</b></div></div>
     <div class="tags"><span>One time project</span><span>Commission based</span><span>Store opening</span></div>
-    <p>Creator campaign for the new Starbucks store in Kandy, opening Dec 5. Design and run the campaign to drive store visits, with a total budget of Rs. 800,000.</p>
+    <p>Creator campaign for the new Patty Pop restaurant in Kandy, opening Dec 5. Design and run the campaign to drive store visits, with a total budget of Rs. 800,000.</p>
     <div class="if"><span class="cd">Closes in 23 h 59 m</span><span class="btn">Start Chat</span></div>
   </div>
   <div class="ps-f"><span>Sent to Ishara Fernando · invite ID inv_8f21</span><span>Includes your cover image and 3 inspiration posts</span></div>
@@ -767,9 +767,9 @@ const CARD_CHAT1 = `
   <div class="xchat">
     <div class="xsys">Ishara started a chat about your invite · 10:42 AM</div>
     <div class="xauto">Sent automatically by Polysocial on your behalf</div>
-    ${xm('out','Hi! Thanks for your interest in working with Starbucks Sri Lanka. Here’s a quick summary of the campaign.')}
-    ${xm('out','We’re opening a new store on Dalada Veediya, Kandy on Dec 5. We want creators to build buzz the week before and bring people into the store in opening week.')}
-    ${xm('out','I’ve attached the files you’ll need.<div class="xfiles"><span>📎 kandy_store_interior.jpg</span><span>🔗 3 inspiration posts</span><span>📎 Campaign brief.pdf</span></div>')}
+    ${xm('out','Hi! Thanks for your interest in working with Patty Pop. Here’s a quick summary of the campaign.')}
+    ${xm('out','We’re opening a new restaurant on Dalada Veediya, Kandy on Dec 5. We want creators to build buzz the week before and bring people in for their first burger in opening week.')}
+    ${xm('out','I’ve attached the files you’ll need.<div class="xfiles"><span>📎 patty_pop_cover.jpg</span><span>🔗 3 inspiration posts</span><span>📎 Campaign brief.pdf</span></div>')}
     ${xm('out','The total budget for this campaign is Rs. 800,000.')}
     ${xm('out','Here’s the timeline:<br>Teasers – Nov 28 to Dec 4<br>Store opens – Dec 5<br>Campaign ends – Dec 14')}
     ${xm('out','What commission would you expect for managing this campaign?')}
@@ -820,16 +820,16 @@ const designCard = (v2) => `
 <div class="ps">
   ${psHead(v2 ? 'Strategist design · version 2' : 'Strategist design · version 1')}
   <div class="cp-hero" style="aspect-ratio:16/6">
-    <img src="images/sbContent2.jpg" alt="">
-    <span class="brand"><img src="images/starbucks.png" alt="">Starbucks Sri Lanka · your cover</span>
+    <img src="images/ppMeal.jpg" alt="">
+    <span class="brand"><img src="images/pattypop.png" alt="">Patty Pop · your cover</span>
     <span class="stat badge on-img blue">Designed by Ishara Fernando</span>
   </div>
   <div class="cp-body">
-    <h3>Starbucks Kandy — First brew in the hills</h3>
+    <h3>Patty Pop Kandy — First bite in the hills</h3>
     <div class="meta">Store opening · Teasers Nov 28 – Dec 4 · Opening week Dec 5 – 14 · Goal: store visits</div>
   </div>
-  <div class="sec"><h6>Hook</h6><div class="hook">“I found the coziest new coffee spot in Kandy 👀”</div></div>
-  <div class="sec"><h6>Script · 20–30s reel</h6>${beats([['0–3s','Walking by Kandy Lake or along Dalada Veediya, misty morning'],['3–10s','Step into the new store, a slow pan of the interior'],['10–20s','Order, first sip by the window, honest reaction'],['20s+','“Now open on Dalada Veediya. Show this video for a free upsize in opening week.”']])}</div>
+  <div class="sec"><h6>Hook</h6><div class="hook">“I found the juiciest new burger spot in Kandy 👀”</div></div>
+  <div class="sec"><h6>Script · 20–30s reel</h6>${beats([['0–3s','Hungry face to camera, walking along Dalada Veediya'],['3–10s','Step into the new Patty Pop, tray reveal of burger, fries and drink'],['10–20s','First big bite, slow-mo crunch, honest reaction'],['20s+','“Now open on Dalada Veediya. Show this video for free fries in opening week.”']])}</div>
   <div class="two">
     <div class="sec"><h6>Creator mix</h6>
       <div class="plist">
@@ -839,8 +839,8 @@ const designCard = (v2) => `
       </div>
     </div>
     <div class="sec"><h6>Audience</h6><div class="tags"><span>18–35 age</span><span>Kandy</span><span>Central Province</span><span>Students</span><span>Tourists</span></div>
-      <h6 style="margin-top:10px">Measured by</h6><p>Free-upsize redemptions at the Kandy store</p>
-      <h6 style="margin-top:10px">Built from your inspiration</h6><p>Misty-morning opener, slow interior pan, first sip by the window</p></div>
+      <h6 style="margin-top:10px">Measured by</h6><p>Free-fries redemptions at the Kandy restaurant</p>
+      <h6 style="margin-top:10px">Built from your inspiration</h6><p>Hungry-face opener, tray reveal, first big bite close up</p></div>
   </div>
   <div class="sec"><h6>Budget split</h6>
     <div class="plist">
@@ -854,16 +854,16 @@ const designCard = (v2) => `
 </div>`;
 
 const STRAT = [
-  {user:"Hi Claude, we're opening a new Starbucks in Kandy on Dec 5 and want a creator campaign to bring people in. My team is swamped with the holiday season, though.",
+  {user:"Hi Claude, we're opening a new Patty Pop in Kandy on Dec 5 and want a creator campaign to bring people in. My team is swamped with the holiday season, though.",
    steps:[
     {think:900},
     {tool:'check_brand_connection',label:'Check brand connection',
-     input:{workspace:'Starbucks Sri Lanka'},
-     output:{connected:true,brand_id:'brd_starbucks_lk',verified:true,your_role:'admin'}},
+     input:{workspace:'Patty Pop'},
+     output:{connected:true,brand_id:'brd_pattypop_lk',verified:true,your_role:'admin'}},
     {tool:'get_brand_profile',label:'Get brand profile',
-     input:{brand_id:'brd_starbucks_lk'},
-     output:{handle:'@starbuckslk',past_campaigns:4,balance:3400000,brand_assets:12}},
-    {text:`<p>Starbucks Sri Lanka is already connected to Polysocial, so there's nothing to set up on that side:</p>`},
+     input:{brand_id:'brd_pattypop_lk'},
+     output:{handle:'@pattypoplk',past_campaigns:4,balance:3400000,brand_assets:12}},
+    {text:`<p>Patty Pop is already connected to Polysocial, so there's nothing to set up on that side:</p>`},
     {card:CARD_CONNECTED},
     {text:`<p>So the requirement is <b>bringing people into the new Kandy store</b>, which opens <b>Dec 5</b>. Since your team is stretched, this question matters:</p>`},
     {card:ASK_PATH}
@@ -885,39 +885,39 @@ const STRAT = [
    steps:[
     {think:700},
     {tool:'create_campaign_draft',label:'Create campaign draft',
-     input:{title:'Starbucks Kandy store opening',design_source:'creative_strategist',goal:'store_visits',location:'Kandy',key_date:'2026-12-05'},
-     output:{id:'cmp_sb_kandy_opening',status:'draft',missing:['cover_image','inspiration_posts','strategist']}},
+     input:{title:'Patty Pop Kandy store opening',design_source:'creative_strategist',goal:'store_visits',location:'Kandy',key_date:'2026-12-05'},
+     output:{id:'cmp_pp_kandy_opening',status:'draft',missing:['cover_image','inspiration_posts','strategist']}},
     {tool:'set_campaign_budget',label:'Set campaign budget',
-     input:{campaign_id:'cmp_sb_kandy_opening',budget:800000,includes_strategist_commission:true},
+     input:{campaign_id:'cmp_pp_kandy_opening',budget:800000,includes_strategist_commission:true},
      output:{budget:800000,includes_strategist_commission:true}},
     {text:`<p>The budget is set at <b>Rs. 800,000</b>, including the strategist's commission, which you'll agree with them.</p>
 <p>Before I find you a strategist, I need two things only you can provide: a <b>cover image</b> and a few <b>inspiration posts</b>. The strategist uses them as the visual direction, and creators see the cover first.</p>`},
     {card:ASK_MEDIA('The strategist designs the hook and script around these')}
   ]},
 
-  {user:"Here's a photo from the new store for the cover, and a few posts we like.",
-   files:[{img:'sbContent2.jpg',name:'kandy_store_interior.jpg',sub:'Image · 3.1 MB'},
-          {img:'sbHero.jpg',name:'instagram.com/reel/DA41m…',sub:'Instagram reel',link:1,crop:'70% 30%'},
-          {img:'sbContent1.jpg',name:'tiktok.com/@hillcountry.diaries/video/7419…',sub:'TikTok reel',link:1},
-          {img:'sbContent2.jpg',name:'instagram.com/reel/C8pQz…',sub:'Instagram reel',link:1,crop:'80% 60%'}],
+  {user:"Here's a shot from our brand shoot for the cover, and a few posts we like.",
+   files:[{img:'ppMeal.jpg',name:'patty_pop_cover.jpg',sub:'Image · 3.1 MB'},
+          {img:'ppMeal.jpg',name:'instagram.com/reel/DA41m…',sub:'Instagram reel',link:1,crop:'55% 75%'},
+          {img:'ppBite.jpg',name:'tiktok.com/@hillcountry.diaries/video/7419…',sub:'TikTok reel',link:1,crop:'50% 18%'},
+          {img:'ppBite.jpg',name:'instagram.com/reel/C8pQz…',sub:'Instagram reel',link:1,crop:'50% 50%'}],
    steps:[
     {think:800},
     {tool:'upload_cover_image',label:'Upload cover image',
-     input:{campaign_id:'cmp_sb_kandy_opening',file:'kandy_store_interior.jpg'},
+     input:{campaign_id:'cmp_pp_kandy_opening',file:'patty_pop_cover.jpg'},
      output:{status:'uploaded',width:3000,height:2000,meets_requirements:true}},
     {tool:'add_inspiration_posts',label:'Add inspiration posts',
-     input:{campaign_id:'cmp_sb_kandy_opening',urls:['instagram.com/reel/DA41m…','tiktok.com/@hillcountry.diaries/video/7419…','instagram.com/reel/C8pQz…']},
+     input:{campaign_id:'cmp_pp_kandy_opening',urls:['instagram.com/reel/DA41m…','tiktok.com/@hillcountry.diaries/video/7419…','instagram.com/reel/C8pQz…']},
      output:{added:3,all_public:true,analysed:['hook_timing','framing','tone']}},
-    {card:mediaCard({cover:'sbContent2.jpg',foot:'3 inspiration posts · will be shared with your strategist',posts:[
-      {img:'sbHero.jpg',crop:'70% 30%',pl:'Instagram',handle:'@kandy.eats',why:'Slow pan of a café interior'},
-      {img:'sbContent1.jpg',pl:'TikTok',handle:'@hillcountry.diaries',why:'Misty Kandy morning as the opener'},
-      {img:'sbContent2.jpg',crop:'80% 60%',zoom:1.6,pl:'Instagram',handle:'@nethmi.eats',why:'First sip by the window'}]})},
+    {card:mediaCard({cover:'ppMeal.jpg',foot:'3 inspiration posts · will be shared with your strategist',posts:[
+      {img:'ppMeal.jpg',crop:'55% 75%',pl:'Instagram',handle:'@kandy.eats',why:'Tray reveal of the full meal'},
+      {img:'ppBite.jpg',crop:'50% 18%',pl:'TikTok',handle:'@hillcountry.diaries',why:'Hungry face to camera as the opener'},
+      {img:'ppBite.jpg',crop:'50% 50%',pl:'Instagram',handle:'@nethmi.eats',why:'First big bite, close up'}]})},
     {tool:'list_creative_strategists',label:'List creative strategists',
-     input:{campaign_id:'cmp_sb_kandy_opening',category:'Food',city:'Kandy',campaign_type:'store_opening',budget:800000,limit:3},
+     input:{campaign_id:'cmp_pp_kandy_opening',category:'Food',city:'Kandy',campaign_type:'store_opening',budget:800000,limit:3},
      output:{matches:[{id:'str_ishara_f',usual_commission:'12-15%'},{id:'str_ravindu_p',usual_commission:'10-12%'},{id:'str_hill_country',usual_commission:'15-18%'}]}},
-    {text:`<p>Both are added. Here are the three strategists who best fit a Kandy café opening:</p>`},
+    {text:`<p>Both are added. Here are the three strategists who best fit a Kandy restaurant opening:</p>`},
     {card:CARD_STRAT_OPTIONS},
-    {text:`<p>I'd go with <b>Ishara</b>. She lives in Kandy, has run three café openings, and her commission is in the normal range. Ravindu is cheaper but has few contacts in Kandy. Malsha's agency can do everything, including production, but costs the most.</p>`}
+    {text:`<p>I'd go with <b>Ishara</b>. She lives in Kandy, has run three restaurant openings, and her commission is in the normal range. Ravindu is cheaper but has few contacts in Kandy. Malsha's agency can do everything, including production, but costs the most.</p>`}
   ]},
 
   {user:"Let's go with Ishara.",
@@ -925,9 +925,9 @@ const STRAT = [
    steps:[
     {think:600},
     {perm:'send_strategist_invite',desc:'Sends Ishara an invite in her Polysocial collaborator app, with your brief, budget, timeline, cover image and inspiration posts. Nothing is charged yet.',
-     preview:'send_strategist_invite({ campaign_id: "cmp_sb_kandy_opening", strategist_id: "str_ishara_f", engagement: "one_time", pricing: "commission" })',once:true},
+     preview:'send_strategist_invite({ campaign_id: "cmp_pp_kandy_opening", strategist_id: "str_ishara_f", engagement: "one_time", pricing: "commission" })',once:true},
     {tool:'send_strategist_invite',label:'Send strategist invite',
-     input:{campaign_id:'cmp_sb_kandy_opening',strategist_id:'str_ishara_f',engagement:'one_time',pricing:'commission',starts:'2026-11-28',closes_in_hours:24},
+     input:{campaign_id:'cmp_pp_kandy_opening',strategist_id:'str_ishara_f',engagement:'one_time',pricing:'commission',starts:'2026-11-28',closes_in_hours:24},
      output:{invite_id:'inv_8f21',status:'sent',visible_in:'collaborator_app.invites'}},
     {text:`<p>Invite sent. This is what Ishara sees in her Polysocial collaborator app:</p>`},
     {card:CARD_INVITE},
@@ -986,15 +986,15 @@ const STRAT = [
    steps:[
     {think:600},
     {tool:'get_strategist_design',label:'Get strategist design',
-     input:{campaign_id:'cmp_sb_kandy_opening'},
+     input:{campaign_id:'cmp_pp_kandy_opening'},
      output:{version:1,status:'awaiting_brand_approval',sent_at:'2026-10-16T09:12:00+05:30'}},
     {text:`<p>Yes, Ishara sent it this morning. Here's the design:</p>`},
     {card:designCard(false)},
     {text:`<p>What stands out:</p>
 <ul>
 <li><b>Two phases.</b> A few big Kandy creators build buzz the week before opening, then lots of smaller creators fill opening week.</li>
-<li><b>It follows your inspiration posts.</b> The misty-morning opener, slow interior pan and window-seat sip all come from the three reels you shared.</li>
-<li><b>Store visits are measurable.</b> The "show this video for a free upsize" offer lets you count visits at the store.</li>
+<li><b>It follows your inspiration posts.</b> The hungry-face opener, tray reveal and close-up first bite all come from the three reels you shared.</li>
+<li><b>Store visits are measurable.</b> The "show this video for free fries" offer lets you count visits at the restaurant.</li>
 <li><b>One thing to weigh:</b> 30% of the budget goes to 6 macro creators. In your past campaigns, Kandy micro creators were your cheapest views.</li>
 </ul>
 <p>Approve it as it is, or send Ishara feedback?</p>`}
@@ -1004,10 +1004,10 @@ const STRAT = [
    steps:[
     {think:600},
     {tool:'send_strategist_feedback',label:'Send strategist feedback',
-     input:{campaign_id:'cmp_sb_kandy_opening',message:'Please shift some of the macro budget to more micro creators for opening week.'},
+     input:{campaign_id:'cmp_pp_kandy_opening',message:'Please shift some of the macro budget to more micro creators for opening week.'},
      output:{status:'revision_requested'}},
     {tool:'get_strategist_design',label:'Get strategist design',
-     input:{campaign_id:'cmp_sb_kandy_opening',version:2},
+     input:{campaign_id:'cmp_pp_kandy_opening',version:2},
      output:{version:2,status:'awaiting_brand_approval',changes:['macro_creators: 6 → 4','micro_creators: 40 → 50']}},
     {text:`<p>I passed that on, and Ishara sent a revised version 40 minutes later:</p>`},
     {card:designCard(true)},
@@ -1018,26 +1018,26 @@ const STRAT = [
    steps:[
     {think:500},
     {tool:'approve_strategist_design',label:'Approve strategist design',
-     input:{campaign_id:'cmp_sb_kandy_opening',version:2},
+     input:{campaign_id:'cmp_pp_kandy_opening',version:2},
      output:{status:'approved',strategist_commission_charged:96000}},
     {perm:'publish_campaign',desc:'This makes the campaign visible to creators now and holds the Rs. 704,000 creator budget from your Polysocial balance.',
-     preview:'publish_campaign({ campaign_id: "cmp_sb_kandy_opening", go_live: "now" })',once:true},
+     preview:'publish_campaign({ campaign_id: "cmp_pp_kandy_opening", go_live: "now" })',once:true},
     {tool:'publish_campaign',label:'Publish campaign',
-     input:{campaign_id:'cmp_sb_kandy_opening',go_live:'now'},
+     input:{campaign_id:'cmp_pp_kandy_opening',go_live:'now'},
      output:{status:'live',managed_by:'Ishara Fernando',macro_invites_sent:4,eligible_creators_notified:610}},
     {text:`<p>It's live 🎉 Ishara has sent invites to the 4 macro creators, and 610 micro creators in the Kandy area have been notified. Her Rs. 96,000 commission was charged when you approved the design.</p>`},
-    {card:liveCard({title:'Starbucks Kandy — First brew in the hills',meta:'Managed by Ishara Fernando · 12% commission · Budget held: Rs. 704,000 for creators',steps:['Today · live','Nov 28 · teasers','Dec 5 · store opens','Dec 14 · close'],id:'ID cmp_sb_kandy_opening'})},
+    {card:liveCard({title:'Patty Pop Kandy — First bite in the hills',meta:'Managed by Ishara Fernando · 12% commission · Budget held: Rs. 704,000 for creators',steps:['Today · live','Nov 28 · teasers','Dec 5 · store opens','Dec 14 · close'],id:'ID cmp_pp_kandy_opening'})},
     {card:stepper(['done','done','done','done','done','done'],'By Ishara Fernando')},
-    {text:`<p>From here Ishara runs it day to day: creator approvals, the upsize tracking and a weekly report. You'll only be asked about budget changes. Want the weekly report sent here every Monday?</p>`}
+    {text:`<p>From here Ishara runs it day to day: creator approvals, the free-fries tracking and a weekly report. You'll only be asked about budget changes. Want the weekly report sent here every Monday?</p>`}
   ]}
 ];
 
 const CHATS = {
-  self:{title:'Cold Brew launch — our own brief',script:SELF,
+  self:{title:'Crunch Chicken launch — our own brief',script:SELF,
     greet:'Good morning, Dinithi',
     blurb:'Path 1 of the campaign flow: the brand is connected, shares the requirement and timeline, designs the campaign itself (hook, script, audience), uploads a cover image and inspiration posts, sets the budget and goes live.',
     chips:['Check brand connection','Requirement &amp; timeline','Brand shares hook, script, audience','Upload cover &amp; inspiration','Set budget','Go live']},
-  strat:{title:'Kandy store opening — with a strategist',script:STRAT,
+  strat:{title:'Kandy opening — with a strategist',script:STRAT,
     greet:'Good morning, Dinithi',
     blurb:'Path 2 of the campaign flow: the brand has no time to design the campaign, so it sets a budget, uploads a cover image and inspiration posts, picks one of three matched creative strategists, invites them and agrees their commission in chat. The strategist designs it; the brand reviews, approves and goes live.',
     chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Upload cover &amp; inspiration','Choose from 3 strategists','Invite &amp; agree commission','Review &amp; revise design','Approve &amp; go live']}
