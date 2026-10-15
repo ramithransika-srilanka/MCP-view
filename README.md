@@ -10,14 +10,14 @@ The sidebar (or the chat picker on mobile) switches between two chats. Link stra
 Both chats follow the same flow: check the brand is connected → requirement and timeline → who designs it →
 cover image and inspiration posts (always requested from the brand) → budget → go live. They start the same way and split at "Do you need to hire a creative strategist to design your campaign?" (Yes / No).
 
-**Cold Brew launch — our own brief (`#self`, opens by default).** The brand designs the campaign itself.
-`check_brand_connection` and `get_brand_profile` confirm Starbucks Sri Lanka is connected. The marketing manager
+**Crunch Chicken launch — our own brief (`#self`, opens by default).** The brand designs the campaign itself.
+`check_brand_connection` and `get_brand_profile` confirm Patty Pop (a burger chain) is connected. The marketing manager
 gives the goal and dates and pastes the team's brief (hook, script beats, audience, platforms). `check_brief` and
 `create_campaign_draft` turn it into the campaign and flag what's missing. Claude asks for a **cover image and
 inspiration posts**; the user uploads the cover and shares three reels (`upload_cover_image`, `add_inspiration_posts`).
 Then `set_campaign_budget` and `estimate_reach` add the budget, and `publish_campaign` (with approval) takes it live.
 
-**Kandy store opening — with a creative strategist (`#strat`).** The brand has no time to design it. After the same
+**Kandy opening — with a creative strategist (`#strat`).** The brand has no time to design it. After the same
 connection check, `get_strategist_options` explains the service, and the budget is set first (it includes the
 strategist's commission). Claude asks for a **cover image and inspiration posts** (`upload_cover_image`,
 `add_inspiration_posts`), then `list_creative_strategists` offers **three strategists** to choose from: Ishara Fernando
