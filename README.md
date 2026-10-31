@@ -45,14 +45,22 @@ dates, no design) and the **creator persona** ("momfluencers in Colombo"). `crea
 availability for the dates. Only 2 are momfluencers, so it widens the match to a dadfluencer and restaurant reviewers, and
 leaves out Lelumi Jagoda, who is booked.
 
-Claude then shows the **creator map**, the same map, filters and creators as the Polysocial mobile site
-(`Polysocial-mobile`, `site/creator-map/celeste`), opened with Polysocial's match already applied. Instead of one big
-window, its parts come in the chat as separate cards, each with a line from Claude: **Filters** (persona, tier,
-language, gender, lifestyle/location view), **Audience map**, **Cost per reel** (with the cost range), **Creators by
-tier** and **Creators**. A change in any card updates the others. Clicking a creator on the map or in the list opens
-their **profile** in a side panel. The brand hides the creators it doesn't want with the eyes, and **Use these N
-creators** on the Creators card sends whoever is left back to the chat. The conversation carries on with that line-up
-(Next, Play and Show all use Ranshan, Radeesha, Imasha and Chathuri):
+Claude then shows the **creator map** right in the chat: the same map, filters and creators as the Polysocial mobile
+site (`Polysocial-mobile`, `site/creator-map/celeste`), opened with Polysocial's match applied. Nothing is embedded
+and nothing scrolls inside a card; every part is chat UI:
+
+- **Filter chips** in Claude's message: persona, tier, audience gender, language and the map view (location or
+  lifestyle).
+- **Audience map** card: creators shown, combined followers, coverage, and the age × location grid with reach. Hover a
+  cell for who reaches it.
+- **Cost per reel** card: a price range slider, totals and the cost chart.
+- **Creators by tier** card, with an eye to hide a whole tier.
+- **Creators** card: everyone who matches, with an eye to leave anyone out.
+- **Use these N creators**, below the cards.
+
+All the parts share one state, so a change anywhere redraws the rest. Tapping a creator (on the map, the chart or the
+list) opens their **profile** in a side panel, where they can also be left out. The conversation carries on with the
+picked line-up (Next, Play and Show all use Ranshan, Radeesha, Imasha and Chathuri):
 
 1. `add_campaign_creators` adds the picks, and `draft_campaign_brief` turns the brand's idea into the design.
 2. The brand uploads a cover image (`upload_cover_image`, `update_campaign_design`), and `set_campaign_budget` sets the
@@ -61,12 +69,10 @@ creators** on the Creators card sends whoever is left back to the chat. The conv
 4. After the campaign, `get_campaign_results` and `get_payout_summary` show each creator's reel and payout, and
    `release_payouts` (with approval) pays them.
 
-The map lives in `creator-map/`: `index.html` is the mobile site's page without its site nav, footer and "Send this
-plan" form. `data.js` is the same creator list (brand set to Patty Pop, with food and family persona filters), and
-`avatars/` the same profile pictures. The page reads its starting filters from the URL
-(`?persona=…&axis=location&exclude=…&note=…`). With `&part=filters|map|cost|tiers|creators|profile` it shows only that
-part, which is how each chat card and the profile panel embed it; the chat passes each card's changes to the others.
-Opened on its own, without `part`, it is the whole map and needs a desktop-sized window, as on the mobile site.
+The creator data lives in `creator-map/`: `data.js` is the mobile site's creator list (brand set to Patty Pop, with food
+and family persona filters) and `avatars/` the same profile pictures. The chat draws the map from it (`CM_PARTS` in
+`index.html`), following the mobile page's rules for placement, reach, tiers and cost. `creator-map/index.html` is the
+mobile page itself, kept for reference and opened on its own.
 
 ## Presenting
 

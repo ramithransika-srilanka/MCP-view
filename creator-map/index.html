@@ -305,39 +305,6 @@
     #siteFooter p { font-size: 14px; }
     #siteFooter .legal { font-size: 12px; }
   }
-  /* ================= CHAT CARDS =================
-     Opened from the Claude chat with ?part=filters|map|cost|tiers|creators|profile:
-     each card in the chat shows one part of the map, and the chat keeps the
-     cards in step. Without ?part the page is the whole map, as on Polysocial. */
-  body.inChat { --edge: 16px; }
-  body.inChat [data-part]:not(.partOn) { display: none !important; }
-  body.inChat main { display: block !important; padding-bottom: 16px; }
-  body.inChat .cmDesktopOnly { display: none !important; }
-  body.inChat .cmStats { grid-template-columns: repeat(3, minmax(0,1fr)) auto; padding-top: 16px; margin-bottom: 20px; }
-  body.inChat .cmStat b { font-size: 24px; }
-  body.inChat .cmFilters { padding-top: 16px; }
-  body.inChat .rosterNote { margin-top: 16px; margin-bottom: 0; }
-  body.inChat .cmTags { margin-bottom: 0; }
-  body.inChat .cmLayout { margin-top: 0; gap: 0; }
-  body.inChat .cmCard { padding-top: 16px; }
-  body.inChat .cmCard[data-part="map"] > h2, body.inChat .cmCard[data-part="cost"] > h2 { display: none; }
-  body.inChat .cmSide { padding-top: 0; }
-  body.inChat .cmSide > section { padding-top: 16px; }
-  body.inChat .cmSide > section + section { margin-top: 0; }
-  body.inChat .cmSide > section > h2:first-child { display: none; }
-  body.inChat .planBand { margin: 24px var(--edge) 0; padding: 16px; border-radius: 16px; }
-  body.inChat .planBand h2 { font-size: 17px; }
-  body.inChat .plan > div { flex-basis: 260px; }
-  body.inChat .drawer { position: static; width: auto; transform: none; visibility: visible; box-shadow: none; }
-  body.inChat .drawer .dHead { display: none; }
-  body.inChat .drawer .dBody { padding: 24px 20px; overflow: visible; }
-  @media (max-width: 520px) {
-    body.inChat .cmStats { grid-template-columns: repeat(3, minmax(0,1fr)); }
-    body.inChat .cmPlatform { grid-column: 1 / -1; justify-self: start; }
-    body.inChat .cmStat b { font-size: 20px; }
-    body.inChat .tagRow { flex-direction: column; gap: 6px; }
-    body.inChat .tagLabel { width: auto; padding-top: 0; }
-  }
   @media (prefers-reduced-motion: reduce) {
     #siteNav { animation: none; }
     .cell { transition: none; }
@@ -353,16 +320,16 @@
 
   <main>
 
-    <section class="cmStats" aria-label="Summary" data-part="map">
+    <section class="cmStats" aria-label="Summary">
       <div class="cmStat"><b id="sCount">0</b><span>Creators shown</span></div>
       <div class="cmStat"><b id="sReach">0</b><span>Combined followers</span></div>
       <div class="cmStat"><b id="sCov">0%</b><span>Map covered</span></div>
       <select class="pill cmPlatform" id="fPlatform" aria-label="Platform"></select>
     </section>
 
-    <p class="rosterNote" id="rosterNote" data-part="filters" hidden><span id="rosterTxt"></span></p>
+    <p class="rosterNote" id="rosterNote" hidden><span id="rosterTxt"></span></p>
 
-    <section class="cmFilters" aria-label="Filters" data-part="filters">
+    <section class="cmFilters" aria-label="Filters">
       <span class="seg" id="axisSeg" role="group" aria-label="Vertical axis">
         <button type="button" data-axis="lifestyle" class="on">Lifestyle</button>
         <button type="button" data-axis="location">Location</button>
@@ -374,7 +341,7 @@
       </div>
     </section>
 
-    <section class="cmTags" aria-label="Tag filters" data-part="filters">
+    <section class="cmTags" aria-label="Tag filters">
       <p class="tagHint">Select one or more tags in each row to combine them.</p>
       <div class="tagRow"><span class="tagLabel">Persona</span><div class="tags" id="tPersona" role="group" aria-label="Persona"></div></div>
       <div class="tagRow"><span class="tagLabel">Content creation style</span><div class="tags" id="tStyle" role="group" aria-label="Content creation style"></div></div>
@@ -382,7 +349,7 @@
     </section>
 
     <div class="cmLayout">
-      <div class="cmCard" data-part="map">
+      <div class="cmCard">
         <h2>Audience map</h2>
         <p class="cmSub" id="mapSub"></p>
         <div class="map" id="map"></div>
@@ -395,7 +362,7 @@
         </div>
       </div>
 
-      <div class="cmCard" data-part="cost">
+      <div class="cmCard">
         <h2>Cost per reel</h2>
         <p class="cmSub">What each creator charges for one Instagram reel, in Rs.</p>
         <div class="budget" id="budget">
@@ -414,12 +381,12 @@
       </div>
 
       <aside class="cmCard cmSide">
-        <section data-part="tiers">
+        <section>
           <h2>Creators by tier</h2>
           <p class="cmSub">How many matching creators sit in each follower tier. Use the eye to hide a whole tier.</p>
           <div class="tiers" id="tiers"></div>
         </section>
-        <section data-part="creators">
+        <section>
           <h2>Creators</h2>
           <p class="cmSub">Everyone who matches your filters. Use the eye to hide a creator from the map and cost chart.</p>
           <div class="list" id="list"></div>
@@ -428,7 +395,7 @@
 
     </div>
 
-    <section class="planBand" aria-labelledby="planTitle" data-part="creators"><div class="plan">
+    <section class="planBand" aria-labelledby="planTitle"><div class="plan">
       <div>
         <h2 id="planTitle">Pick your creators</h2>
         <p class="cmSub" id="planSub">Adjust the filters, cost range and eyes above until the map shows the creators you want. Click a creator to open their profile. Everyone left on the map goes back to Claude.</p>
@@ -438,7 +405,7 @@
   </main>
 
   <div class="scrim" id="scrim"></div>
-  <aside class="drawer" id="drawer" data-part="profile" role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <aside class="drawer" id="drawer" role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
     <div class="dHead">
       <h2 id="drawerTitle">Creator profile</h2>
       <button type="button" class="x" id="closeBtn" aria-label="Close profile"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -477,12 +444,6 @@
   // `exclude` takes creators who are booked for the campaign dates off the map.
   var Q = new URLSearchParams(location.search);
   function qList(k) { return (Q.get(k) || "").split("|").filter(Boolean); }
-  // ?part=… shows one part of the map, as one card in the chat.
-  var PART = Q.get("part"), IN_CHAT = !!PART && window.parent !== window;
-  if (PART) {
-    document.body.classList.add("inChat");
-    document.querySelectorAll("[data-part]").forEach(function (el) { el.classList.toggle("partOn", el.dataset.part === PART); });
-  }
   var EXCLUDE = qList("exclude").map(function (h) { return h.toLowerCase(); });
   function loadCreators() {
     return DATA.creators.filter(function (c) { return EXCLUDE.indexOf(String(c.handle || "").toLowerCase()) === -1; })
@@ -936,7 +897,6 @@
 
     var s = creators.find(function (c) { return c.id === selected; });
     renderProfile(s);
-    share();
   }
 
   var IG_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#121212" stroke="none"/></svg>';
@@ -985,8 +945,6 @@
 
   function select(id) {
     selected = id; render();
-    // In the chat the profile opens in Claude's side panel instead.
-    if (IN_CHAT) return post({ type: "polysocial:profile", id: id });
     $("profile").scrollTop = 0;
     openDrawer();
   }
@@ -1043,56 +1001,6 @@
   mq.addEventListener ? mq.addEventListener("change", render) : mq.addListener(render);
   var rz; window.addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(function () { renderCost(costRows); }, 120); });
 
-  // ---------- Chat cards: keep every part in step ----------
-  // Each card is its own copy of the map. A change in one is sent to the chat,
-  // which passes it to the others; a card that opens later asks for the latest.
-  var live = false, applying = false;
-  function post(msg) { if (IN_CHAT) window.parent.postMessage(msg, "*"); }
-  function snapshot() {
-    return { picked: picked, gender: gender, lang: $("fLang").value, platform: $("fPlatform").value, axis: axis,
-      budget: budget, hiddenIds: hiddenIds, shownIds: shownIds, hiddenTiers: hiddenTiers, selected: selected };
-  }
-  function share() { if (live && !applying && PART !== "profile") post({ type: "polysocial:state", state: snapshot() }); }
-  function applyState(st) {
-    picked = st.picked; gender = st.gender; axis = st.axis; budget = st.budget; selected = st.selected;
-    hiddenIds = st.hiddenIds; shownIds = st.shownIds; hiddenTiers = st.hiddenTiers;
-    $("fLang").value = st.lang; $("fPlatform").value = st.platform;
-    [["tPersona", "persona"], ["tStyle", "style"], ["tTier", "tier"]].forEach(function (r) {
-      $(r[0]).querySelectorAll(".tag").forEach(function (x) {
-        var on = x.dataset.v ? picked[r[1]].indexOf(x.dataset.v) !== -1 : !picked[r[1]].length;
-        x.classList.toggle("on", on);
-        if (x.dataset.v) x.setAttribute("aria-pressed", on ? "true" : "false");
-      });
-    });
-    $("axisSeg").querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x.dataset.axis === axis); });
-    $("tGender").querySelectorAll(".tag").forEach(function (b) { b.classList.toggle("on", !!gender[b.dataset.v]); b.setAttribute("aria-pressed", gender[b.dataset.v] ? "true" : "false"); });
-  }
-  // Leave only these creators on the map (the line-up the chat went on with).
-  function only(handles) {
-    creators.forEach(function (c) {
-      delete shownIds[c.id];
-      if (handles.indexOf(handleOf(c)) === -1) hiddenIds[c.id] = true; else delete hiddenIds[c.id];
-    });
-  }
-  function lock() {
-    $("planBtn").disabled = true; $("planBtn").textContent = "Line-up sent to Claude";
-    $("planBtn").onclick = null;
-  }
-  window.addEventListener("message", function (e) {
-    var d = e.data;
-    if (e.source !== window.parent || !d || d.type !== "polysocial:state") return;
-    applying = true;
-    if (d.state) applyState(d.state);
-    if (d.only) only(d.only);
-    render();
-    applying = false;
-    if (d.locked) lock();
-    live = true;
-  });
-  if (IN_CHAT) {
-    new ResizeObserver(function () { post({ type: "polysocial:height", h: Math.ceil(document.body.getBoundingClientRect().height) }); }).observe(document.body);
-  }
-
   // The match Polysocial made: preset persona tags and axis, and a note.
   qList("persona").forEach(function (v) {
     var b = Array.prototype.find.call($("tPersona").querySelectorAll(".tag"), function (x) { return x.dataset.v === v; });
@@ -1100,9 +1008,7 @@
   });
   if (Q.get("axis") === "location") $("axisSeg").querySelector('[data-axis="location"]').click();
   if (Q.get("note")) { $("rosterTxt").textContent = Q.get("note"); $("rosterNote").hidden = false; }
-  if (PART === "profile") selected = Q.get("id");
   render();
-  if (IN_CHAT && PART !== "profile") post({ type: "polysocial:ready" });
 })();
 </script>
 </body></html>
