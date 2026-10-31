@@ -23,6 +23,7 @@
   --ps-g100:#ececec; --ps-g200:#d9d9d9; --ps-g600:#717171; --ps-g800:#121212; --ps-card:#fff;
   --chat-font:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
   --ps-font:'Inter',-apple-system,system-ui,sans-serif;
+  --cm-cell:#f2f2f2; --cm-cell2:#e9e9e9; --cm-h0:#ffe9e3; --cm-h1:#ffcdbf; --cm-h2:#ffa990; --cm-h3:#ff8868; --cm-core:#ff6b49; --cm-lab:92px;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
@@ -32,6 +33,7 @@
     --clay-soft:rgba(217,119,87,.18); --ok:#6cc08f; --ok-soft:rgba(108,192,143,.14); --warn:#e0a458; --warn-soft:rgba(224,164,88,.15);
     --code:#1f1e1d; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
     --ps-g100:#3a3a38; --ps-g200:#4a4a47; --ps-g600:#a6a39b; --ps-g800:#faf9f5; --ps-card:#30302e; --ps-blue-100:rgba(115,145,243,.25);
+    --cm-cell:#3a3a38; --cm-cell2:#343432; --cm-h0:#4d3732; --cm-h1:#6f4333; --cm-h2:#a14f36; --cm-h3:#cf5d3c;
   }
 }
 :root[data-theme="dark"]{
@@ -41,6 +43,7 @@
   --clay-soft:rgba(217,119,87,.18); --ok:#6cc08f; --ok-soft:rgba(108,192,143,.14); --warn:#e0a458; --warn-soft:rgba(224,164,88,.15);
   --code:#1f1e1d; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
   --ps-g100:#3a3a38; --ps-g200:#4a4a47; --ps-g600:#a6a39b; --ps-g800:#faf9f5; --ps-card:#30302e; --ps-blue-100:rgba(115,145,243,.25);
+    --cm-cell:#3a3a38; --cm-cell2:#343432; --cm-h0:#4d3732; --cm-h1:#6f4333; --cm-h2:#a14f36; --cm-h3:#cf5d3c;
 }
 
 *{box-sizing:border-box;}
@@ -376,9 +379,101 @@ img{display:block;}
 .plist small{font-weight:400;color:var(--ps-g600);}
 
 /* ---------- Pick creators: creator map card, overlay, line-up ---------- */
-.cmf{display:block;width:100%;height:240px;border:0;background:#fff;}
-.cmpart .ps-f .cm-st{font-weight:500;}
-.cmpart.done .cm-st{color:var(--ok);font-weight:600;}
+/* ---------- Creator map in the chat (Pick creators chat) ---------- */
+.cmrow{display:flex;gap:12px;align-items:flex-start;padding:4px 0;}
+.cmlab{flex:none;width:74px;padding-top:6px;font-size:12.5px;font-weight:500;color:var(--muted);}
+.cmchips{display:flex;flex-wrap:wrap;gap:6px;}
+.cmchip{border:1px solid var(--line-2);background:transparent;color:var(--text);border-radius:999px;padding:5px 12px;font-size:13px;line-height:1.3;transition:background .15s,border-color .15s,color .15s;}
+.cmchip:hover{border-color:var(--clay);}
+.cmchip.on{background:var(--clay);border-color:var(--clay);color:#fff;}
+.cmpart.locked .cmchip,.cmpart.locked .cmeye{pointer-events:none;opacity:.55;}
+.cmpart.locked .cmchip.on{opacity:.8;}
+.cmstats{padding:12px 14px 0;}
+[data-cm="map"]{padding-bottom:14px;}
+.cmgrid{display:grid;margin:14px 14px 0;}
+.cmc{aspect-ratio:1;border-radius:3px;background:var(--cm-cell);position:relative;}
+.cmc.alt{background:var(--cm-cell2);}
+.cmc.cr{background:var(--cm-core)!important;cursor:pointer;}
+.cmc.cr::after{content:"";position:absolute;inset:28%;border-radius:50%;background:#fff;}
+.cmc.cr:hover,.cmc.sel{outline:2px solid var(--ps-blue);outline-offset:1px;z-index:1;}
+.cmyl{display:flex;align-items:center;justify-content:flex-end;padding-right:8px;text-align:right;font-size:11.5px;line-height:1.2;border-right:1px solid var(--line);}
+.cmxl{padding-top:5px;text-align:center;font-size:11.5px;border-top:1px solid var(--line);}
+.cmaxes{display:flex;justify-content:space-between;margin:6px 14px 0;font-size:11.5px;font-weight:600;}
+.cmlegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 14px 0;font-size:11.5px;color:var(--ps-g600);}
+.cmlegend span{display:inline-flex;align-items:center;gap:6px;}
+.sw{position:relative;display:inline-block;width:14px;height:14px;border-radius:3px;background:var(--cm-cell2);}
+.sw.cr{background:var(--cm-core);}
+.sw.cr::after{content:"";position:absolute;inset:28%;border-radius:50%;background:#fff;}
+.sw.ramp{width:40px;background:linear-gradient(90deg,var(--cm-h0),var(--cm-h1) 35%,var(--cm-h2) 70%,var(--cm-h3));}
+.cmtip{position:fixed;z-index:60;pointer-events:none;max-width:240px;padding:8px 11px;border-radius:10px;background:#141413;color:#fff;font:12px/1.45 var(--ps-font);opacity:0;transition:opacity .12s;box-shadow:0 10px 30px rgba(0,0,0,.2);}
+[data-cm="cost"]{padding:12px 14px 14px;}
+.cmrange{padding:10px 14px;border-radius:12px;background:var(--ps-g100);}
+.cmrange .top{display:flex;justify-content:space-between;gap:10px;font-size:13px;}
+.cmrange .cnt{font-size:12px;color:var(--ps-g600);}
+.cmrange .rail{position:relative;height:20px;margin-top:6px;}
+.cmrange .rail::before{content:"";position:absolute;left:0;right:0;top:8px;height:4px;border-radius:4px;background:var(--ps-g200);}
+.cmrange .fill{position:absolute;top:8px;height:4px;border-radius:4px;background:var(--cm-core);}
+.cmrange input{position:absolute;inset:0;width:100%;height:20px;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none;}
+.cmrange input::-webkit-slider-runnable-track{background:none;}
+.cmrange input::-moz-range-track{background:none;}
+.cmrange input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--cm-core);box-shadow:0 1px 3px rgba(0,0,0,.15);cursor:pointer;pointer-events:auto;}
+.cmrange input::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--cm-core);cursor:pointer;pointer-events:auto;}
+.cmrange input:disabled::-webkit-slider-thumb{cursor:default;border-color:var(--ps-g600);}
+.cmrange .ends{display:flex;justify-content:space-between;font-size:11px;color:var(--ps-g600);}
+[data-cm="cost"] .cmstats{padding:14px 0 0;}
+.cmchart{display:grid;grid-template-columns:56px minmax(0,1fr);margin-top:22px;}
+.cmchart .cy{position:relative;height:180px;}
+.cmchart .cy span{position:absolute;right:8px;transform:translateY(50%);font-size:10.5px;color:var(--ps-g600);white-space:nowrap;}
+.cmchart .plot{position:relative;height:180px;border-bottom:1px solid var(--ps-g200);}
+.cmchart .gl{position:absolute;left:0;right:0;border-top:1px solid var(--line);}
+.cmchart .md{position:absolute;left:0;right:0;border-top:1px dashed var(--ps-g600);}
+.cmchart svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
+.cmchart polyline{fill:none;stroke:#F05A38;stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke;}
+.cmchart .pt{position:absolute;width:12px;height:12px;margin:0 0 -6px -6px;padding:0;border-radius:50%;border:2px solid var(--ps-card);background:#F05A38;}
+.cmchart .pt:hover,.cmchart .pt.sel{background:var(--ps-blue);}
+.cmchart .pt em{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-style:normal;font-size:10.5px;font-weight:600;color:var(--ps-g800);white-space:nowrap;}
+.cmchart .cx{grid-column:2;display:flex;padding-top:6px;}
+.cmchart .cx span{flex:1 1 0;min-width:0;text-align:center;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cmnote{margin:10px 0 0;font-size:11.5px;font-style:italic;color:var(--ps-g600);}
+.cmempty{margin:0;font-size:12.5px;color:var(--ps-g600);}
+[data-cm="tiers"]{padding:10px 14px;}
+.cmtier{display:grid;grid-template-columns:80px minmax(0,1fr) 22px 28px;gap:10px;align-items:center;padding:2px 0;font-size:13px;font-weight:500;}
+.cmtier small{display:block;font-size:10.5px;font-weight:400;color:var(--ps-g600);}
+.cmtier .tb{height:6px;border-radius:4px;background:var(--ps-g100);overflow:hidden;}
+.cmtier .tb i{display:block;height:100%;border-radius:4px;background:var(--cm-core);}
+.cmtier .n{text-align:right;font-size:12px;color:var(--ps-g600);}
+.cmtier.off > span{opacity:.4;}
+.cmeye{flex:none;display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;border-radius:50%;background:none;color:var(--ps-g800);}
+.cmeye:hover{background:var(--ps-g100);}
+.cmeye.off{color:var(--ps-g600);}
+.cmli{cursor:pointer;}
+.cmli:hover{background:var(--clay-soft);}
+.cmli.sel{background:var(--ps-blue-100);}
+.cmli.off > .cav,.cmli.off > .m,.cmli.off > .r{opacity:.4;}
+.cmli .m .why{color:var(--warn);opacity:1;}
+[data-cm="go"]{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;}
+.cmgo{border:0;border-radius:999px;padding:9px 18px;background:var(--ps-blue);color:#fff;font-size:14px;font-weight:600;}
+.cmgo:hover{background:var(--ps-blue-600);}
+.cmgo:disabled{opacity:.5;}
+.cmsum{font-size:12.5px;color:var(--muted);}
+.cmdone{font-size:13.5px;font-weight:600;color:var(--ok);}
+.pf-who{padding-bottom:18px;text-align:center;}
+.cav.xl{width:96px;height:96px;margin:0 auto 12px;font-size:28px;}
+.pf-who h3{margin:0;font-size:22px;letter-spacing:-.01em;}
+.pf-who p{margin:4px 0 0;font-size:13px;color:var(--ps-g600);}
+.pf-sec{padding:16px 0;border-top:1px solid var(--line);}
+.pf-sec h4{margin:0 0 10px;font-size:13px;color:var(--ps-g600);}
+.pf-ig{margin:0;font-size:14px;}
+.pf-ig a{color:var(--ps-blue);font-weight:600;text-decoration:none;}
+.pf-stats{display:grid;grid-template-columns:1fr 1fr;}
+.pf-stats div + div{padding-left:18px;border-left:1px solid var(--line);}
+.pf-stats b{display:block;font-size:26px;font-weight:600;letter-spacing:-.02em;}
+.pf-stats span{font-size:12px;color:var(--ps-g600);}
+.pf-sec dl{display:grid;grid-template-columns:92px minmax(0,1fr);gap:8px 12px;margin:0;font-size:13px;}
+.pf-sec dt{color:var(--ps-g600);}
+.pf-sec dd{margin:0;font-weight:500;}
+.pf-btn{width:100%;margin-top:6px;padding:9px;border:1px solid var(--line-2);border-radius:999px;background:transparent;color:var(--ps-g800);font-size:13.5px;font-weight:600;}
+.pf-btn:hover{border-color:var(--clay);}
 .cav{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;background:var(--ps-g100);display:grid;place-items:center;font-size:12px;font-weight:600;}
 .picks{display:flex;flex-direction:column;}
 .pk{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line);}
@@ -389,12 +484,12 @@ img{display:block;}
 .pk .r{text-align:right;min-width:72px;font-variant-numeric:tabular-nums;}
 .pk .r b{display:block;font-size:13px;}
 .pk .r span{display:block;font-size:11px;color:var(--ps-g600);}
-.pside{position:fixed;top:0;right:0;bottom:0;z-index:50;width:min(440px,100vw);display:flex;flex-direction:column;background:#fff;border-left:1px solid var(--line);box-shadow:-12px 0 40px rgba(0,0,0,.12);animation:slidein .25s cubic-bezier(.32,.72,0,1) both;}
+.pside{position:fixed;top:0;right:0;bottom:0;z-index:50;width:min(420px,100vw);display:flex;flex-direction:column;background:var(--ps-card);color:var(--ps-g800);font-family:var(--ps-font);border-left:1px solid var(--line);box-shadow:-12px 0 40px rgba(0,0,0,.12);animation:slidein .25s cubic-bezier(.32,.72,0,1) both;}
 .pside[hidden]{display:none;}
-.pside-h{display:flex;align-items:center;gap:8px;padding:12px 12px 12px 16px;border-bottom:1px solid #e4e4e4;font:600 13px var(--ps-font);color:#121212;}
-.pside-h button{margin-left:auto;width:32px;height:32px;border-radius:50%;border:1px solid #e4e4e4;background:#fff;color:#121212;display:grid;place-items:center;}
-.pside-h button:hover{background:#f2f2f2;}
-.pside iframe{flex:1;width:100%;border:0;background:#fff;}
+.pside-h{display:flex;align-items:center;gap:8px;padding:12px 12px 12px 16px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;}
+.pside-h button{margin-left:auto;width:32px;height:32px;border-radius:50%;border:1px solid var(--line-2);background:transparent;color:inherit;display:grid;place-items:center;}
+.pside-h button:hover{background:var(--ps-g100);}
+.pside-b{flex:1;overflow-y:auto;padding:24px 22px;}
 @keyframes slidein{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
 
 /* ---------- Responsive ---------- */
@@ -429,6 +524,11 @@ img{display:block;}
   .ctrls .lbl{display:none;}
   .pk .r:nth-of-type(2){display:none;}
   .pside{border-left:0;}
+  :root{--cm-lab:58px;}
+  .cmrow{flex-direction:column;gap:5px;}
+  .cmlab{width:auto;padding-top:0;}
+  .cmtier{grid-template-columns:64px minmax(0,1fr) 22px 28px;}
+  .cmchart{grid-template-columns:48px minmax(0,1fr);}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
@@ -502,7 +602,7 @@ img{display:block;}
 
 <aside class="pside" id="pside" hidden aria-label="Creator profile">
   <div class="pside-h"><span class="ps-mark"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Creator profile<button type="button" id="psideClose" aria-label="Close profile"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-  <iframe id="psideFrame" title="Creator profile"></iframe>
+  <div class="pside-b" id="psideBody"></div>
 </aside>
 
 <script src="creator-map/data.js"></script>
@@ -1070,10 +1170,6 @@ const STRAT = [
 
 const POOL = (window.CREATOR_MAP || {creators:[]}).creators;
 const byHandle = (h) => POOL.find(c => c.handle === h);
-const MAP_SRC = 'creator-map/?' + new URLSearchParams({
-  persona:'Momfluencer|Dadfluencer|Restaurant reviewer', axis:'location', exclude:'le.lumii',
-  note:'Matched by Polysocial for Family Feast · Nov 16 – Dec 6 · Momfluencers in Colombo, widened to dads and restaurant reviewers. Lelumi Jagoda is booked until Nov 29, so she is not on the map.'
-}).toString();
 // Who the scripted brand keeps when the map isn't used (Next, Play, Show all).
 const DEFAULT_PICKS = ['ranshan15','radeeshaa','mitchie_imasha','she_writes_a_diary'].map(byHandle).filter(Boolean);
 let picks = null, picksLocked = false;
@@ -1081,7 +1177,7 @@ const picked = () => picks || DEFAULT_PICKS;
 
 const rs = (n) => 'Rs. ' + Math.round(n).toLocaleString('en-US');
 const kf = (n) => n >= 1e6 ? (n/1e6).toFixed(1).replace(/\.0$/,'') + 'M' : n >= 1e3 ? (n/1e3).toFixed(n >= 1e5 ? 0 : 1).replace(/\.0$/,'') + 'K' : String(n);
-const tierOf = (f) => f < 5000 ? 'Emerging' : f < 10000 ? 'Nano' : f < 40000 ? 'Micro' : f < 100000 ? 'Rising' : 'Mid';
+const tierOf = (f) => cmTier(f).name;
 const cav = (c, cls) => c.photo ? `<img class="${cls||'cav'}" src="creator-map/${c.photo}" alt="">` : `<span class="${cls||'cav'} ini">${c.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</span>`;
 const first = (c) => c.name.split(' ')[0];
 const names = (list) => list.length < 2 ? list.map(first).join('') : list.slice(0,-1).map(first).join(', ') + ' and ' + first(list[list.length-1]);
@@ -1096,14 +1192,9 @@ const views = (c) => Math.round(c.followers * (1.6 + (seed(c) % 12) / 10) / 100)
 const orders = (c) => Math.round(views(c) / 1000 * (9 + seed(c) % 5));
 const postedOn = (c) => 'Nov ' + (17 + seed(c) % 14);
 
-// One part of the Polysocial creator map per card. Every card is the same
-// map page (creator-map/?part=…); the chat keeps them in step.
-const mapPart = (part, label, foot) => `
-<div class="ps cmpart" data-part="${part}">
-  ${psHead('Creator map · ' + label)}
-  <iframe class="cmf" src="${MAP_SRC}&part=${part}" title="Creator map: ${label}"></iframe>
-  ${foot ? `<div class="ps-f">${foot}</div>` : ''}
-</div>`;
+// Parts of the creator map in the chat (drawn by cmRender, further down).
+const cmPart = (part) => `<div class="cmpart" data-cm="${part}"></div>`;
+const cmCard = (part, label, foot) => `<div class="ps">${psHead(label)}${cmPart(part)}${foot ? `<div class="ps-f">${foot}</div>` : ''}</div>`;
 
 const picksCard = (list) => `
 <div class="ps">
@@ -1187,16 +1278,17 @@ const PICK = [
     {tool:'find_creators',label:'Find matching creators',running:'Matching creators',ms:4200,
      input:{campaign_id:'cmp_pp_family_feast',persona:'Momfluencer',audience_location:'Colombo',platform:'instagram',check_availability:{from:'2026-11-16',to:'2026-12-06'},widen_if_fewer_than:5},
      output:{pool_checked:16,exact_matches:2,widened_with:['Dadfluencer','Restaurant reviewer'],matched:6,available:5,booked:[{name:'Lelumi Jagoda',handle:'le.lumii',booked_until:'2026-11-29'}],creator_map:'ready'}},
-    {text:`<p>Polysocial checked all 16 creators in the pool against your persona and dates. Only <b>2 are momfluencers</b> with a Colombo audience: Imasha Peiris and Chathuri Dahanayake. So I widened the match to a <b>dadfluencer</b> and <b>restaurant reviewers</b> whose audiences in Colombo also include young families. Lelumi Jagoda is booked until Nov 29, so she's left out.</p><p>That leaves <b>5 available creators</b>, on the Polysocial creator map you know from the mobile app. I've split it into cards. Change anything in one and the others follow. First, the filters Polysocial used for the match:</p>`},
-    {card:mapPart('filters','Filters','<span>Persona, tier, language and gender · preset from your persona</span>')},
-    {text:`<p>Where each creator's audience sits by age and location. Click a creator to open their profile:</p>`},
-    {card:mapPart('map','Audience map')},
-    {text:`<p>What each one charges for one Instagram reel. Drag the range to set your budget per creator:</p>`},
-    {card:mapPart('cost','Cost per reel')},
-    {text:`<p>How the matches spread across follower tiers. The eye hides a whole tier:</p>`},
-    {card:mapPart('tiers','Creators by tier')},
-    {text:`<p>And everyone who matches. Hide anyone you don't want with the eye, then tap <b>Use these creators</b>:</p>`},
-    {card:mapPart('creators','Creators',`<span class="cm-st">Everyone left on the map joins the campaign</span><a href="${MAP_SRC}" target="_blank" rel="noopener">Whole map ↗</a>`)}
+    {text:`<p>Polysocial checked all 16 creators in the pool against your persona and dates. Only <b>2 are momfluencers</b> with a Colombo audience: Imasha Peiris and Chathuri Dahanayake. So I widened the match to a <b>dadfluencer</b> and <b>restaurant reviewers</b> whose audiences in Colombo also include young families. Lelumi Jagoda is booked until Nov 29, so she's left out.</p><p>That leaves <b>5 available creators</b>. Here's the match as filters. Tap any of them and everything below updates:</p>`},
+    {card:cmPart('filters')},
+    {text:`<p>Where each creator's audience sits by age and location. Tap a creator to see their profile:</p>`},
+    {card:cmCard('map','Creator map · Audience')},
+    {text:`<p>What each one charges for one Instagram reel. Drag the ends to set your price range per creator:</p>`},
+    {card:cmCard('cost','Cost per reel')},
+    {text:`<p>How they spread across follower tiers. The eye hides a whole tier:</p>`},
+    {card:cmCard('tiers','Creators by tier')},
+    {text:`<p>And everyone who matches. Tap a creator for their profile, and use the eye to leave anyone out:</p>`},
+    {card:cmCard('creators','Creators')},
+    {card:cmPart('go')}
   ]},
 
   {pickMap:true,
@@ -1420,6 +1512,7 @@ async function claudeTurn(steps, id){
     if (s.card){
       const el = document.createElement('div'); el.className = 'blk'; el.style.animation = 'rise .4s ease both';
       el.innerHTML = s.card; body.appendChild(el);
+      if (el.querySelector('[data-cm]')) cmRender();
       requestAnimationFrame(() => el.querySelectorAll('.track i').forEach(i => i.style.width = i.dataset.w));
       toBottom(); await sleep(600, id); continue;
     }
@@ -1450,7 +1543,7 @@ const val = (v) => typeof v === 'function' ? v() : v;
 
 function reset(){
   run++; busy = false; autoplay = false; instant = false; turn = 0;
-  closeProfile(); picks = null; picksLocked = false; mapState = null;
+  closeProfile(); picks = null; picksLocked = false; cmReset();
   thread.innerHTML = introHTML; ta.textContent = ''; sendBtn.classList.remove('ready');
   const c = CHATS[chatKey];
   $('#greet').textContent = c.greet; $('#blurb').textContent = c.blurb;
@@ -1460,7 +1553,7 @@ function reset(){
 }
 
 async function showAll(){
-  run++; autoplay = false; busy = false; closeProfile(); picksLocked = false; mapState = null;
+  run++; autoplay = false; busy = false; closeProfile(); picks = null; picksLocked = false; cmReset();
   // Rebuild from scratch so a half-played turn isn't left behind.
   thread.innerHTML = ''; turn = 0; instant = true;
   const id = run;
@@ -1483,7 +1576,7 @@ document.addEventListener('keydown', (e) => {
 });
 async function preTurn(t, id){
   if (t.select) await selectOpts(t.select, id);
-  if (t.pickMap){ closeProfile(); picksLocked = true; markMapCard(); }
+  if (t.pickMap && !picksLocked) cmUseDefaults();
   if (t.divider){ const d = document.createElement('div'); d.className = 'divider'; d.textContent = t.divider; thread.appendChild(d); toBottom(true); await sleep(500, id); }
 }
 async function selectOpts(keys, id){
@@ -1500,48 +1593,297 @@ thread.addEventListener('click', (e) => {
   b.parentElement.querySelectorAll('button').forEach(x => x.classList.remove('sel')); b.classList.add('sel');
 });
 
-/* ---------- Creator map cards & profile panel (Pick creators chat) ---------- */
-const pside = $('#pside'), psideFrame = $('#psideFrame');
-let mapState = null; // the map cards' latest shared state
-const mapFrames = () => [...thread.querySelectorAll('.cmf')];
-const lockMsg = () => picksLocked ? { only: picked().map(c => c.handle), locked: true } : {};
-function sendFrames(msg, except){
-  mapFrames().forEach(f => { if (f.contentWindow !== except) f.contentWindow.postMessage(msg, '*'); });
+/* ---------- Creator map, built into the chat (Pick creators chat) ----------
+   The Polysocial mobile creator map (Polysocial-mobile, site/creator-map),
+   drawn natively in the chat: filter chips in the message, then the audience
+   map, cost per reel, tiers and creator list as cards. They share one state,
+   so a change anywhere redraws them all. */
+const CM_OPT = {
+  persona:(window.CREATOR_MAP || {}).filterPersonas || [],
+  language:['Sinhala','Tamil','English','Singlish','Mixed'],
+  age:['18–24','25–34','35–44','45+'],
+  location:['Colombo city','Colombo suburbs','Outside Colombo','Diaspora'],
+  lifestyle:['Premium','Middle-income','Budget-conscious']
+};
+const CM_TIERS = [
+  {name:'Emerging',max:5000,r:1.2},{name:'Nano',max:10000,r:1.6},{name:'Micro',max:40000,r:2.2},
+  {name:'Rising',max:100000,r:2.8},{name:'Mid',max:300000,r:3.5},{name:'Macro',max:1000000,r:4.3},{name:'Mega',max:Infinity,r:5.2}
+];
+const cmTier = (f) => CM_TIERS.find(t => Number(f) < t.max) || CM_TIERS[CM_TIERS.length - 1];
+const CM_POOL = POOL.filter(c => c.handle !== 'le.lumii'); // booked for the campaign dates
+const CM_PRESET = ['Momfluencer','Dadfluencer','Restaurant reviewer'];
+const COST_STEP = 5000;
+const ea = (v) => String(v == null ? '' : v).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const EYE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+const EYE_OFF = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 5.2A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-2.6 3.5M6.6 6.6C3.6 8.5 2 12 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18"/></svg>';
+
+let cm, cmSel = null;
+function cmReset(){
+  cm = {persona:[...CM_PRESET], tier:[], women:true, men:true, lang:'', axis:'location', lo:0, hi:null, max:null, hidden:{}, shown:{}, hiddenTiers:{}, locked:false};
+  cmSel = null;
 }
-function openProfile(id){
-  const src = MAP_SRC + '&part=profile&id=' + encodeURIComponent(id);
-  if (psideFrame.getAttribute('src') !== src) psideFrame.setAttribute('src', src);
-  pside.hidden = false; autoplay = false; updateUI();
+cmReset();
+
+/* Matching and hiding, as on the mobile map. */
+const cmAny = (have, want) => !want.length || have.some(v => want.includes(v));
+const cmMatches = () => CM_POOL.filter(c => cmAny(c.personas || [], cm.persona)
+  && (!cm.tier.length || cm.tier.includes(cmTier(c.followers).name)) && (!cm.lang || c.language === cm.lang)
+  && (cm.women && cm.men || (cm.women ? c.gender !== 'Mostly men' : c.gender !== 'Mostly women')));
+const cmEyeHidden = (c) => !!cm.hidden[c.handle] || !cm.shown[c.handle] && !!cm.hiddenTiers[cmTier(c.followers).name];
+const cmCeil = (list) => Math.max(COST_STEP, Math.ceil(Math.max(0, ...list.map(c => c.cost || 0)) / COST_STEP) * COST_STEP);
+const cmInBudget = (c) => cm.lo === 0 && cm.hi >= cm.max || c.cost > 0 && c.cost >= cm.lo && c.cost <= cm.hi;
+function cmWhy(c){
+  if (cm.hidden[c.handle]) return 'Hidden';
+  if (cm.shown[c.handle]) return '';
+  if (cm.hiddenTiers[cmTier(c.followers).name]) return 'Hidden with the ' + cmTier(c.followers).name + ' tier';
+  if (!cmInBudget(c)) return 'Outside the cost range';
+  return '';
+}
+function cmCompute(){
+  const all = cmMatches(), shown = all.filter(c => !cmEyeHidden(c)), max = cmCeil(shown);
+  if (cm.hi == null || cm.hi === cm.max || cm.hi > max) cm.hi = max;
+  cm.lo = Math.min(cm.lo, cm.hi); cm.max = max;
+  const list = shown.filter(c => !cmWhy(c)).sort((a,b) => b.followers - a.followers);
+  return {all:all.slice().sort((a,b) => b.followers - a.followers), list};
+}
+
+/* Placement: each creator takes the free cell nearest the centre of their age x band block. */
+function cmBounds(b){ const m = String(b).match(/(\d+)\s*[–-]\s*(\d+)/); return m ? [+m[1], +m[2]] : [parseInt(b, 10), Infinity]; }
+function cmAgeSpan(c){
+  const i = CM_OPT.age.indexOf(c.age); if (i !== -1) return [i, i];
+  const r = cmBounds(c.age), hit = [];
+  CM_OPT.age.forEach((b, k) => { const bb = cmBounds(b); if (bb[0] <= r[1] && bb[1] >= r[0]) hit.push(k); });
+  return hit.length ? [hit[0], hit[hit.length - 1]] : [0, 0];
+}
+function cmBandSpan(c, bands){
+  const v = c[cm.axis], list = Array.isArray(v) ? v : [v];
+  const idx = list.map(b => bands.indexOf(b)).filter(i => i !== -1).sort((a,b) => a - b);
+  return idx.length ? [idx[0], idx[idx.length - 1]] : [0, 0];
+}
+function cmLayout(list){
+  const bands = CM_OPT[cm.axis], nb = bands.length, counts = {};
+  let most = 0, S = 1;
+  list.forEach(c => { const k = cmAgeSpan(c)[0] + '|' + cmBandSpan(c, bands)[0]; counts[k] = (counts[k] || 0) + 1; most = Math.max(most, counts[k]); });
+  for (; S < 6 && most > 0.4 * (6 * S) * (12 / nb * S); S++){}
+  const AW = 6 * S, COLS = AW * CM_OPT.age.length, ROWS = 12 * S;
+  const rows = bands.map((_, k) => [Math.round(k * ROWS / nb), Math.round((k + 1) * ROWS / nb)]);
+  const taken = {}, pos = {};
+  list.forEach(c => {
+    const span = cmAgeSpan(c), ys = cmBandSpan(c, bands);
+    const r0 = rows[ys[0]][0], r1 = rows[ys[1]][1], c0 = span[0] * AW, c1 = (span[1] + 1) * AW;
+    const cx = span[0] === span[1] ? c0 + Math.floor(AW / 2) : (c0 + c1) / 2 - 0.5;
+    let cy = Math.floor((r0 + r1 - 1) / 2);
+    if (ys[0] !== ys[1]){ const line = rows[ys[1]][0], lean = bands.indexOf(c.lean); cy = lean === ys[0] ? line - 1 : lean === ys[1] ? line : line - 0.5; }
+    let best = null, bd = Infinity;
+    for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++){
+      if (taken[y * COLS + x]) continue;
+      const inside = x >= c0 && x < c1 && y >= r0 && y < r1, d = Math.hypot(x - cx, y - cy) + (inside ? 0 : 100);
+      if (d < bd){ bd = d; best = [x, y]; }
+    }
+    pos[c.handle] = best; taken[best[1] * COLS + best[0]] = true;
+  });
+  return {S, AW, COLS, ROWS, rows, bands, pos};
+}
+
+/* ---------- The parts ---------- */
+const chip = (on, act, v, label, extra) => `<button type="button" class="cmchip${on ? ' on' : ''}" data-cm-act="${act}" data-v="${ea(v)}"${extra || ''} aria-pressed="${on}">${label}</button>`;
+const CM_PARTS = {
+  // Filter chips, straight in the message.
+  filters(el){
+    const used = (vals) => vals.filter(v => CM_POOL.some(c => (c.personas || []).includes(v)));
+    const tiers = CM_TIERS.filter(t => CM_POOL.some(c => cmTier(c.followers).name === t.name)).map(t => t.name);
+    const langs = CM_OPT.language.filter(l => CM_POOL.some(c => c.language === l));
+    const row = (label, html) => `<div class="cmrow"><span class="cmlab">${label}</span><div class="cmchips">${html}</div></div>`;
+    el.innerHTML = row('Persona', chip(!cm.persona.length, 'persona', '', 'All') + used(CM_OPT.persona).map(v => chip(cm.persona.includes(v), 'persona', v, ea(v))).join(''))
+      + row('Tier', chip(!cm.tier.length, 'tier', '', 'All') + tiers.map(v => chip(cm.tier.includes(v), 'tier', v, v)).join(''))
+      + row('Audience', chip(cm.women, 'gender', 'women', 'Female') + chip(cm.men, 'gender', 'men', 'Male'))
+      + row('Language', chip(!cm.lang, 'lang', '', 'All') + langs.map(v => chip(cm.lang === v, 'lang', v, v)).join(''))
+      + row('Map view', chip(cm.axis === 'location', 'axis', 'location', 'Location') + chip(cm.axis === 'lifestyle', 'axis', 'lifestyle', 'Lifestyle'));
+  },
+  // Audience map: who reaches which age x location (or lifestyle) block.
+  map(el, R){
+    const list = R.list, L = cmLayout(list), N = L.COLS * L.ROWS, heat = new Array(N).fill(0), who = Array.from({length:N}, () => []), owner = {};
+    list.forEach(c => {
+      const [cx, cy] = L.pos[c.handle], r = cmTier(c.followers).r * L.S;
+      owner[cy * L.COLS + cx] = c;
+      for (let y = 0; y < L.ROWS; y++) for (let x = 0; x < L.COLS; x++){
+        const d = Math.hypot(x - cx, y - cy);
+        if (d <= r){ const i = y * L.COLS + x; heat[i] += d === 0 ? 0 : 1.5 * (r - d + 1) / r; who[i].push(c); }
+      }
+    });
+    let cells = '';
+    L.rows.forEach((rr, k) => { cells += `<div class="cmyl" style="grid-column:1;grid-row:${rr[0] + 1}/${rr[1] + 1}">${ea(L.bands[k])}</div>`; });
+    for (let y = 0; y < L.ROWS; y++) for (let x = 0; x < L.COLS; x++){
+      const i = y * L.COLS + x, band = L.rows.findIndex(rr => y >= rr[0] && y < rr[1]), ab = Math.floor(x / L.AW), o = owner[i], h = heat[i];
+      const bg = o ? '' : h >= 2.6 ? 'var(--cm-h3)' : h >= 1.5 ? 'var(--cm-h2)' : h >= 0.8 ? 'var(--cm-h1)' : h > 0 ? 'var(--cm-h0)' : '';
+      const tip = o ? `<b>${ea(o.name)}</b><br>${ea((o.personas || []).slice(0,3).join(', '))} · ${cmTier(o.followers).name}<br>${kf(o.followers)} followers`
+        : `<b>${CM_OPT.age[ab]} · ${ea(L.bands[band])}</b><br>${who[i].length ? 'Reached by ' + who[i].map(c => ea(first(c))).join(', ') : 'Not reached yet'}`;
+      cells += `<div class="cmc${(band + ab) % 2 ? ' alt' : ''}${o ? ' cr' + (cmSel === o.handle ? ' sel' : '') : ''}" style="grid-column:${x + 2};grid-row:${y + 1}${bg ? ';background:' + bg : ''}" data-tip="${ea(tip)}"${o ? ` data-cm-act="profile" data-v="${ea(o.handle)}" role="button" tabindex="0" aria-label="${ea(o.name)}"` : ''}></div>`;
+    }
+    CM_OPT.age.forEach((a, k) => { cells += `<div class="cmxl" style="grid-column:${k * L.AW + 2}/span ${L.AW};grid-row:${L.ROWS + 1}">${a}</div>`; });
+    const covered = Math.round(heat.filter((h, i) => h > 0 || owner[i]).length / N * 100);
+    el.innerHTML = `<div class="mini cmstats"><div><b>${list.length}</b><span>creators shown</span></div><div><b>${kf(reach(list))}</b><span>combined followers</span></div><div><b>${covered}%</b><span>map covered</span></div></div>
+      <div class="cmgrid" style="grid-template-columns:var(--cm-lab) repeat(${L.COLS},minmax(0,1fr));gap:${L.S > 1 ? 1 : 2}px">${cells}</div>
+      <div class="cmaxes"><span>${cm.axis === 'location' ? 'Location' : 'Lifestyle'} ↑</span><span>Audience age →</span></div>
+      <div class="cmlegend"><span><i class="sw cr"></i>Creator</span><span><i class="sw ramp"></i>Reach, wider for bigger tiers</span><span><i class="sw" style="background:var(--cm-h3)"></i>Overlap</span><span><i class="sw"></i>Not reached yet</span></div>`;
+  },
+  // Cost per reel: the range slider stays in place while dragging; the rest redraws.
+  cost(el, R){
+    if (!el.querySelector('.cmrange')) el.innerHTML = `<div class="cmrange"><div class="top"><b class="val"></b><span class="cnt"></span></div><div class="rail"><span class="fill"></span><input type="range" data-cm-range="lo" aria-label="Lowest cost per reel"><input type="range" data-cm-range="hi" aria-label="Highest cost per reel"></div><div class="ends"><span>Rs. 0</span><span class="mx"></span></div></div><div class="cmcost"></div>`;
+    const lo = el.querySelector('[data-cm-range="lo"]'), hi = el.querySelector('[data-cm-range="hi"]');
+    [lo, hi].forEach(i => { i.min = 0; i.max = cm.max; i.step = COST_STEP; i.disabled = cm.locked; });
+    if (document.activeElement !== lo) lo.value = cm.lo;
+    if (document.activeElement !== hi) hi.value = cm.hi;
+    el.querySelector('.val').textContent = rs(cm.lo) + ' – ' + rs(cm.hi);
+    el.querySelector('.cnt').textContent = R.list.length + (R.list.length === 1 ? ' creator' : ' creators') + ' in range';
+    el.querySelector('.mx').textContent = 'Rs. ' + kf(cm.max);
+    el.querySelector('.fill').style.cssText = `left:calc(9px + (100% - 18px) * ${cm.lo / cm.max});right:calc(9px + (100% - 18px) * ${1 - cm.hi / cm.max})`;
+    lo.style.zIndex = cm.lo >= cm.max - COST_STEP ? 2 : '';
+    const hash = (c) => { let h = 2166136261; for (const ch of c.name) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+    const rows = R.list.filter(c => c.cost > 0).sort((a,b) => hash(a) - hash(b)), box = el.querySelector('.cmcost');
+    if (!rows.length){ box.innerHTML = '<p class="cmempty">No creators in this range.</p>'; return; }
+    const costs = rows.map(c => c.cost), sum = total(rows), top0 = Math.max(...costs);
+    const raw = top0 / 4, p = Math.pow(10, Math.floor(Math.log10(raw))), step = [1,2,2.5,5,10].map(m => m * p).find(s => s >= raw);
+    const top = Math.ceil(top0 * 1.12 / step) * step, sorted = costs.slice().sort((a,b) => a - b);
+    const med = sorted.length % 2 ? sorted[(sorted.length - 1) / 2] : (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2;
+    const X = (k) => (k + 0.5) / rows.length * 100, Y = (v) => v / top * 100;
+    const ticks = []; for (let t = 0; t <= top; t += step) ticks.push(t);
+    box.innerHTML = `<div class="mini cmstats"><div><b>${rs(sum)}</b><span>one reel from each of ${rows.length}</span></div><div><b>Rs. ${kf(Math.round(sum / rows.length))}</b><span>average per reel</span></div><div><b>Rs. ${kf(Math.min(...costs))}–${kf(Math.max(...costs))}</b><span>cheapest to priciest</span></div></div>
+      <div class="cmchart"><div class="cy">${ticks.map(t => `<span style="bottom:${Y(t)}%">${t ? 'Rs. ' + kf(t) : '0'}</span>`).join('')}</div>
+        <div class="plot">${ticks.slice(1).map(t => `<i class="gl" style="bottom:${Y(t)}%"></i>`).join('')}<i class="md" style="bottom:${Y(med)}%"></i>
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline points="${rows.map((c, k) => X(k).toFixed(2) + ',' + (100 - Y(c.cost)).toFixed(2)).join(' ')}"/></svg>
+          ${rows.map((c, k) => `<button type="button" class="pt${cmSel === c.handle ? ' sel' : ''}" style="left:${X(k)}%;bottom:${Y(c.cost)}%" data-cm-act="profile" data-v="${ea(c.handle)}" aria-label="${ea(c.name)}, ${rs(c.cost)}"><em>Rs. ${kf(c.cost)}</em></button>`).join('')}
+        </div>
+        <div class="cx">${rows.map(c => `<span>${ea(first(c))}</span>`).join('')}</div></div>
+      <p class="cmnote">Dashed line: median, Rs. ${kf(med)}. All costs include the Polysocial fees.</p>`;
+  },
+  // Creators per follower tier; the eye hides a whole tier.
+  tiers(el, R){
+    const counted = R.all.filter(c => !cm.hidden[c.handle] && (cm.shown[c.handle] || cmInBudget(c)));
+    const counts = CM_TIERS.map(t => counted.filter(c => cmTier(c.followers).name === t.name).length), max = Math.max(1, ...counts);
+    el.innerHTML = CM_TIERS.map((t, k) => {
+      const lo = k ? CM_TIERS[k - 1].max : 0, range = !lo ? 'Under ' + kf(t.max) : t.max === Infinity ? kf(lo) + '+' : kf(lo) + '–' + kf(t.max);
+      const inTier = R.all.filter(c => cmTier(c.followers).name === t.name), off = inTier.length ? inTier.every(cmEyeHidden) : !!cm.hiddenTiers[t.name];
+      return `<div class="cmtier${off ? ' off' : ''}"><span>${t.name}<small>${range}</small></span><span class="tb"><i style="width:${counts[k] / max * 100}%"></i></span><span class="n">${counts[k]}</span>`
+        + `<button type="button" class="cmeye${off ? ' off' : ''}" data-cm-act="tiereye" data-v="${t.name}" aria-pressed="${off}" title="${off ? 'Show' : 'Hide'} ${t.name} creators">${off ? EYE_OFF : EYE}</button></div>`;
+    }).join('');
+  },
+  // Everyone who matches the filters; tap for the profile, the eye to leave them out.
+  creators(el, R){
+    el.innerHTML = R.all.length ? R.all.map(c => {
+      const why = cmWhy(c);
+      return `<div class="pk cmli${why ? ' off' : ''}${cmSel === c.handle ? ' sel' : ''}" data-cm-act="profile" data-v="${ea(c.handle)}" role="button" tabindex="0">${cav(c)}<div class="m"><b>${ea(c.name)}</b><span>@${ea(c.handle)} · ${ea(focus(c).slice(0,3).join(', '))}</span>${why ? `<span class="why">${why}</span>` : ''}</div>`
+        + `<div class="r"><b>${kf(c.followers)}</b><span>${cmTier(c.followers).name}</span></div><div class="r"><b>${rs(c.cost)}</b><span>per reel</span></div>`
+        + `<button type="button" class="cmeye${why ? ' off' : ''}" data-cm-act="eye" data-v="${ea(c.handle)}" aria-pressed="${!!why}" title="${why ? 'Show' : 'Hide'} ${ea(c.name)}">${why ? EYE_OFF : EYE}</button></div>`;
+    }).join('') : '<p class="cmempty" style="padding:14px">No creators match these filters.</p>';
+  },
+  // The action that hands the line-up to the chat.
+  go(el, R){
+    const n = R.list.length;
+    el.innerHTML = cm.locked
+      ? `<span class="cmdone">✓ Picked ${picked().length}: ${ea(names(picked()))}</span>`
+      : `<button type="button" class="cmgo" data-cm-act="use"${n ? '' : ' disabled'}>${n ? `Use these ${n} creator${n === 1 ? '' : 's'}` : 'Pick at least one creator'}</button><span class="cmsum">${n ? `${rs(total(R.list))} for one reel each · ${kf(reach(R.list))} followers` : ''}</span>`;
+  }
+};
+
+function cmRender(){
+  const R = cmCompute();
+  thread.querySelectorAll('[data-cm]').forEach(el => { el.classList.toggle('locked', cm.locked); CM_PARTS[el.dataset.cm](el, R); });
+  if (!pside.hidden && cmSel) cmProfile(cmSel);
+}
+
+/* ---------- Profile side panel ---------- */
+const pside = $('#pside'), psideBody = $('#psideBody');
+function cmProfile(h){
+  const c = byHandle(h); if (!c) return;
+  cmSel = h;
+  const why = cmWhy(c), inMatch = cmMatches().includes(c);
+  const band = (v) => Array.isArray(v) ? v.join(' to ') + (c.lean ? ', closer to ' + c.lean : '') : v;
+  psideBody.innerHTML = `<div class="pf-who">${cav(c, 'cav xl')}<h3>${ea(c.name)}</h3><p>${cmTier(c.followers).name} tier · ${ea(c.platform)}</p></div>
+    <div class="pf-sec"><h4>Social profiles</h4><p class="pf-ig"><b>${kf(c.followers)}</b> followers · <a href="https://www.instagram.com/${encodeURIComponent(c.handle)}/" target="_blank" rel="noopener">@${ea(c.handle)}</a></p></div>
+    <div class="pf-sec pf-stats"><div><b>Rs. ${kf(c.cost)}</b><span>Cost per reel</span></div><div><b>${ea(c.age)}</b><span>Audience age</span></div></div>
+    <div class="pf-sec"><h4>Audience</h4><dl><dt>Personas</dt><dd>${ea((c.personas || []).join(', '))}</dd><dt>Community</dt><dd>${ea(c.community)}</dd><dt>Gender</dt><dd>${ea(c.gender)}</dd><dt>Location</dt><dd>${ea(band(c.location))}</dd><dt>Language</dt><dd>${ea(c.language)}</dd><dt>Lifestyle</dt><dd>${ea(band(c.lifestyle))}</dd></dl></div>
+    ${cm.locked || !inMatch ? '' : `<button type="button" class="pf-btn${why ? '' : ' out'}" data-cm-act="eye" data-v="${ea(h)}">${why ? 'Add back to the line-up' : 'Leave out of the line-up'}</button>`}`;
+  pside.hidden = false;
 }
 function closeProfile(){
   if (pside.hidden) return;
-  pside.hidden = true;
-  if (mapState){ mapState = {...mapState, selected:null}; sendFrames({type:'polysocial:state', state:mapState}); }
+  pside.hidden = true; cmSel = null; cmRender();
 }
-// The creators card shows the line-up the chat went on with.
-function markMapCard(){
-  const cards = thread.querySelectorAll('.cmpart[data-part="creators"]'), card = cards[cards.length - 1];
-  if (!card) return;
-  const list = picked();
-  card.classList.add('done');
-  card.querySelector('.cm-st').textContent = `✓ Picked ${list.length}: ${names(list)}`;
-  sendFrames({type:'polysocial:state', state:null, ...lockMsg()});
+function cmOpen(h){ autoplay = false; updateUI(); cmProfile(h); cmRender(); }
+
+/* ---------- Interaction ---------- */
+function cmToggle(list, v){ if (!v) return []; const i = list.indexOf(v); i === -1 ? list.push(v) : list.splice(i, 1); return list; }
+function cmAct(act, v){
+  if (act === 'profile') return cmOpen(v);
+  if (cm.locked) return;
+  if (act === 'persona') cm.persona = cmToggle(cm.persona, v);
+  else if (act === 'tier') cm.tier = cmToggle(cm.tier, v);
+  else if (act === 'gender'){ const o = v === 'women' ? 'men' : 'women'; if (cm[v] && !cm[o]) return; cm[v] = !cm[v]; }
+  else if (act === 'lang') cm.lang = v;
+  else if (act === 'axis') cm.axis = v;
+  else if (act === 'eye'){
+    // A creator's own eye wins over their tier and the cost range.
+    const c = byHandle(v), wasOff = !!cmWhy(c);
+    delete cm.hidden[v]; delete cm.shown[v];
+    if (!wasOff) cm.hidden[v] = true; else if (cmWhy(c)) cm.shown[v] = true;
+  }
+  else if (act === 'tiereye'){
+    // Showing or hiding a whole tier resets each of its creators' own eyes.
+    const inTier = cmMatches().filter(c => cmTier(c.followers).name === v);
+    const off = inTier.length ? inTier.every(cmEyeHidden) : !!cm.hiddenTiers[v];
+    if (off) delete cm.hiddenTiers[v]; else cm.hiddenTiers[v] = true;
+    CM_POOL.forEach(c => { if (cmTier(c.followers).name === v){ delete cm.hidden[c.handle]; delete cm.shown[c.handle]; } });
+  }
+  else if (act === 'use'){
+    picks = cmCompute().list;
+    if (!picks.length) return;
+    closeProfile(); cm.locked = true; picksLocked = true; cmRender();
+    if (SCRIPT[turn] && SCRIPT[turn].pickMap && !busy) playTurn();
+    return;
+  }
+  cmRender();
 }
+thread.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-cm-act]'); if (!b || b.disabled) return;
+  if (b.dataset.cmAct !== 'profile') e.stopPropagation();
+  cmAct(b.dataset.cmAct, b.dataset.v);
+});
+thread.addEventListener('keydown', (e) => {
+  const b = e.target.closest('[data-cm-act="profile"]');
+  if (b && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); e.stopPropagation(); cmOpen(b.dataset.v); }
+});
+psideBody.addEventListener('click', (e) => { const b = e.target.closest('[data-cm-act]'); if (b) cmAct(b.dataset.cmAct, b.dataset.v); });
+thread.addEventListener('input', (e) => {
+  const r = e.target.closest('[data-cm-range]'); if (!r || cm.locked) return;
+  let v = +r.value;
+  if (r.dataset.cmRange === 'lo'){ if (v > cm.hi) r.value = v = cm.hi; cm.lo = v; }
+  else { if (v < cm.lo) r.value = v = cm.lo; cm.hi = v; }
+  cmRender();
+});
+// Hover tooltip for map cells.
+const cmTip = document.createElement('div'); cmTip.className = 'cmtip'; document.body.appendChild(cmTip);
+thread.addEventListener('mouseover', (e) => {
+  const c = e.target.closest('.cmc'); if (!c){ cmTip.style.opacity = 0; return; }
+  cmTip.innerHTML = c.dataset.tip; cmTip.style.opacity = 1;
+});
+thread.addEventListener('mousemove', (e) => {
+  if (cmTip.style.opacity !== '1') return;
+  const w = cmTip.offsetWidth, x = e.clientX + 14 + w > innerWidth ? e.clientX - w - 10 : e.clientX + 14;
+  cmTip.style.left = x + 'px'; cmTip.style.top = (e.clientY + 14) + 'px';
+});
+scroller.addEventListener('scroll', () => { cmTip.style.opacity = 0; }, {passive:true});
 $('#psideClose').addEventListener('click', closeProfile);
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeProfile(); }, true);
-window.addEventListener('message', (e) => {
-  const d = e.data; if (!d || typeof d.type !== 'string') return;
-  const frame = mapFrames().find(f => f.contentWindow === e.source);
-  if (!frame) return;
-  if (d.type === 'polysocial:height') return void (frame.style.height = Math.max(80, d.h) + 'px');
-  if (d.type === 'polysocial:ready') return frame.contentWindow.postMessage({type:'polysocial:state', state:mapState, ...lockMsg()}, '*');
-  if (d.type === 'polysocial:state'){ mapState = d.state; return sendFrames({type:'polysocial:state', state:d.state}, e.source); }
-  if (d.type === 'polysocial:profile') return openProfile(d.id);
-  if (d.type !== 'polysocial:creators' || !Array.isArray(d.creators) || picksLocked) return;
-  picks = d.creators.map(c => byHandle(c.handle)).filter(Boolean);
-  if (!picks.length) picks = null;
-  if (SCRIPT[turn] && SCRIPT[turn].pickMap && !busy) playTurn();
-});
+
+// The scripted line-up, when the presenter moves on without picking.
+function cmUseDefaults(){
+  if (!picks){
+    cmReset();
+    CM_POOL.forEach(c => { if (!DEFAULT_PICKS.includes(c)) cm.hidden[c.handle] = true; });
+  }
+  closeProfile(); cm.locked = true; picksLocked = true; cmRender();
+}
 
 function openChat(key){
   if (!CHATS[key]) key = 'self';
