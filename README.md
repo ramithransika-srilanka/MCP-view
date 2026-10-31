@@ -86,3 +86,15 @@ mobile page itself, kept for reference and opened on its own.
 Campaign, creator and pricing data follow the demo set in the brand web app
 (`ramithransika-srilanka/brand-web-app`, commit `61d5f80`). Images in `images/` are taken from that app's `assets.js`.
 The tool names are a proposal for the Polysocial MCP server, not a published API.
+
+## Campaign creation flows (image)
+
+`flow/campaign-flows.png` is a one-page overview of how a brand creates a campaign in all three chats, drawn as chat
+screenshots: what the brand needs set up in Polysocial first (connector, brand profile, team access, a funded wallet,
+bank details), the shared start (connection check, requirement and timeline, choosing the path), each path step by step
+with its MCP tools, permission prompts and the details the brand has to give, a table of every campaign field and who
+provides it on each path, and the go-live gates. `flow/flow-self.png`, `flow/flow-strat.png` and `flow/flow-pick.png`
+are each path on its own.
+
+The image is rendered from `flow/campaign-flows.html`. After editing it, render it again with Playwright (full-page
+screenshot at 2200px wide, scale 1.5, plus an element screenshot of `#path-self`, `#path-strat` and `#path-pick`).

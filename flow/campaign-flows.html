@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Creating a Polysocial campaign from Claude — three ways</title>
+<meta name="viewport" content="width=2200">
+<style>
+@font-face{font-family:'Inter';src:url('../creator-map/inter.woff2') format('woff2');font-weight:100 900;}
+:root{
+  --bg:#faf9f5; --side:#f5f4ed; --panel:#fff; --bubble:#f0eee6;
+  --text:#141413; --muted:#73726c; --faint:#a3a199;
+  --line:rgba(31,30,29,.13); --line-2:rgba(31,30,29,.22);
+  --clay:#d97757; --clay-ink:#c6613f; --clay-soft:rgba(217,119,87,.12);
+  --ok:#2f7d4f; --ok-soft:rgba(47,125,79,.12); --warn:#a8641a; --warn-soft:rgba(196,129,40,.14);
+  --blue:#1548eb; --blue-100:#d0dafb; --blue-50:#eef2fe;
+  --purple:#7a3fd1; --purple-soft:rgba(122,63,209,.11);
+  --pink:#c42a8c; --pink-soft:rgba(196,42,140,.1);
+  --g100:#ececec; --g600:#717171;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font:15px/1.5 'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;width:2200px;padding:56px 60px 64px;}
+.psm{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--blue);color:#fff;flex-shrink:0;}
+.psm svg{width:14px;height:10px;}
+.clm{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--clay);color:#fff;flex-shrink:0;}
+.clm svg{width:14px;height:14px;}
+
+/* ---------- Header ---------- */
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-bottom:34px;}
+header .kick{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--muted);letter-spacing:.02em;text-transform:uppercase;margin-bottom:10px;}
+header h1{font-size:46px;line-height:1.08;letter-spacing:-.02em;font-weight:700;}
+header h1 em{font-style:normal;color:var(--clay-ink);}
+header p{font-size:18px;color:var(--muted);margin-top:12px;max-width:1080px;}
+.legend{display:grid;grid-template-columns:auto auto;gap:8px 22px;font-size:13px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 18px;}
+.legend div{display:flex;align-items:center;gap:8px;}
+
+/* who provides a detail */
+.who{display:inline-block;font-size:11px;font-weight:700;line-height:18px;padding:0 7px;border-radius:5px;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap;}
+.who.b{background:var(--clay-soft);color:var(--clay-ink);}
+.who.c{background:var(--bubble);color:#4d4c48;}
+.who.s{background:var(--purple-soft);color:var(--purple);}
+.who.p{background:var(--blue-50);color:var(--blue);}
+.who.k{background:var(--pink-soft);color:var(--pink);}
+
+/* ---------- Sections ---------- */
+.band{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:28px 30px;margin-bottom:28px;box-shadow:0 1px 2px rgba(0,0,0,.03),0 6px 24px rgba(0,0,0,.04);}
+.band h2{font-size:24px;letter-spacing:-.01em;display:flex;align-items:center;gap:12px;}
+.band h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--text);color:#fff;font-size:16px;}
+.band > .sub{color:var(--muted);margin:6px 0 20px 46px;font-size:15px;}
+
+/* Before you start */
+.pre{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;}
+.pre .it{border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;background:linear-gradient(#fff,#fbfaf7);}
+.pre .it h4{font-size:15px;display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.pre .it h4 i{font-style:normal;font-size:18px;}
+.pre .it ul{list-style:none;font-size:13px;color:#3d3d3a;display:grid;gap:4px;}
+.pre .it li::before{content:"•";color:var(--faint);margin-right:6px;}
+.pre .it .where{margin-top:10px;font-size:12px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px;}
+.pre .it .where code{font:600 11.5px/1 ui-monospace,Menlo,monospace;color:var(--blue);background:var(--blue-50);padding:2px 5px;border-radius:4px;}
+
+/* ---------- Mini Claude window (screenshot) ---------- */
+.shot{border:1px solid var(--line-2);border-radius:14px;overflow:hidden;background:var(--bg);box-shadow:0 2px 4px rgba(0,0,0,.04),0 10px 28px rgba(0,0,0,.07);}
+.shot .bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--side);border-bottom:1px solid var(--line);font-size:12px;color:var(--muted);}
+.shot .bar .dots{display:flex;gap:5px;margin-right:4px;}
+.shot .bar .dots i{width:9px;height:9px;border-radius:50%;background:#e2ded3;}
+.shot .bar b{color:var(--text);font-weight:600;}
+.shot .bar .conn{margin-left:auto;display:flex;align-items:center;gap:6px;font-weight:600;color:var(--text);}
+.shot .bar .conn .psm{width:16px;height:16px;border-radius:4px;}
+.shot .bar .conn .psm svg{width:10px;height:7px;}
+.shot .bar .conn .dt{width:6px;height:6px;border-radius:50%;background:#3fb26b;}
+.shot .body{padding:14px 14px 12px;display:grid;gap:10px;font-size:13px;line-height:1.5;}
+.u{justify-self:end;max-width:86%;background:var(--bubble);border-radius:14px 14px 4px 14px;padding:9px 12px;}
+.u .att{display:flex;gap:6px;margin-top:7px;}
+.u .att img{width:46px;height:46px;border-radius:8px;object-fit:cover;border:1px solid var(--line);}
+.u .att span{font-size:11px;color:var(--muted);align-self:center;}
+.a{display:flex;gap:9px;align-items:flex-start;}
+.a .clm{width:20px;height:20px;border-radius:50%;margin-top:1px;}
+.a .clm svg{width:12px;height:12px;}
+.a .ac{flex:1;min-width:0;display:grid;gap:7px;}
+.a p b{font-weight:600;}
+.tools{display:flex;flex-wrap:wrap;gap:5px;}
+.tool{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:3px 8px 3px 5px;font:500 11.5px/1.5 ui-monospace,Menlo,monospace;color:#3d3d3a;}
+.tool .psm{width:15px;height:15px;border-radius:4px;}
+.tool .psm svg{width:9px;height:6px;}
+.tool .ok{color:var(--ok);font-family:'Inter';font-weight:700;}
+.perm{border:1px solid var(--clay);background:#fff;border-radius:10px;padding:9px 11px;display:grid;gap:7px;}
+.perm .q{font-size:12.5px;}
+.perm .q code{font:600 11.5px ui-monospace,Menlo,monospace;background:var(--clay-soft);color:var(--clay-ink);padding:1px 5px;border-radius:4px;}
+.perm .d{font-size:11.5px;color:var(--muted);}
+.perm .bt{display:flex;gap:6px;}
+.perm .bt span{font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:7px;border:1px solid var(--line-2);}
+.perm .bt span.y{background:var(--text);color:#fff;border-color:var(--text);}
+/* Polysocial card in the chat */
+.ps{border:1px solid var(--g100);background:#fff;border-radius:12px;overflow:hidden;}
+.ps .h{display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid var(--g100);font-size:11px;font-weight:600;color:var(--g600);}
+.ps .h .psm{width:15px;height:15px;border-radius:4px;}
+.ps .h .psm svg{width:9px;height:6px;}
+.ps .h .live{margin-left:auto;display:flex;align-items:center;gap:4px;color:#2f9e5c;}
+.ps .h .live i{width:5px;height:5px;border-radius:50%;background:#2f9e5c;}
+.ps .bd{padding:9px 10px;display:grid;gap:7px;font-size:12px;}
+.row{display:flex;align-items:center;gap:9px;}
+.row img.lg{width:30px;height:30px;border-radius:8px;object-fit:cover;}
+.row .t b{display:block;font-size:12.5px;}
+.row .t span{color:var(--g600);font-size:11px;}
+.pill{display:inline-block;font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:20px;}
+.pill.ok{background:var(--ok-soft);color:var(--ok);}
+.pill.bl{background:var(--blue-50);color:var(--blue);}
+.pill.wn{background:var(--warn-soft);color:var(--warn);}
+.pill.lv{background:#e6f6ec;color:#1f8a4c;}
+.kv{display:grid;grid-template-columns:1fr auto;gap:3px 12px;}
+.kv span{color:var(--g600);}
+.kv b{text-align:right;font-weight:600;}
+.tg{display:flex;flex-wrap:wrap;gap:4px;}
+.tg span{font-size:10.5px;padding:1px 7px;border-radius:20px;background:#f3f3f3;color:#333;}
+.mini3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.mini3 div{background:#f7f7f7;border-radius:8px;padding:5px 7px;}
+.mini3 b{display:block;font-size:13px;}
+.mini3 span{font-size:10px;color:var(--g600);}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.opts div{border:1px solid var(--line-2);border-radius:9px;padding:6px 8px;font-size:11px;color:var(--muted);background:#fff;}
+.opts div b{display:block;color:var(--text);font-size:12.5px;}
+.opts div.on{border-color:var(--clay);box-shadow:0 0 0 2px var(--clay-soft);}
+.av{width:22px;height:22px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+.ini{display:inline-grid;place-items:center;color:#fff;font-size:9.5px;font-weight:700;}
+.cover{height:70px;border-radius:8px;overflow:hidden;position:relative;}
+.cover img{width:100%;height:100%;object-fit:cover;}
+.cover span{position:absolute;left:6px;bottom:6px;}
+.insp{display:flex;gap:5px;}
+.insp img{width:38px;height:56px;border-radius:6px;object-fit:cover;}
+.chat2{display:grid;gap:5px;background:#f7f5fb;border-radius:9px;padding:7px;}
+.chat2 .m{font-size:11.5px;padding:5px 8px;border-radius:9px;max-width:85%;}
+.chat2 .m.s{background:#fff;border:1px solid var(--line);}
+.chat2 .m.br{justify-self:end;background:var(--blue);color:#fff;}
+.heat{display:grid;grid-template-columns:repeat(12,1fr);gap:2px;}
+.heat i{aspect-ratio:1;border-radius:2px;background:#eef1fd;}
+.heat i.h1{background:#c9d4fb;}.heat i.h2{background:#8ea4f5;}.heat i.h3{background:#4a6cf0;}
+.chips{display:flex;flex-wrap:wrap;gap:4px;}
+.chips span{font-size:10.5px;padding:2px 8px;border-radius:20px;border:1px solid var(--line-2);}
+.chips span.on{background:var(--text);color:#fff;border-color:var(--text);}
+.btnp{display:inline-block;background:var(--blue);color:#fff;font-weight:600;font-size:11.5px;padding:5px 12px;border-radius:8px;}
+
+/* ---------- Shared start ---------- */
+.shared{display:grid;grid-template-columns:1fr 1fr 1.05fr;gap:22px;align-items:start;}
+
+/* ---------- Steps ---------- */
+.step{display:grid;grid-template-columns:1fr;gap:12px;}
+.step .sh{display:flex;align-items:center;gap:10px;}
+.step .sh .n{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;font-size:13px;font-weight:700;color:#fff;background:var(--text);flex-shrink:0;}
+.step .sh h3{font-size:17px;letter-spacing:-.005em;}
+.step .sh .tg2{margin-left:auto;font-size:11px;font-weight:600;color:var(--muted);}
+.need{border:1px dashed var(--line-2);border-radius:12px;padding:10px 12px;background:#fff;}
+.need h5{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px;}
+.need ul{list-style:none;display:grid;gap:5px;font-size:12.5px;}
+.need li{display:grid;grid-template-columns:76px 1fr;gap:8px;align-items:start;}
+.need li .who{justify-self:start;margin-top:1px;}
+
+/* ---------- Three paths ---------- */
+.paths{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:28px;}
+.path{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.03),0 6px 24px rgba(0,0,0,.04);}
+.path .ph{padding:22px 24px 18px;color:#fff;}
+.path.self .ph{background:linear-gradient(135deg,#c6613f,#e08a62);}
+.path.strat .ph{background:linear-gradient(135deg,#5b2bb0,#9a5fe6);}
+.path.pick .ph{background:linear-gradient(135deg,#123bbd,#3d6bf5);}
+.path .ph .tag{display:inline-block;font:600 12px ui-monospace,Menlo,monospace;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:6px;margin-bottom:8px;}
+.path .ph h2{font-size:24px;letter-spacing:-.01em;line-height:1.2;}
+.path .ph p{font-size:14px;opacity:.92;margin-top:6px;}
+.path .ph .facts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.path .ph .facts span{font-size:12px;background:rgba(255,255,255,.18);padding:3px 9px;border-radius:20px;}
+.path .steps{padding:22px 24px 26px;display:grid;gap:26px;position:relative;}
+.path.self .step .sh .n{background:var(--clay-ink);}
+.path.strat .step .sh .n{background:var(--purple);}
+.path.pick .step .sh .n{background:var(--blue);}
+.path .step + .step{position:relative;}
+.path .step + .step::before{content:"";position:absolute;left:13px;top:-24px;height:20px;border-left:2px dotted var(--line-2);}
+.path .result{margin:auto 24px 24px;border-radius:14px;padding:14px 16px;background:var(--bubble);font-size:13px;}
+.path .result b{display:block;font-size:14px;margin-bottom:4px;}
+
+/* ---------- Requirements matrix ---------- */
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+thead th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--side);}
+thead th:first-child{border-radius:10px 0 0 10px;} thead th:last-child{border-radius:0 10px 10px 0;}
+td.grp{font-weight:700;width:170px;}
+td.f b{font-weight:600;}
+td.f span{display:block;color:var(--muted);font-size:12.5px;}
+td .who{margin-right:4px;}
+td.sm{font-size:12.5px;color:#3d3d3a;width:300px;}
+tbody tr:last-child td{border-bottom:0;}
+
+/* Gates */
+.gates{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+.gate{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;position:relative;}
+.gate .gn{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.gate b{display:block;font-size:14.5px;margin:4px 0 4px;}
+.gate p{font-size:12.5px;color:#3d3d3a;}
+.gate code{font:600 11px ui-monospace,Menlo,monospace;color:var(--blue);background:var(--blue-50);padding:1px 4px;border-radius:4px;}
+.gate:not(:last-child)::after{content:"→";position:absolute;right:-11px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--faint);background:var(--bg);line-height:1;}
+footer{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:6px;}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="pslogo" viewBox="0 0 269 184"><path d="M121.556 4.06404C141.556 -7.48297 166.556 6.9505 166.556 30.0445C166.556 31.0921 165.899 32.0212 164.936 32.4319C152.062 37.9179 143.037 50.6867 143.037 65.564V116.564C143.037 131.086 151.636 143.598 164.02 149.29C165.519 149.979 166.556 151.435 166.556 153.085C166.555 176.178 141.556 190.612 121.556 179.065L15 117.545C-5 105.998 -5 77.1306 15 65.5836L121.556 4.06404Z" fill="currentColor"/><path d="M227.969 0.278931C250.418 0.27893 268.617 18.478 268.617 40.9274V140.409C268.617 162.858 250.418 181.056 227.969 181.056C210.666 181.056 195.891 170.245 190.025 155.01C189.233 152.955 190.505 150.769 192.546 149.942C205.734 144.6 215.037 131.669 215.037 116.564V65.5641C215.037 50.3684 205.621 37.3734 192.306 32.0911C190.279 31.2867 188.994 29.1414 189.737 27.0903C195.397 11.453 210.378 0.278951 227.969 0.278931Z" fill="currentColor"/></symbol>
+<symbol id="claude" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l1.6 6.2L19.8 6l-4.6 4.4L22 12l-6.8 1.6 4.6 4.4-6.2-2.2L12 22l-1.6-6.2L4.2 18l4.6-4.4L2 12l6.8-1.6L4.2 6l6.2 2.2z"/></symbol>
+</defs></svg>
+
+<header>
+  <div>
+    <div class="kick"><span class="clm"><svg><use href="#claude"/></svg></span>+<span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial MCP connector · campaign creation flows</div>
+    <h1>Creating a Polysocial campaign from Claude — <em>three ways</em></h1>
+    <p>Every chat checks the brand is connected and captures the requirement and timeline first. Then the brand chooses who designs the campaign and who picks the creators. Each path below shows the chat as it appears in Claude, the MCP tools it calls, and the details the brand has to give before the campaign can go live.</p>
+  </div>
+  <div class="legend">
+    <div><span class="who b">Brand</span>gives it in the chat</div>
+    <div><span class="who c">Claude</span>drafts or fills it</div>
+    <div><span class="who s">Strategist</span>creative strategist</div>
+    <div><span class="who p">Polysocial</span>platform / account data</div>
+    <div><span class="who k">Creator</span>from the creator side</div>
+    <div><span class="tool" style="font-size:11px"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>tool_name</span>MCP tool call</div>
+  </div>
+</header>
+
+<!-- ============ 0. BEFORE YOU START ============ -->
+<section class="band">
+  <h2><span class="n">0</span>Before any chat: what the brand needs in Polysocial</h2>
+  <p class="sub">Set up once in the brand web app. <code>check_brand_connection</code> and <code>get_brand_profile</code> read these at the start of every chat, and <code>publish_campaign</code> is blocked without them.</p>
+  <div class="pre">
+    <div class="it"><h4><i>🔌</i>Connector added in Claude</h4><ul><li>Polysocial MCP connector connected</li><li>Signed in to the brand's Polysocial workspace</li><li>Brand verified</li></ul><div class="where">Claude · Settings → Connectors</div></div>
+    <div class="it"><h4><i>🏷️</i>Brand profile</h4><ul><li>Brand name and logo, cover</li><li>Category, website, location</li><li>About (what creators see)</li><li>Social accounts: Instagram, TikTok, Facebook, YouTube, LinkedIn</li></ul><div class="where">Brand web app · <code>#/profile/brand</code></div></div>
+    <div class="it"><h4><i>👥</i>Team access</h4><ul><li>You are <b>Full admin</b> or <b>Can edit</b> to create and publish</li><li>View only can read but not publish</li><li>At least one active full admin</li></ul><div class="where">Brand web app · <code>#/profile/team</code></div></div>
+    <div class="it"><h4><i>💳</i>Funded wallet</h4><ul><li>Add funds by bank transfer, with the payment reference</li><li>Upload the transfer slip (PDF/JPG/PNG ≤ 10 MB)</li><li>Only <b>verified</b> transfers count; free-to-spend balance ≥ campaign budget</li></ul><div class="where">Brand web app · <code>#/financials/funds</code></div></div>
+    <div class="it"><h4><i>🏦</i>Bank details</h4><ul><li>Account holder, bank, branch, account number</li><li>Where Polysocial refunds unspent budget</li><li>Only the brand can add or edit them</li></ul><div class="where">Brand web app · <code>#/profile/account</code></div></div>
+  </div>
+</section>
+
+<!-- ============ 1–2. SHARED START ============ -->
+<section class="band">
+  <h2><span class="n">1</span>Same start in every chat: connection check → requirement &amp; timeline → choose the path</h2>
+  <p class="sub">The three chats in MCP-view (<code>#self</code>, <code>#strat</code>, <code>#pick</code>) open the same way, then split on who designs the campaign and who picks the creators.</p>
+  <div class="shared">
+    <div class="step">
+      <div class="sh"><span class="n">1</span><h3>Is the brand connected?</h3></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>New chat</b><span class="conn"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial<span class="dt"></span></span></div>
+        <div class="body">
+          <div class="u">Hi Claude! We're launching our new Pop Crunch Chicken burger and I'd like to run a creator campaign on Polysocial for it.</div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac">
+            <div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>check_brand_connection<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>get_brand_profile<span class="ok">✓</span></span></div>
+            <p>Patty Pop is already connected to Polysocial, so I can set this up directly.</p>
+            <div class="ps"><div class="h"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Brand connection<span class="live"><i></i>Live</span></div>
+              <div class="bd"><div class="row"><img class="lg" src="../images/pattypop.png" alt=""><div class="t"><b>Patty Pop <span class="pill ok">✓ Connected</span></b><span>Verified brand · @pattypoplk · you're an admin</span></div></div>
+              <div class="mini3"><div><b>4</b><span>past campaigns</span></div><div><b>Rs. 3.4M</b><span>balance</span></div><div><b>12</b><span>brand assets</span></div></div></div></div>
+          </div></div>
+        </div></div>
+      <div class="need"><h5>Checked here</h5><ul>
+        <li><span class="who p">Polysocial</span><span>Connected, verified, your role (admin / can edit)</span></li>
+        <li><span class="who p">Polysocial</span><span>Wallet balance, brand assets, past campaigns, standard restrictions</span></li>
+      </ul></div>
+    </div>
+
+    <div class="step">
+      <div class="sh"><span class="n">2</span><h3>Requirement &amp; timeline</h3></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Kandy opening</b><span class="conn"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial<span class="dt"></span></span></div>
+        <div class="body">
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><p>To shape the campaign I need to know <b>what it should achieve and when it should run</b>.</p></div></div>
+          <div class="u">We're opening a new Patty Pop in Kandy on Dec 5 and want a creator campaign to bring people in.</div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac">
+            <p>So the requirement is <b>bringing people into the new Kandy store</b>, which opens <b>Dec 5</b>.</p>
+            <div class="ps"><div class="h"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Campaign setup</div>
+              <div class="bd"><div class="tg"><span>✓ Brand connected</span><span style="background:var(--clay-soft);color:var(--clay-ink)">● Requirement &amp; timeline</span><span>3 Design</span><span>4 Cover &amp; inspiration</span><span>5 Budget</span><span>6 Go live</span></div></div></div>
+          </div></div>
+        </div></div>
+      <div class="need"><h5>Details the brand gives</h5><ul>
+        <li><span class="who b">Brand</span><span><b>Goal</b>: trial, store visits, weekend orders…</span></li>
+        <li><span class="who b">Brand</span><span><b>Product / offer</b>: e.g. Family Feast box, Rs. 4,990</span></li>
+        <li><span class="who b">Brand</span><span><b>Dates</b>: start and end (or the event / opening date) and <b>location</b></span></li>
+      </ul></div>
+    </div>
+
+    <div class="step">
+      <div class="sh"><span class="n">3</span><h3>Choose the path</h3></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Crunch Chicken launch</b><span class="conn"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial<span class="dt"></span></span></div>
+        <div class="body">
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac">
+            <div class="ps"><div class="bd" style="padding:10px">
+              <b style="font-size:12.5px">Do you need to hire a creative strategist to design your campaign?</b>
+              <div class="opts"><div><b>Yes</b>A Polysocial creative strategist designs and runs it for you. You set the budget first.</div><div class="on"><b>No</b>You share the hook, script and target audience, and I turn them into the campaign.</div></div>
+            </div></div>
+          </div></div>
+          <div class="u">…this time we'd like to <b>pick the creators ourselves</b>.</div>
+        </div></div>
+      <div class="opts" style="grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="border-color:var(--clay-ink);border-width:2px"><b>A · No → our own brief</b>Brand designs it · open to matching creators</div>
+        <div style="border-color:var(--purple);border-width:2px"><b>B · Yes → strategist</b>Strategist designs and runs it</div>
+        <div style="border-color:var(--blue);border-width:2px"><b>C · We pick creators</b>Brand picks on the creator map</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE THREE PATHS ============ -->
+<div class="paths">
+
+<!-- ---------- A: our own brief ---------- -->
+<article class="path self" id="path-self">
+  <div class="ph"><span class="tag">#self</span><h2>A · Crunch Chicken launch — our own brief</h2><p>The brand's team writes the creative. Claude checks it, turns it into the campaign and takes it live; any matching creator can join.</p>
+    <div class="facts"><span>Food · Oct 19 – Nov 8</span><span>Performance fee</span><span>Open campaign</span><span>Rs. 600,000</span></div></div>
+  <div class="steps">
+    <div class="step">
+      <div class="sh"><span class="n">A1</span><h3>Paste the creative brief</h3><span class="tg2">Campaign design</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Crunch Chicken launch — our own brief</b></div>
+        <div class="body">
+          <div class="u">No, we'll design it ourselves. Goal is trial, Oct 19 – Nov 8. Here's our brief:<br><span style="font:11px/1.45 ui-monospace,Menlo,monospace;color:#4d4c48;display:block;margin-top:5px">Hook: "POV: you found the crunchiest burger in Colombo"<br>Script 0–3s starving · 3–8s order · 8–15s slow-mo bite<br>Audience: 18–28, Colombo + Galle · TikTok, Reels</span></div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac">
+            <div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>check_brief<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>create_campaign_draft<span class="ok">✓</span></span></div>
+            <div class="ps"><div class="h"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Campaign draft · creative brief</div>
+              <div class="bd"><b style="font-size:13px">Pop Crunch Chicken — The crunch you can hear</b><span style="color:var(--g600);font-size:11px">Food · Oct 19 – Nov 8, 2026 · 3 weeks · Goal: trial</span>
+              <div class="tg"><span>18–28 age</span><span>Students</span><span>Colombo</span><span>Galle</span><span>1 reel · 15–30s</span><span>TikTok</span><span>Instagram</span></div>
+              <span class="pill wn" style="justify-self:start">Missing: cover image, inspiration posts, budget</span></div></div>
+          </div></div>
+        </div></div>
+      <div class="need"><h5>Details required</h5><ul>
+        <li><span class="who b">Brand</span><span><b>Hook</b> and <b>script beats</b> (15–30s reel)</span></li>
+        <li><span class="who b">Brand</span><span><b>Target audience</b>: age, persona, cities</span></li>
+        <li><span class="who b">Brand</span><span><b>Platforms</b> and <b>deliverable</b> (1 reel · 15–30s)</span></li>
+        <li><span class="who b">Brand</span><span><b>Must show</b> (brand visibility) and <b>tone</b></span></li>
+        <li><span class="who c">Claude</span><span>Title, caption CTA, the 6 standard restrictions</span></li>
+      </ul></div>
+    </div>
+
+    <div class="step">
+      <div class="sh"><span class="n">A2</span><h3>Cover image &amp; inspiration posts</h3><span class="tg2">Always from the brand</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Crunch Chicken launch — our own brief</b></div>
+        <div class="body">
+          <div class="u">Here's the cover from our launch shoot, and three reels that have the vibe we want.<div class="att"><img src="../images/ppBiteWide.jpg" alt=""><img src="../images/ppMeal.jpg" alt=""><img src="../images/ppBite.jpg" alt=""><span>+ 3 reel links</span></div></div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac">
+            <div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>upload_cover_image<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>add_inspiration_posts<span class="ok">✓</span></span></div>
+            <div class="ps"><div class="h"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Cover &amp; inspiration added</div>
+              <div class="bd"><div class="cover"><img src="../images/ppBiteWide.jpg" alt=""><span class="pill bl">Cover image</span></div>
+              <div class="insp"><img src="../images/ppMeal.jpg" alt="" style="object-position:62% 70%"><img src="../images/ppBite.jpg" alt=""><img src="../images/ppMeal.jpg" alt="" style="object-position:95% 50%"><span style="font-size:11px;color:var(--g600);align-self:center">Shown to creators as<br>“the style we're after”</span></div></div></div>
+          </div></div>
+        </div></div>
+      <div class="need"><h5>Details required</h5><ul>
+        <li><span class="who b">Brand</span><span><b>Cover image</b>: the first thing creators see</span></li>
+        <li><span class="who b">Brand</span><span><b>Inspiration posts</b>: 2–3 <b>public</b> reels or links</span></li>
+      </ul></div>
+    </div>
+
+    <div class="step">
+      <div class="sh"><span class="n">A3</span><h3>Budget &amp; pricing</h3><span class="tg2">Performance fee</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Crunch Chicken launch — our own brief</b></div>
+        <div class="body">
+          <div class="u">Let's do 600K with the pricing you suggested.</div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac">
+            <div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>set_campaign_budget<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>estimate_reach<span class="ok">✓</span></span></div>
+            <div class="ps"><div class="h"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Budget &amp; pricing</div>
+              <div class="bd"><div class="kv"><span>Base price per reel</span><b>Rs. 6,000</b><span>Max earning per reel</span><b>Rs. 90,000</b><span>Performance pricing</span><b>Rs. 1,800 / 1K views</b><span>Total budget</span><b>Rs. 600,000</b></div>
+              <div class="mini3"><div><b>70–90</b><span>creators</span></div><div><b>1.6–2.0M</b><span>views</span></div><div><b>~Rs. 330</b><span>per 1K views</span></div></div></div></div>
+          </div></div>
+        </div></div>
+      <div class="need"><h5>Details required</h5><ul>
+        <li><span class="who b">Brand</span><span><b>Total budget</b> (approves the suggested pricing)</span></li>
+        <li><span class="who c">Claude</span><span>Base price, max earning per reel, Rs / 1K views; reach estimate</span></li>
+        <li><span class="who p">Polysocial</span><span>Free-to-spend wallet balance ≥ budget</span></li>
+      </ul></div>
+    </div>
+
+    <div class="step">
+      <div class="sh"><span class="n">A4</span><h3>Go live</h3><span class="tg2">Needs approval</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Crunch Chicken launch — our own brief</b></div>
+        <div class="body">
+          <div class="u">Yes, go live!</div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac">
+            <div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>validate_campaign<span class="ok">✓</span></span></div>
+            <div class="perm"><div class="q">Allow Polysocial to run <code>publish_campaign</code>?</div><div class="d">This makes the campaign visible to creators now and holds Rs. 600,000 from your Polysocial balance.</div><div class="bt"><span class="y">Allow once</span><span>Always allow</span><span>Deny</span></div></div>
+            <div class="ps"><div class="h"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Campaign live<span class="live"><i></i>Live</span></div>
+              <div class="bd"><div class="row"><span class="pill lv">● LIVE</span><div class="t"><b>Pop Crunch Chicken — The crunch you can hear</b><span>1,480 matching creators notified · Colombo &amp; Galle</span></div></div></div></div>
+          </div></div>
+        </div></div>
+    </div>
+  </div>
+  <div class="result"><b>Live: open to matching creators</b>Creators join, post from Oct 19 and are paid base + performance. Content approvals come to the brand's team.</div>
+</article>
+
+<!-- ---------- B: with a strategist ---------- -->
+<article class="path strat" id="path-strat">
+  <div class="ph"><span class="tag">#strat</span><h2>B · Kandy opening — with a creative strategist</h2><p>No time to design it. The brand sets the budget, picks one of three strategists and agrees the commission; the strategist designs and runs it.</p>
+    <div class="facts"><span>Store opens Dec 5 · Kandy</span><span>Rs. 800,000 all-in</span><span>12% commission</span></div></div>
+  <div class="steps">
+    <div class="step">
+      <div class="sh"><span class="n">B1</span><h3>Yes → budget first</h3><span class="tg2">Budget includes commission</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Kandy opening — with a strategist</b></div>
+        <div class="body">
+          <div class="u">Yes, let's hire a creative strategist to design and run it.</div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>get_strategist_options<span class="ok">✓</span></span></div><p>A strategist designs and runs it. What's the total budget, <b>including their commission</b>?</p></div></div>
+          <div class="u">800K all-in.</div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>create_campaign_draft<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>set_campaign_budget<span class="ok">✓</span></span></div><p>Budget set at <b>Rs. 800,000</b>, including the strategist's commission.</p></div></div>
+        </div></div>
+      <div class="need"><h5>Details required</h5><ul>
+        <li><span class="who b">Brand</span><span><b>Goal &amp; key date</b>: store visits, opens Dec 5, Kandy</span></li>
+        <li><span class="who b">Brand</span><span><b>Total budget, all-in</b> (creators + commission)</span></li>
+      </ul></div>
+    </div>
+
+    <div class="step">
+      <div class="sh"><span class="n">B2</span><h3>Cover image &amp; inspiration posts</h3><span class="tg2">Visual direction</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Kandy opening — with a strategist</b></div>
+        <div class="body">
+          <div class="u">Here's a shot from our brand shoot for the cover, and a few posts we like.<div class="att"><img src="../images/ppBiteWide.jpg" alt=""><img src="../images/ppBite.jpg" alt=""><img src="../images/ppMeal.jpg" alt=""></div></div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>upload_cover_image<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>add_inspiration_posts<span class="ok">✓</span></span></div><p>The strategist uses these as the visual direction, and creators see the cover first.</p></div></div>
+        </div></div>
+      <div class="need"><h5>Details required</h5><ul>
+        <li><span class="who b">Brand</span><span><b>Cover image</b> and <b>inspiration posts</b>, before a strategist is invited</span></li>
+      </ul></div>
+    </div>
+
+    <div class="step">
+      <div class="sh"><span class="n">B3</span><h3>Pick a strategist &amp; invite</h3><span class="tg2">Needs approval</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Kandy opening — with a strategist</b></div>
+        <div class="body">
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>list_creative_strategists<span class="ok">✓</span></span></div>
+            <div class="ps"><div class="h"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Creative strategists</div><div class="bd">
+              <div class="row"><span class="av ini" style="background:linear-gradient(135deg,#1548eb,#f433ab)">IF</span><div class="t"><b>Ishara Fernando <span class="pill bl">Best match</span></b><span>Senior strategist · Food &amp; bev · Kandy · 12–15%</span></div></div>
+              <div class="row"><span class="av ini" style="background:linear-gradient(135deg,#0f2d8f,#7391f3)">RP</span><div class="t"><b>Ravindu Perera</b><span>Lifestyle &amp; retail · Colombo · lower commission</span></div></div>
+              <div class="row"><span class="av ini" style="background:linear-gradient(135deg,#a8641a,#f433ab)">HC</span><div class="t"><b>Malsha Gunawardena</b><span>Agency · Hill Country Creators · full service · 15–18%</span></div></div>
+            </div></div></div></div>
+          <div class="u">Let's go with Ishara.</div>
+          <div class="perm"><div class="q">Allow Polysocial to run <code>send_strategist_invite</code>?</div><div class="d">Sends Ishara an invite with your brief, budget, timeline, cover image and inspiration posts. Nothing is charged yet.</div><div class="bt"><span class="y">Allow once</span><span>Deny</span></div></div>
+        </div></div>
+      <div class="need"><h5>Details required</h5><ul>
+        <li><span class="who b">Brand</span><span><b>Choice of strategist</b> (1 of 3)</span></li>
+        <li><span class="who k">Strategist</span><span>Sees industry, start date, “One time project · Commission based”, brief, “Closes in” countdown</span></li>
+      </ul></div>
+    </div>
+
+    <div class="step">
+      <div class="sh"><span class="n">B4</span><h3>Agree the commission</h3><span class="tg2">Needs approval</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Kandy opening — with a strategist</b></div>
+        <div class="body">
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>get_strategist_chat<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>get_commission_benchmarks<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>send_strategist_message<span class="ok">✓</span></span></div>
+            <div class="chat2"><div class="m s"><b>Polysocial:</b> What commission would you expect for managing this campaign?</div><div class="m s"><b>Ishara:</b> 15% — Rs. 120,000.</div><div class="m br">Could you do 12% with weekly reports included?</div><div class="m s"><b>Ishara:</b> Deal — 12% with weekly reports. ✓</div></div>
+          </div></div>
+          <div class="perm"><div class="q">Allow Polysocial to run <code>confirm_strategist_commission</code>?</div><div class="d">Hires Ishara at 12% (Rs. 96,000 from the budget). Charged only when you approve her design.</div><div class="bt"><span class="y">Allow once</span><span>Deny</span></div></div>
+        </div></div>
+      <div class="need"><h5>Details required</h5><ul>
+        <li><span class="who b">Brand</span><span><b>Counter-offer</b> and terms (12% + weekly reports)</span></li>
+        <li><span class="who p">Polysocial</span><span>Her history and the category median (benchmarks)</span></li>
+      </ul></div>
+    </div>
+
+    <div class="step">
+      <div class="sh"><span class="n">B5</span><h3>Review the design → go live</h3><span class="tg2">Needs approval</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Kandy opening — with a strategist</b></div>
+        <div class="body">
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>get_strategist_design<span class="ok">✓</span></span></div>
+            <div class="ps"><div class="h"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Design by Ishara · v1</div><div class="bd"><b style="font-size:13px">Patty Pop Kandy — First bite in the hills</b><div class="tg"><span>4 macro creators</span><span>Micro creators, Kandy area</span><span>Free-fries tracking</span><span>Nov 28 teasers</span></div></div></div></div></div>
+          <div class="u">Can we move some of the macro money to more micro creators?</div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>send_strategist_feedback<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>get_strategist_design · v2<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>approve_strategist_design<span class="ok">✓</span></span></div></div></div>
+          <div class="perm"><div class="q">Allow Polysocial to run <code>publish_campaign</code>?</div><div class="d">Makes the campaign visible to creators now and holds the Rs. 704,000 creator budget from your balance.</div><div class="bt"><span class="y">Allow once</span><span>Deny</span></div></div>
+        </div></div>
+      <div class="need"><h5>Details required</h5><ul>
+        <li><span class="who s">Strategist</span><span>Hook, script, audience, creator mix, timeline</span></li>
+        <li><span class="who b">Brand</span><span><b>Feedback</b> and <b>design approval</b> (triggers the commission)</span></li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="result"><b>Live: managed by Ishara Fernando</b>4 macro invites sent, 610 micro creators in Kandy notified. Rs. 704,000 held for creators + Rs. 96,000 commission. Ishara handles approvals; the brand is asked only about budget changes.</div>
+</article>
+
+<!-- ---------- C: we pick the creators ---------- -->
+<article class="path pick" id="path-pick">
+  <div class="ph"><span class="tag">#pick</span><h2>C · Family Feast — we pick the creators</h2><p>The brand gives the basic idea and a creator persona, picks creators on the creator map in the chat, and pays each one their price per reel.</p>
+    <div class="facts"><span>Nov 16 – Dec 6</span><span>Invite only · fixed per creator</span><span>4 creators · Rs. 217,647</span></div></div>
+  <div class="steps">
+    <div class="step">
+      <div class="sh"><span class="n">C1</span><h3>Basic idea + creator persona</h3><span class="tg2">No design yet</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Family Feast — we pick the creators</b></div>
+        <div class="body">
+          <div class="u">It's the Family Feast box: 2 burgers, 2 kids' meals, fries and 4 drinks for Rs. 4,990. Families' weekend dinner plan, Nov 16 to Dec 6. For creators, we're thinking <b>momfluencers in Colombo</b>.</div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>create_campaign_draft<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>find_creators · 4.2s<span class="ok">✓</span></span></div>
+            <p>Checked all <b>16 creators</b> in the pool. Only <b>2 are momfluencers</b> with a Colombo audience, so I widened it to a dadfluencer and restaurant reviewers. Lelumi Jagoda is booked until Nov 29.</p></div></div>
+        </div></div>
+      <div class="need"><h5>Details required</h5><ul>
+        <li><span class="who b">Brand</span><span><b>Offer</b>, <b>goal</b>, <b>dates</b>, <b>platform</b> (Instagram)</span></li>
+        <li><span class="who b">Brand</span><span><b>Creator persona</b> and <b>audience location</b></span></li>
+        <li><span class="who p">Polysocial</span><span>Creator pool, availability for the dates</span></li>
+      </ul></div>
+    </div>
+
+    <div class="step">
+      <div class="sh"><span class="n">C2</span><h3>Pick on the creator map</h3><span class="tg2">Chat UI, shared state</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Family Feast — we pick the creators</b></div>
+        <div class="body">
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac">
+            <div class="chips"><span class="on">Momfluencer</span><span class="on">Dadfluencer</span><span class="on">Restaurant reviewer</span><span>Micro</span><span>Female</span><span>Sinhala</span><span class="on">Location</span><span>Lifestyle</span></div>
+            <div class="ps"><div class="h"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Creator map · Audience</div><div class="bd">
+              <div class="heat" id="heat"></div>
+              <div class="mini3"><div><b>5</b><span>creators shown</span></div><div><b>147K</b><span>followers</span></div><div><b>38%</b><span>coverage</span></div></div></div></div>
+            <div class="ps"><div class="h"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Creators · cost per reel</div><div class="bd">
+              <div class="row"><img class="av" src="../creator-map/avatars/ranshan-jude-gomez.webp" alt=""><div class="t" style="flex:1"><b>Ranshan Jude Gomez</b><span>Dadfluencer · 26K</span></div><b>Rs. 70,588</b></div>
+              <div class="row"><img class="av" src="../creator-map/avatars/radeesha-de-silva.webp" alt=""><div class="t" style="flex:1"><b>Radeesha De Silva</b><span>Restaurant reviewer · 52K</span></div><b>Rs. 52,941</b></div>
+              <div class="row"><img class="av" src="../creator-map/avatars/imasha-peiris.webp" alt=""><div class="t" style="flex:1"><b>Imasha Peiris</b><span>Momfluencer · 23K</span></div><b>Rs. 47,059</b></div>
+              <div class="row"><img class="av" src="../creator-map/avatars/chathuri-dahanayake.webp" alt=""><div class="t" style="flex:1"><b>Chathuri Dahanayake</b><span>Momfluencer · 23K</span></div><b>Rs. 47,059</b></div>
+              <span class="btnp" style="justify-self:start">Use these 4 creators</span></div></div>
+          </div></div>
+          <div class="u">I've picked 4 creators on the map: Ranshan, Radeesha, Imasha and Chathuri.</div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>add_campaign_creators<span class="ok">✓</span></span></div></div></div>
+        </div></div>
+      <div class="need"><h5>Details required</h5><ul>
+        <li><span class="who b">Brand</span><span><b>Filters</b>: persona, tier, gender, language, map view</span></li>
+        <li><span class="who b">Brand</span><span><b>Price range per creator</b> and the <b>final line-up</b></span></li>
+      </ul></div>
+    </div>
+
+    <div class="step">
+      <div class="sh"><span class="n">C3</span><h3>Brief, cover &amp; budget</h3><span class="tg2">Fixed per creator</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Family Feast — we pick the creators</b></div>
+        <div class="body">
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>draft_campaign_brief<span class="ok">✓</span></span></div><p>I turned your idea into a brief for these four creators: hook, script, must-show and CTA.</p></div></div>
+          <div class="u">Looks great, go with this brief. Here's the cover photo.<div class="att"><img src="../images/ppMeal.jpg" alt=""></div></div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>upload_cover_image<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>update_campaign_design<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>set_campaign_budget<span class="ok">✓</span></span></div>
+            <div class="ps"><div class="h"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Budget</div><div class="bd"><div class="kv"><span>Model</span><b>Fixed per creator · 1 reel each</b><span>4 creators</span><b>Rs. 217,647</b><span>Held from balance</span><b>Rs. 217,647</b></div><span style="font-size:11px;color:var(--g600)">Inclusive of Polysocial fees · each creator paid after their reel is approved</span></div></div></div></div>
+        </div></div>
+      <div class="need"><h5>Details required</h5><ul>
+        <li><span class="who c">Claude</span><span>Creative brief from the brand's idea</span></li>
+        <li><span class="who b">Brand</span><span><b>Brief approval</b> and <b>cover image</b></span></li>
+        <li><span class="who k">Creator</span><span>Each creator's price for one reel = the budget</span></li>
+      </ul></div>
+    </div>
+
+    <div class="step">
+      <div class="sh"><span class="n">C4</span><h3>Go live → results &amp; payouts</h3><span class="tg2">Needs approval ×2</span></div>
+      <div class="shot"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><b>Family Feast — we pick the creators</b></div>
+        <div class="body">
+          <div class="u">Yes, go live!</div>
+          <div class="perm"><div class="q">Allow Polysocial to run <code>publish_campaign</code>?</div><div class="d">Sends invites to 4 creators and holds Rs. 217,647 from your Polysocial balance.</div><div class="bt"><span class="y">Allow once</span><span>Deny</span></div></div>
+          <div class="u">The campaign ended yesterday. How did it go, and can we pay the creators?</div>
+          <div class="a"><span class="clm"><svg><use href="#claude"/></svg></span><div class="ac"><div class="tools"><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>get_campaign_results<span class="ok">✓</span></span><span class="tool"><span class="psm"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>get_payout_summary<span class="ok">✓</span></span></div></div></div>
+          <div class="perm"><div class="q">Allow Polysocial to run <code>release_payouts</code>?</div><div class="d">Pays 4 creators Rs. 217,647 in total from the budget already held.</div><div class="bt"><span class="y">Allow once</span><span>Deny</span></div></div>
+        </div></div>
+    </div>
+  </div>
+  <div class="result"><b>Live: invite only, 4 creators</b>Each creator gets an invite with the brief, posts between Nov 16 and Dec 6, every reel comes to the brand for approval, and payouts are released from the held budget.</div>
+</article>
+</div>
+
+<!-- ============ WHAT A LIVE CAMPAIGN NEEDS ============ -->
+<section class="band">
+  <h2><span class="n">2</span>Every campaign detail needed to go live, and who provides it on each path</h2>
+  <p class="sub">Fields from the creator-facing campaign page and the admin dashboard in the brand web app. <code>validate_campaign</code> checks these before <code>publish_campaign</code> is offered.</p>
+  <table>
+    <thead><tr><th>Group</th><th>Field</th><th>A · Our own brief</th><th>B · Strategist</th><th>C · We pick creators</th></tr></thead>
+    <tbody>
+      <tr><td class="grp" rowspan="4">Basics</td><td class="f"><b>Title &amp; category</b><span>Food · Mobility · Entertainment · Lifestyle · Price</span></td><td><span class="who c">Claude</span>from the brief</td><td><span class="who s">Strategist</span></td><td><span class="who c">Claude</span>from the idea</td></tr>
+      <tr><td class="f"><b>Goal, dates &amp; location</b><span>Start/end, or event date, time, venue, ticket link for events</span></td><td><span class="who b">Brand</span></td><td><span class="who b">Brand</span></td><td><span class="who b">Brand</span></td></tr>
+      <tr><td class="f"><b>Cover image</b><span>First thing creators see on the campaign card</span></td><td><span class="who b">Brand</span></td><td><span class="who b">Brand</span></td><td><span class="who b">Brand</span></td></tr>
+      <tr><td class="f"><b>Inspiration posts</b><span>Public reels shown as “the style we're after”</span></td><td><span class="who b">Brand</span></td><td><span class="who b">Brand</span>visual direction for the strategist</td><td><span class="who c">Claude</span>optional</td></tr>
+      <tr><td class="grp" rowspan="4">Creative</td><td class="f"><b>Requirement, hook &amp; script</b><span>What creators should show and say</span></td><td><span class="who b">Brand</span>checked by Claude</td><td><span class="who s">Strategist</span>approved by brand</td><td><span class="who c">Claude</span>approved by brand</td></tr>
+      <tr><td class="f"><b>Brand visibility &amp; CTAs</b><span>e.g. burger + wrapper in frame; caption tags @pattypoplk</span></td><td><span class="who b">Brand</span>+ <span class="who c">Claude</span>CTA</td><td><span class="who s">Strategist</span></td><td><span class="who c">Claude</span></td></tr>
+      <tr><td class="f"><b>Platforms &amp; deliverable</b><span>TikTok · Instagram · YouTube · Facebook; 9:16, 30–45s, min 1080p, language, captions</span></td><td><span class="who b">Brand</span></td><td><span class="who s">Strategist</span></td><td><span class="who b">Brand</span>1 Instagram reel each</td></tr>
+      <tr><td class="f"><b>Restrictions</b><span>No AI content · face visible · no competitors · tag the brand · licensed audio · live 30 days</span></td><td><span class="who p">Polysocial</span>brand defaults</td><td><span class="who p">Polysocial</span></td><td><span class="who p">Polysocial</span></td></tr>
+      <tr><td class="grp" rowspan="3">Creators</td><td class="f"><b>Best suited for</b><span>Gender, age, location, persona, content style</span></td><td><span class="who b">Brand</span>audience</td><td><span class="who s">Strategist</span></td><td><span class="who b">Brand</span>persona + map filters</td></tr>
+      <tr><td class="f"><b>Who can join</b><span>Open to every creator, or Invite only</span></td><td>Open</td><td>Strategist invites macro + open to micro</td><td>Invite only</td></tr>
+      <tr><td class="f"><b>Creator line-up</b><span>Named creators, with availability checked for the dates</span></td><td>—</td><td><span class="who s">Strategist</span></td><td><span class="who b">Brand</span>on the creator map</td></tr>
+      <tr><td class="grp" rowspan="3">Money</td><td class="f"><b>Pay model &amp; pricing</b><span>Performance fee: base price, max earning, Rs / 1K views · Flat fee: rate per slot, slots, negotiation limits</span></td><td><span class="who c">Claude</span>suggests · <span class="who b">Brand</span>approves</td><td><span class="who s">Strategist</span>within budget</td><td><span class="who k">Creator</span>price per reel</td></tr>
+      <tr><td class="f"><b>Total budget</b><span>Held from the wallet at publish; unspent budget refunded</span></td><td><span class="who b">Brand</span>Rs. 600,000</td><td><span class="who b">Brand</span>Rs. 800,000 all-in</td><td>Sum of picks · Rs. 217,647</td></tr>
+      <tr><td class="f"><b>Commission</b><span>Strategist fee, charged only when the design is approved</span></td><td>—</td><td><span class="who b">Brand</span>negotiated · 12%</td><td>—</td></tr>
+      <tr><td class="grp">Approvals</td><td class="f"><b>Who approves content</b><span>Pending approvals in the admin dashboard</span></td><td><span class="who b">Brand</span></td><td><span class="who s">Strategist</span></td><td><span class="who b">Brand</span>then <code>release_payouts</code></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="band">
+  <h2><span class="n">3</span>Go-live gates (all three paths)</h2>
+  <p class="sub">What has to be true before Claude asks for permission to publish.</p>
+  <div class="gates">
+    <div class="gate"><span class="gn">Gate 1</span><b>Brand connected</b><p><code>check_brand_connection</code> · verified, admin or can edit</p></div>
+    <div class="gate"><span class="gn">Gate 2</span><b>Design done</b><p>Brief from the brand, Claude or the approved strategist design</p></div>
+    <div class="gate"><span class="gn">Gate 3</span><b>Cover &amp; inspiration</b><p>Always from the brand; inspiration reels must be public</p></div>
+    <div class="gate"><span class="gn">Gate 4</span><b>Budget set &amp; funded</b><p>Verified wallet balance ≥ the amount to hold</p></div>
+    <div class="gate"><span class="gn">Gate 5</span><b>Validated</b><p><code>validate_campaign</code> · no missing fields or warnings</p></div>
+    <div class="gate"><span class="gn">Gate 6</span><b>Brand approves</b><p>Permission prompt for <code>publish_campaign</code>, then the budget is held</p></div>
+  </div>
+</section>
+
+<footer><span>Source: MCP-view chats <code>#self</code>, <code>#strat</code>, <code>#pick</code> · brand-web-app campaign page, admin dashboard, financials and profile · Polysocial-mobile creator map and pricing.</span><span>Tool names are a proposal for the Polysocial MCP server, not a published API.</span></footer>
+
+<script>
+/* A small audience heat grid for the creator-map card */
+const h = document.getElementById('heat'), hot = {14:3,15:2,26:3,27:3,28:2,38:2,39:1,40:1,13:1,25:2,50:1,51:1,29:1,16:1,41:1,52:2,53:1,64:1,63:1,2:1,3:1};
+for (let i = 0; i < 72; i++) { const e = document.createElement('i'); if (hot[i]) e.className = 'h' + hot[i]; h.appendChild(e); }
+</script>
+</body>
+</html>
