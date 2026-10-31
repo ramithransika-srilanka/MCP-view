@@ -376,20 +376,9 @@ img{display:block;}
 .plist small{font-weight:400;color:var(--ps-g600);}
 
 /* ---------- Pick creators: creator map card, overlay, line-up ---------- */
-.cm-pre{display:flex;align-items:center;gap:14px;padding:14px;flex-wrap:wrap;}
-.cm-avs{display:flex;flex:none;}
-.cm-avs .cav{width:36px;height:36px;border:2px solid var(--ps-card);margin-left:-10px;}
-.cm-avs .cav:first-child{margin-left:0;}
-.cm-tx{flex:1 1 200px;min-width:0;}
-.cm-tx b{display:block;font-size:14px;}
-.cm-tx span{display:block;font-size:12px;color:var(--ps-g600);}
-.cm-mini{margin-left:auto;}
-.cm-act{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:0 14px 14px;}
-.cm-open{border:0;background:var(--ps-blue);color:#fff;border-radius:99px;padding:8px 16px;font-size:13px;font-weight:600;}
-.cm-open:hover{background:var(--ps-blue-600);}
-.cm-st{font-size:12px;color:var(--ps-g600);}
-.cmap.done .cm-st{color:var(--ok);font-weight:600;}
-.cmap.done .cm-open{background:transparent;color:var(--ps-blue);box-shadow:inset 0 0 0 1.5px var(--ps-blue);}
+.cmf{display:block;width:100%;height:240px;border:0;background:#fff;}
+.cmpart .ps-f .cm-st{font-weight:500;}
+.cmpart.done .cm-st{color:var(--ok);font-weight:600;}
 .cav{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;background:var(--ps-g100);display:grid;place-items:center;font-size:12px;font-weight:600;}
 .picks{display:flex;flex-direction:column;}
 .pk{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line);}
@@ -400,14 +389,13 @@ img{display:block;}
 .pk .r{text-align:right;min-width:72px;font-variant-numeric:tabular-nums;}
 .pk .r b{display:block;font-size:13px;}
 .pk .r span{display:block;font-size:11px;color:var(--ps-g600);}
-.mapov{position:fixed;inset:0;z-index:50;background:rgba(20,20,19,.45);display:flex;padding:24px;}
-.mapov[hidden]{display:none;}
-.mapov-in{flex:1;display:flex;flex-direction:column;max-width:1200px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:rise .3s ease both;}
-.mapov-h{display:flex;align-items:center;gap:8px;padding:10px 12px 10px 16px;border-bottom:1px solid #e4e4e4;font:600 13px var(--ps-font);color:#121212;}
-.mapov-h small{font-weight:500;color:#717171;font-size:12px;}
-.mapov-h button{margin-left:auto;width:32px;height:32px;border-radius:50%;border:1px solid #e4e4e4;background:#fff;color:#121212;display:grid;place-items:center;}
-.mapov-h button:hover{background:#f2f2f2;}
-.mapov iframe{flex:1;width:100%;border:0;background:#fff;}
+.pside{position:fixed;top:0;right:0;bottom:0;z-index:50;width:min(440px,100vw);display:flex;flex-direction:column;background:#fff;border-left:1px solid var(--line);box-shadow:-12px 0 40px rgba(0,0,0,.12);animation:slidein .25s cubic-bezier(.32,.72,0,1) both;}
+.pside[hidden]{display:none;}
+.pside-h{display:flex;align-items:center;gap:8px;padding:12px 12px 12px 16px;border-bottom:1px solid #e4e4e4;font:600 13px var(--ps-font);color:#121212;}
+.pside-h button{margin-left:auto;width:32px;height:32px;border-radius:50%;border:1px solid #e4e4e4;background:#fff;color:#121212;display:grid;place-items:center;}
+.pside-h button:hover{background:#f2f2f2;}
+.pside iframe{flex:1;width:100%;border:0;background:#fff;}
+@keyframes slidein{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
 
 /* ---------- Responsive ---------- */
 @media (max-width:900px){
@@ -439,10 +427,8 @@ img{display:block;}
   .bstats{margin-left:0;width:100%;}
   .msg.user .b{max-width:92%;}
   .ctrls .lbl{display:none;}
-  .cm-mini{margin-left:0;width:100%;}
   .pk .r:nth-of-type(2){display:none;}
-  .mapov{padding:0;}
-  .mapov-in{border-radius:0;}
+  .pside{border-left:0;}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
@@ -514,12 +500,10 @@ img{display:block;}
   </defs>
 </svg>
 
-<div class="mapov" id="mapov" hidden>
-  <div class="mapov-in" role="dialog" aria-modal="true" aria-label="Polysocial creator map">
-    <div class="mapov-h"><span class="ps-mark"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Creator map <small>Patty Pop · Family Feast</small><button type="button" id="mapClose" aria-label="Close creator map"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-    <iframe id="mapFrame" title="Polysocial creator map"></iframe>
-  </div>
-</div>
+<aside class="pside" id="pside" hidden aria-label="Creator profile">
+  <div class="pside-h"><span class="ps-mark"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Creator profile<button type="button" id="psideClose" aria-label="Close profile"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <iframe id="psideFrame" title="Creator profile"></iframe>
+</aside>
 
 <script src="creator-map/data.js"></script>
 <script>
@@ -1090,7 +1074,6 @@ const MAP_SRC = 'creator-map/?' + new URLSearchParams({
   persona:'Momfluencer|Dadfluencer|Restaurant reviewer', axis:'location', exclude:'le.lumii',
   note:'Matched by Polysocial for Family Feast · Nov 16 – Dec 6 · Momfluencers in Colombo, widened to dads and restaurant reviewers. Lelumi Jagoda is booked until Nov 29, so she is not on the map.'
 }).toString();
-const MATCHED = ['radeeshaa','mitchie_imasha','she_writes_a_diary','iamshavi__','ranshan15'].map(byHandle).filter(Boolean);
 // Who the scripted brand keeps when the map isn't used (Next, Play, Show all).
 const DEFAULT_PICKS = ['ranshan15','radeeshaa','mitchie_imasha','she_writes_a_diary'].map(byHandle).filter(Boolean);
 let picks = null, picksLocked = false;
@@ -1113,16 +1096,13 @@ const views = (c) => Math.round(c.followers * (1.6 + (seed(c) % 12) / 10) / 100)
 const orders = (c) => Math.round(views(c) / 1000 * (9 + seed(c) % 5));
 const postedOn = (c) => 'Nov ' + (17 + seed(c) % 14);
 
-const mapCard = () => `
-<div class="ps cmap">
-  ${psHead('Creator map')}
-  <div class="cm-pre">
-    <div class="cm-avs">${MATCHED.map(c => cav(c)).join('')}</div>
-    <div class="cm-tx"><b>${MATCHED.length} available creators for Family Feast</b><span>2 momfluencers · 1 dadfluencer · 2 restaurant reviewers · Colombo city</span></div>
-    <div class="mini cm-mini"><div><b>${kf(reach(MATCHED))}</b><span>combined followers</span></div><div><b>${rs(total(MATCHED))}</b><span>one reel each</span></div></div>
-  </div>
-  <div class="cm-act"><button type="button" class="cm-open">Open creator map</button><span class="cm-st">Adjust the filters, open profiles and pick your creators</span></div>
-  <div class="ps-f"><span>Same map and creators as Polysocial mobile · Persona: Momfluencer, Dadfluencer, Restaurant reviewer</span><a href="${MAP_SRC}" target="_blank" rel="noopener">New tab ↗</a></div>
+// One part of the Polysocial creator map per card. Every card is the same
+// map page (creator-map/?part=…); the chat keeps them in step.
+const mapPart = (part, label, foot) => `
+<div class="ps cmpart" data-part="${part}">
+  ${psHead('Creator map · ' + label)}
+  <iframe class="cmf" src="${MAP_SRC}&part=${part}" title="Creator map: ${label}"></iframe>
+  ${foot ? `<div class="ps-f">${foot}</div>` : ''}
 </div>`;
 
 const picksCard = (list) => `
@@ -1207,8 +1187,16 @@ const PICK = [
     {tool:'find_creators',label:'Find matching creators',running:'Matching creators',ms:4200,
      input:{campaign_id:'cmp_pp_family_feast',persona:'Momfluencer',audience_location:'Colombo',platform:'instagram',check_availability:{from:'2026-11-16',to:'2026-12-06'},widen_if_fewer_than:5},
      output:{pool_checked:16,exact_matches:2,widened_with:['Dadfluencer','Restaurant reviewer'],matched:6,available:5,booked:[{name:'Lelumi Jagoda',handle:'le.lumii',booked_until:'2026-11-29'}],creator_map:'ready'}},
-    {text:`<p>Polysocial checked all 16 creators in the pool against your persona and dates. Only <b>2 are momfluencers</b> with a Colombo audience: Imasha Peiris and Chathuri Dahanayake. So I widened the match to a <b>dadfluencer</b> and <b>restaurant reviewers</b> whose audiences in Colombo also include young families. Lelumi Jagoda is booked until Nov 29, so she's left out.</p><p>That leaves <b>5 available creators</b>. They're on the Polysocial creator map, the same one you have in the mobile app. Change the filters and cost range, click anyone to see their profile, and hide the ones you don't want. Then tap <b>Use these creators</b>:</p>`},
-    {card:mapCard()}
+    {text:`<p>Polysocial checked all 16 creators in the pool against your persona and dates. Only <b>2 are momfluencers</b> with a Colombo audience: Imasha Peiris and Chathuri Dahanayake. So I widened the match to a <b>dadfluencer</b> and <b>restaurant reviewers</b> whose audiences in Colombo also include young families. Lelumi Jagoda is booked until Nov 29, so she's left out.</p><p>That leaves <b>5 available creators</b>, on the Polysocial creator map you know from the mobile app. I've split it into cards. Change anything in one and the others follow. First, the filters Polysocial used for the match:</p>`},
+    {card:mapPart('filters','Filters','<span>Persona, tier, language and gender · preset from your persona</span>')},
+    {text:`<p>Where each creator's audience sits by age and location. Click a creator to open their profile:</p>`},
+    {card:mapPart('map','Audience map')},
+    {text:`<p>What each one charges for one Instagram reel. Drag the range to set your budget per creator:</p>`},
+    {card:mapPart('cost','Cost per reel')},
+    {text:`<p>How the matches spread across follower tiers. The eye hides a whole tier:</p>`},
+    {card:mapPart('tiers','Creators by tier')},
+    {text:`<p>And everyone who matches. Hide anyone you don't want with the eye, then tap <b>Use these creators</b>:</p>`},
+    {card:mapPart('creators','Creators',`<span class="cm-st">Everyone left on the map joins the campaign</span><a href="${MAP_SRC}" target="_blank" rel="noopener">Whole map ↗</a>`)}
   ]},
 
   {pickMap:true,
@@ -1462,7 +1450,7 @@ const val = (v) => typeof v === 'function' ? v() : v;
 
 function reset(){
   run++; busy = false; autoplay = false; instant = false; turn = 0;
-  closeMap(); picks = null; picksLocked = false;
+  closeProfile(); picks = null; picksLocked = false; mapState = null;
   thread.innerHTML = introHTML; ta.textContent = ''; sendBtn.classList.remove('ready');
   const c = CHATS[chatKey];
   $('#greet').textContent = c.greet; $('#blurb').textContent = c.blurb;
@@ -1472,7 +1460,7 @@ function reset(){
 }
 
 async function showAll(){
-  run++; autoplay = false; busy = false; closeMap(); picksLocked = false;
+  run++; autoplay = false; busy = false; closeProfile(); picksLocked = false; mapState = null;
   // Rebuild from scratch so a half-played turn isn't left behind.
   thread.innerHTML = ''; turn = 0; instant = true;
   const id = run;
@@ -1486,7 +1474,6 @@ btnAll.addEventListener('click', showAll);
 btnRestart.addEventListener('click', reset);
 document.addEventListener('keydown', (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
-  if (!mapov.hidden) return;
   if (e.target.closest && e.target.closest('select')) return;
   if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
   if (e.key === ' ' || e.key === 'ArrowRight'){ e.preventDefault(); playTurn(); }
@@ -1496,7 +1483,7 @@ document.addEventListener('keydown', (e) => {
 });
 async function preTurn(t, id){
   if (t.select) await selectOpts(t.select, id);
-  if (t.pickMap){ closeMap(); markMapCard(); picksLocked = true; }
+  if (t.pickMap){ closeProfile(); picksLocked = true; markMapCard(); }
   if (t.divider){ const d = document.createElement('div'); d.className = 'divider'; d.textContent = t.divider; thread.appendChild(d); toBottom(true); await sleep(500, id); }
 }
 async function selectOpts(keys, id){
@@ -1513,35 +1500,46 @@ thread.addEventListener('click', (e) => {
   b.parentElement.querySelectorAll('button').forEach(x => x.classList.remove('sel')); b.classList.add('sel');
 });
 
-/* ---------- Creator map overlay (Pick creators chat) ---------- */
-const mapov = $('#mapov'), mapFrame = $('#mapFrame');
-function openMap(){
-  if (mapFrame.getAttribute('src') !== MAP_SRC) mapFrame.setAttribute('src', MAP_SRC);
-  mapov.hidden = false; autoplay = false; updateUI();
+/* ---------- Creator map cards & profile panel (Pick creators chat) ---------- */
+const pside = $('#pside'), psideFrame = $('#psideFrame');
+let mapState = null; // the map cards' latest shared state
+const mapFrames = () => [...thread.querySelectorAll('.cmf')];
+const lockMsg = () => picksLocked ? { only: picked().map(c => c.handle), locked: true } : {};
+function sendFrames(msg, except){
+  mapFrames().forEach(f => { if (f.contentWindow !== except) f.contentWindow.postMessage(msg, '*'); });
 }
-function closeMap(){ if (!mapov.hidden){ mapov.hidden = true; } }
-// Show the picks on the last creator map card in the chat.
+function openProfile(id){
+  const src = MAP_SRC + '&part=profile&id=' + encodeURIComponent(id);
+  if (psideFrame.getAttribute('src') !== src) psideFrame.setAttribute('src', src);
+  pside.hidden = false; autoplay = false; updateUI();
+}
+function closeProfile(){
+  if (pside.hidden) return;
+  pside.hidden = true;
+  if (mapState){ mapState = {...mapState, selected:null}; sendFrames({type:'polysocial:state', state:mapState}); }
+}
+// The creators card shows the line-up the chat went on with.
 function markMapCard(){
-  const cards = thread.querySelectorAll('.cmap'), card = cards[cards.length - 1];
+  const cards = thread.querySelectorAll('.cmpart[data-part="creators"]'), card = cards[cards.length - 1];
   if (!card) return;
   const list = picked();
   card.classList.add('done');
   card.querySelector('.cm-st').textContent = `✓ Picked ${list.length}: ${names(list)}`;
-  card.querySelector('.cm-open').textContent = 'View creator map';
+  sendFrames({type:'polysocial:state', state:null, ...lockMsg()});
 }
-$('#mapClose').addEventListener('click', closeMap);
-mapov.addEventListener('click', (e) => { if (e.target === mapov) closeMap(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMap(); }, true);
-thread.addEventListener('click', (e) => { if (e.target.closest('.cm-open')) openMap(); });
+$('#psideClose').addEventListener('click', closeProfile);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeProfile(); }, true);
 window.addEventListener('message', (e) => {
-  if (e.source !== mapFrame.contentWindow || !e.data) return;
-  if (e.data.type === 'polysocial:close') return closeMap();
-  if (e.data.type !== 'polysocial:creators' || !Array.isArray(e.data.creators)) return;
-  closeMap();
-  if (picksLocked) return; // the line-up is already in the campaign
-  picks = e.data.creators.map(c => byHandle(c.handle)).filter(Boolean);
+  const d = e.data; if (!d || typeof d.type !== 'string') return;
+  const frame = mapFrames().find(f => f.contentWindow === e.source);
+  if (!frame) return;
+  if (d.type === 'polysocial:height') return void (frame.style.height = Math.max(80, d.h) + 'px');
+  if (d.type === 'polysocial:ready') return frame.contentWindow.postMessage({type:'polysocial:state', state:mapState, ...lockMsg()}, '*');
+  if (d.type === 'polysocial:state'){ mapState = d.state; return sendFrames({type:'polysocial:state', state:d.state}, e.source); }
+  if (d.type === 'polysocial:profile') return openProfile(d.id);
+  if (d.type !== 'polysocial:creators' || !Array.isArray(d.creators) || picksLocked) return;
+  picks = d.creators.map(c => byHandle(c.handle)).filter(Boolean);
   if (!picks.length) picks = null;
-  markMapCard();
   if (SCRIPT[turn] && SCRIPT[turn].pickMap && !busy) playTurn();
 });
 
