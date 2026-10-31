@@ -375,6 +375,40 @@ img{display:block;}
 .xfiles span{background:rgba(255,255,255,.18);border-radius:8px;padding:3px 8px;font-size:11.5px;}
 .plist small{font-weight:400;color:var(--ps-g600);}
 
+/* ---------- Pick creators: creator map card, overlay, line-up ---------- */
+.cm-pre{display:flex;align-items:center;gap:14px;padding:14px;flex-wrap:wrap;}
+.cm-avs{display:flex;flex:none;}
+.cm-avs .cav{width:36px;height:36px;border:2px solid var(--ps-card);margin-left:-10px;}
+.cm-avs .cav:first-child{margin-left:0;}
+.cm-tx{flex:1 1 200px;min-width:0;}
+.cm-tx b{display:block;font-size:14px;}
+.cm-tx span{display:block;font-size:12px;color:var(--ps-g600);}
+.cm-mini{margin-left:auto;}
+.cm-act{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:0 14px 14px;}
+.cm-open{border:0;background:var(--ps-blue);color:#fff;border-radius:99px;padding:8px 16px;font-size:13px;font-weight:600;}
+.cm-open:hover{background:var(--ps-blue-600);}
+.cm-st{font-size:12px;color:var(--ps-g600);}
+.cmap.done .cm-st{color:var(--ok);font-weight:600;}
+.cmap.done .cm-open{background:transparent;color:var(--ps-blue);box-shadow:inset 0 0 0 1.5px var(--ps-blue);}
+.cav{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;background:var(--ps-g100);display:grid;place-items:center;font-size:12px;font-weight:600;}
+.picks{display:flex;flex-direction:column;}
+.pk{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line);}
+.pk:first-child{border-top:0;}
+.pk .m{flex:1;min-width:0;}
+.pk .m b{display:block;font-size:13.5px;}
+.pk .m > span{display:block;font-size:11.5px;color:var(--ps-g600);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pk .r{text-align:right;min-width:72px;font-variant-numeric:tabular-nums;}
+.pk .r b{display:block;font-size:13px;}
+.pk .r span{display:block;font-size:11px;color:var(--ps-g600);}
+.mapov{position:fixed;inset:0;z-index:50;background:rgba(20,20,19,.45);display:flex;padding:24px;}
+.mapov[hidden]{display:none;}
+.mapov-in{flex:1;display:flex;flex-direction:column;max-width:1200px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:rise .3s ease both;}
+.mapov-h{display:flex;align-items:center;gap:8px;padding:10px 12px 10px 16px;border-bottom:1px solid #e4e4e4;font:600 13px var(--ps-font);color:#121212;}
+.mapov-h small{font-weight:500;color:#717171;font-size:12px;}
+.mapov-h button{margin-left:auto;width:32px;height:32px;border-radius:50%;border:1px solid #e4e4e4;background:#fff;color:#121212;display:grid;place-items:center;}
+.mapov-h button:hover{background:#f2f2f2;}
+.mapov iframe{flex:1;width:100%;border:0;background:#fff;}
+
 /* ---------- Responsive ---------- */
 @media (max-width:900px){
   .app{grid-template-columns:1fr;}
@@ -405,6 +439,10 @@ img{display:block;}
   .bstats{margin-left:0;width:100%;}
   .msg.user .b{max-width:92%;}
   .ctrls .lbl{display:none;}
+  .cm-mini{margin-left:0;width:100%;}
+  .pk .r:nth-of-type(2){display:none;}
+  .mapov{padding:0;}
+  .mapov-in{border-radius:0;}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
@@ -421,6 +459,7 @@ img{display:block;}
     <ul>
       <li data-chat="self">Crunch Chicken launch — our own brief<span class="new">NEW</span></li>
       <li data-chat="strat">Kandy opening — with a strategist<span class="new">NEW</span></li>
+      <li data-chat="pick">Family Feast — we pick the creators<span class="new">NEW</span></li>
     </ul>
     <div class="me"><div class="av">DR</div><div><b>Dinithi Rajapaksa</b><span>Marketing Manager · Patty Pop</span></div></div>
   </aside>
@@ -428,7 +467,7 @@ img{display:block;}
   <main class="main">
     <div class="bar">
       <div class="title" id="chatTitle"></div>
-      <select class="chatsel" id="chatSel" aria-label="Choose chat"><option value="self">Crunch Chicken — own brief</option><option value="strat">Kandy opening — with strategist</option></select>
+      <select class="chatsel" id="chatSel" aria-label="Choose chat"><option value="self">Crunch Chicken — own brief</option><option value="strat">Kandy opening — with strategist</option><option value="pick">Family Feast — we pick creators</option></select>
       <span class="conn" title="Polysocial MCP connector is connected"><span class="ps-mark"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial<span class="dot"></span></span>
       <span class="spacer"></span>
       <div class="ctrls" role="group" aria-label="Demo controls">
@@ -475,6 +514,14 @@ img{display:block;}
   </defs>
 </svg>
 
+<div class="mapov" id="mapov" hidden>
+  <div class="mapov-in" role="dialog" aria-modal="true" aria-label="Polysocial creator map">
+    <div class="mapov-h"><span class="ps-mark"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial · Creator map <small>Patty Pop · Family Feast</small><button type="button" id="mapClose" aria-label="Close creator map"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <iframe id="mapFrame" title="Polysocial creator map"></iframe>
+  </div>
+</div>
+
+<script src="creator-map/data.js"></script>
 <script>
 /* =====================================================================
    Polysocial × Claude — scripted conversations
@@ -1027,6 +1074,211 @@ const STRAT = [
   ]}
 ];
 
+
+/* =====================================================================
+   Path 3: the brand picks creators from the Polysocial creator pool
+   1. Brand is connected? → 2. Basic idea of the campaign →
+   3. Creator persona → 4. Polysocial matches creators (persona, location,
+   availability) → 5. Brand adjusts and picks on the creator map, the same
+   map and creators as Polysocial mobile (creator-map/) → 6. Design →
+   7. Budget & go live → 8. Approve reels & pay out
+   ===================================================================== */
+
+const POOL = (window.CREATOR_MAP || {creators:[]}).creators;
+const byHandle = (h) => POOL.find(c => c.handle === h);
+const MAP_SRC = 'creator-map/?' + new URLSearchParams({
+  persona:'Momfluencer|Dadfluencer|Restaurant reviewer', axis:'location', exclude:'le.lumii',
+  note:'Matched by Polysocial for Family Feast · Nov 16 – Dec 6 · Momfluencers in Colombo, widened to dads and restaurant reviewers. Lelumi Jagoda is booked until Nov 29, so she is not on the map.'
+}).toString();
+const MATCHED = ['radeeshaa','mitchie_imasha','she_writes_a_diary','iamshavi__','ranshan15'].map(byHandle).filter(Boolean);
+// Who the scripted brand keeps when the map isn't used (Next, Play, Show all).
+const DEFAULT_PICKS = ['ranshan15','radeeshaa','mitchie_imasha','she_writes_a_diary'].map(byHandle).filter(Boolean);
+let picks = null, picksLocked = false;
+const picked = () => picks || DEFAULT_PICKS;
+
+const rs = (n) => 'Rs. ' + Math.round(n).toLocaleString('en-US');
+const kf = (n) => n >= 1e6 ? (n/1e6).toFixed(1).replace(/\.0$/,'') + 'M' : n >= 1e3 ? (n/1e3).toFixed(n >= 1e5 ? 0 : 1).replace(/\.0$/,'') + 'K' : String(n);
+const tierOf = (f) => f < 5000 ? 'Emerging' : f < 10000 ? 'Nano' : f < 40000 ? 'Micro' : f < 100000 ? 'Rising' : 'Mid';
+const cav = (c, cls) => c.photo ? `<img class="${cls||'cav'}" src="creator-map/${c.photo}" alt="">` : `<span class="${cls||'cav'} ini">${c.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</span>`;
+const first = (c) => c.name.split(' ')[0];
+const names = (list) => list.length < 2 ? list.map(first).join('') : list.slice(0,-1).map(first).join(', ') + ' and ' + first(list[list.length-1]);
+// Personas the brand searched for come first on the line-up.
+const FOCUS = ['Momfluencer','Dadfluencer','Restaurant reviewer'];
+const focus = (c) => (c.personas||[]).slice().sort((a,b) => FOCUS.includes(b) - FOCUS.includes(a));
+const total = (list) => list.reduce((s,c) => s + (c.cost||0), 0);
+const reach = (list) => list.reduce((s,c) => s + (c.followers||0), 0);
+// Reel results after the campaign: steady per creator, so replays match.
+const seed = (c) => [...c.handle].reduce((h,ch) => (h*31 + ch.charCodeAt(0)) % 997, 7);
+const views = (c) => Math.round(c.followers * (1.6 + (seed(c) % 12) / 10) / 100) * 100;
+const orders = (c) => Math.round(views(c) / 1000 * (9 + seed(c) % 5));
+const postedOn = (c) => 'Nov ' + (17 + seed(c) % 14);
+
+const mapCard = () => `
+<div class="ps cmap">
+  ${psHead('Creator map')}
+  <div class="cm-pre">
+    <div class="cm-avs">${MATCHED.map(c => cav(c)).join('')}</div>
+    <div class="cm-tx"><b>${MATCHED.length} available creators for Family Feast</b><span>2 momfluencers · 1 dadfluencer · 2 restaurant reviewers · Colombo city</span></div>
+    <div class="mini cm-mini"><div><b>${kf(reach(MATCHED))}</b><span>combined followers</span></div><div><b>${rs(total(MATCHED))}</b><span>one reel each</span></div></div>
+  </div>
+  <div class="cm-act"><button type="button" class="cm-open">Open creator map</button><span class="cm-st">Adjust the filters, open profiles and pick your creators</span></div>
+  <div class="ps-f"><span>Same map and creators as Polysocial mobile · Persona: Momfluencer, Dadfluencer, Restaurant reviewer</span><a href="${MAP_SRC}" target="_blank" rel="noopener">New tab ↗</a></div>
+</div>`;
+
+const picksCard = (list) => `
+<div class="ps">
+  ${psHead('Creators added to the campaign')}
+  <div class="picks">${list.map(c => `
+    <div class="pk">${cav(c)}<div class="m"><b>${c.name}</b><span>@${c.handle} · ${focus(c).slice(0,2).join(', ')}</span></div><div class="r"><b>${kf(c.followers)}</b><span>${tierOf(c.followers)}</span></div><div class="r"><b>${rs(c.cost)}</b><span>per reel</span></div></div>`).join('')}
+  </div>
+  <div class="ps-f"><span>${list.length} creators · ${kf(reach(list))} combined followers · <b style="color:var(--ps-g800)">${rs(total(list))}</b> for one reel each, incl. Polysocial fees</span><a href="#" onclick="return false">Edit in Polysocial ↗</a></div>
+</div>`;
+
+const CARD_BRIEF_P = `
+<div class="ps">
+  ${psHead('Campaign draft · creative brief')}
+  <div class="cp-hero empty" style="aspect-ratio:16/5">
+    <div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg>Cover image needed</div>
+    <span class="stat badge on-img blue">Drafted by Claude</span>
+  </div>
+  <div class="cp-body">
+    <h3>Family Feast — Weekend dinner, sorted</h3>
+    <div class="meta">Food · Nov 16 – Dec 6, 2026 · 3 weeks · Goal: weekend family orders</div>
+  </div>
+  <div class="sec"><h6>Hook</h6><div class="hook">“Friday night, and nobody has to cook”</div></div>
+  <div class="sec"><h6>Script · 20–30s reel</h6>${beats([['0–3s','The weekend dinner question: “What are we eating?” Tired faces, hungry kids'],['3–10s','The Family Feast box arrives or gets picked up at Patty Pop'],['10–20s','Unboxing at the table: 2 burgers, 2 kids’ meals, fries and drinks, everyone grabs theirs'],['20s+','Happy family moment + “Family Feast, Rs. 4,990 at Patty Pop”']])}</div>
+  <div class="two">
+    <div class="sec"><h6>Made for</h6><div class="tags"><span>Parents 25–44</span><span>Young families</span><span>Colombo</span></div></div>
+    <div class="sec"><h6>Deliverable</h6><div class="tags"><span>1 Instagram reel · 20–30s</span><span>Creator's own style</span></div></div>
+  </div>
+  <div class="sec">
+    <h6>Must show</h6><p>The full box opened on the table, the kids' meals, and the Patty Pop logo or bag</p>
+    <h6 style="margin-top:10px">Caption CTA</h6><p>Weekend dinner, sorted 🍔 Get the Family Feast for Rs. 4,990 at Patty Pop. Use code FEAST for free drinks refills · @pattypoplk</p>
+  </div>
+  <div class="ps-f"><span>ID cmp_pp_family_feast · <b style="color:var(--warn)">Missing: cover image</b></span><a href="#" onclick="return false">Edit in Polysocial ↗</a></div>
+</div>`;
+
+const budgetCardP = (list) => `
+<div class="ps">
+  ${psHead('Budget · fixed price per creator')}
+  <div class="sec" style="border-top:0">
+    <div class="plist">${list.map(c => `<div><span>${c.name} <small>· 1 reel</small></span><b>${rs(c.cost)}</b></div>`).join('')}
+      <div><span><b style="color:var(--ps-g800)">Total budget</b> <small>· incl. Polysocial fees</small></span><b>${rs(total(list))}</b></div>
+    </div>
+  </div>
+  <div class="sec"><div class="mini"><div><b>${rs(total(list))}</b><span>held from your balance</span></div><div><b>${rs(3400000 - total(list))}</b><span>balance after</span></div><div><b>${kf(reach(list))}</b><span>combined followers</span></div></div></div>
+  <div class="ps-f"><span>Each creator is paid only after you approve their reel and it's posted</span><a href="#" onclick="return false">Billing ↗</a></div>
+</div>`;
+
+const payoutCard = (list) => {
+  const v = list.reduce((s,c) => s + views(c), 0), o = list.reduce((s,c) => s + orders(c), 0);
+  return `
+<div class="ps">
+  ${psHead('Results &amp; payouts')}
+  <div class="sec" style="border-top:0"><div class="mini"><div><b>${kf(v)}</b><span>reel views</span></div><div><b>${o.toLocaleString('en-US')}</b><span>orders with code FEAST</span></div><div><b>${rs(total(list) / v * 1000)}</b><span>per 1K views</span></div><div><b>${list.length}/${list.length}</b><span>reels approved</span></div></div></div>
+  <div class="picks">${list.map(c => `
+    <div class="pk">${cav(c)}<div class="m"><b>${c.name}</b><span>Reel posted ${postedOn(c)} · <span class="badge ok">✓ Approved</span></span></div><div class="r"><b>${kf(views(c))}</b><span>views</span></div><div class="r"><b>${rs(c.cost)}</b><span>payout</span></div></div>`).join('')}
+  </div>
+  <div class="ps-f"><span>Total payout <b style="color:var(--ps-g800)">${rs(total(list))}</b> · from the budget held when you went live</span><a href="#" onclick="return false">Full report ↗</a></div>
+</div>`;
+};
+
+const PICK = [
+  {user:"Hi Claude! We want to run a Polysocial campaign for our new Family Feast box, and this time we'd like to pick the creators ourselves.",
+   steps:[
+    {think:900},
+    {tool:'check_brand_connection',label:'Check brand connection',
+     input:{workspace:'Patty Pop'},
+     output:{connected:true,brand_id:'brd_pattypop_lk',verified:true,your_role:'admin'}},
+    {tool:'get_brand_profile',label:'Get brand profile',
+     input:{brand_id:'brd_pattypop_lk'},
+     output:{handle:'@pattypoplk',past_campaigns:4,balance:3400000,brand_assets:12,creator_pool_access:true}},
+    {text:`<p>Patty Pop is connected to Polysocial, and you have access to the creator pool, so you can choose the creators yourself:</p>`},
+    {card:CARD_CONNECTED},
+    {text:`<p>To find the right creators I need two things. You don't need the design yet:</p><ol><li><b>The basic idea of the campaign:</b> what you're promoting, what it should achieve and when it runs.</li><li><b>The creator persona:</b> who the creators should be and where their audience is.</li></ol>`}
+  ]},
+
+  {user:"It's the Family Feast box: 2 burgers, 2 kids' meals, fries and 4 drinks for Rs. 4,990. We want families to make Patty Pop their weekend dinner plan, from Nov 16 to Dec 6. For creators, we're thinking momfluencers in Colombo.",
+   steps:[
+    {think:1000},
+    {tool:'create_campaign_draft',label:'Create campaign draft',
+     input:{title:'Family Feast — Weekend dinner, sorted',creator_selection:'brand_picks',design:'later',goal:'weekend_family_orders',offer:'Family Feast box · Rs. 4,990',starts:'2026-11-16',ends:'2026-12-06',platforms:['instagram']},
+     output:{id:'cmp_pp_family_feast',status:'draft',missing:['creators','design','budget']}},
+    {tool:'find_creators',label:'Find matching creators',running:'Matching creators',ms:4200,
+     input:{campaign_id:'cmp_pp_family_feast',persona:'Momfluencer',audience_location:'Colombo',platform:'instagram',check_availability:{from:'2026-11-16',to:'2026-12-06'},widen_if_fewer_than:5},
+     output:{pool_checked:16,exact_matches:2,widened_with:['Dadfluencer','Restaurant reviewer'],matched:6,available:5,booked:[{name:'Lelumi Jagoda',handle:'le.lumii',booked_until:'2026-11-29'}],creator_map:'ready'}},
+    {text:`<p>Polysocial checked all 16 creators in the pool against your persona and dates. Only <b>2 are momfluencers</b> with a Colombo audience: Imasha Peiris and Chathuri Dahanayake. So I widened the match to a <b>dadfluencer</b> and <b>restaurant reviewers</b> whose audiences in Colombo also include young families. Lelumi Jagoda is booked until Nov 29, so she's left out.</p><p>That leaves <b>5 available creators</b>. They're on the Polysocial creator map, the same one you have in the mobile app. Change the filters and cost range, click anyone to see their profile, and hide the ones you don't want. Then tap <b>Use these creators</b>:</p>`},
+    {card:mapCard()}
+  ]},
+
+  {pickMap:true,
+   user:() => `I've picked ${picked().length} creator${picked().length === 1 ? '' : 's'} on the map: ${names(picked())}.`,
+   steps:() => [
+    {think:800},
+    {tool:'add_campaign_creators',label:'Add creators to campaign',
+     input:{campaign_id:'cmp_pp_family_feast',creators:picked().map(c => '@' + c.handle),deliverable:'1 instagram reel each'},
+     output:{added:picked().length,combined_followers:reach(picked()),reel_cost_total:total(picked()),all_available:true,status:'creators_selected'}},
+    {text:`<p>All ${picked().length} are available and on the campaign:</p>`},
+    {card:picksCard(picked())},
+    {text:`<p>Next is the design. You gave me the idea, so I've drafted the brief from it for ${picked().length === 1 ? 'this creator' : 'these creators'}. They'll each film it in their own style:</p>`},
+    {tool:'draft_campaign_brief',label:'Draft creative brief',
+     input:{campaign_id:'cmp_pp_family_feast',from:'brand_idea',creators:picked().map(c => '@' + c.handle)},
+     output:{hook:'Friday night, and nobody has to cook',script_beats:4,deliverable:'1 reel · 20-30s',caption_cta:true,missing:['cover_image']}},
+    {card:CARD_BRIEF_P},
+    {text:`<p>Want to change anything? And send me a <b>cover image</b> for the campaign page. It's the first thing creators see in their invite.</p>`}
+  ]},
+
+  {user:"Looks great, go with this brief. Here's the cover photo.",
+   files:[{img:'ppMeal.jpg',name:'family-feast-cover.jpg',sub:'JPG · 2.4 MB'}],
+   steps:() => [
+    {think:800},
+    {tool:'upload_cover_image',label:'Upload cover image',
+     input:{campaign_id:'cmp_pp_family_feast',file:'family-feast-cover.jpg'},
+     output:{cover:'ok',width:1672,height:941}},
+    {tool:'update_campaign_design',label:'Save campaign design',
+     input:{campaign_id:'cmp_pp_family_feast',brief:'approved_by_brand'},
+     output:{design:'done',missing:['budget']}},
+    {tool:'set_campaign_budget',label:'Set campaign budget',
+     input:{campaign_id:'cmp_pp_family_feast',model:'fixed_per_creator',creators:Object.fromEntries(picked().map(c => ['@' + c.handle, c.cost]))},
+     output:{total:total(picked()),includes_polysocial_fees:true,hold_from_balance:total(picked()),payout:'per creator, after reel approved'}},
+    {text:`<p>Cover and design are saved. Since you picked the creators, the budget is simply their price for one reel each:</p>`},
+    {card:budgetCardP(picked())},
+    {text:`<p>Everything's ready. When you go live, Polysocial sends each creator an invite with the brief. They post between Nov 16 and Dec 6, every reel comes to you for approval, and the creator is paid once you approve it. Shall I go live?</p>`}
+  ]},
+
+  {user:"Yes, go live!",
+   steps:() => [
+    {think:600},
+    {perm:'publish_campaign',desc:`This sends invites to ${picked().length} creators and holds ${rs(total(picked()))} from your Polysocial balance.`,
+     preview:`publish_campaign({ campaign_id: "cmp_pp_family_feast", invite: [${picked().map(c => '"@' + c.handle + '"').join(', ')}] })`,once:true},
+    {tool:'publish_campaign',label:'Publish campaign',
+     input:{campaign_id:'cmp_pp_family_feast',invite:picked().map(c => '@' + c.handle)},
+     output:{status:'live',invites_sent:picked().length,budget_held:total(picked())}},
+    {text:`<p>It's live 🎉 Invites are with ${names(picked())}. I'll let you know as they accept, and each reel will come to you for approval before it goes up.</p>`},
+    {card:liveCard({title:'Family Feast — Weekend dinner, sorted',meta:`${picked().length} creators invited · posting Nov 16 – Dec 6 · Budget held: ${rs(total(picked()))}`,steps:['Today · invites sent','Nov 16 · posting starts','Dec 6 · last post','Dec 7 · payouts'],id:'ID cmp_pp_family_feast'})}
+  ]},
+
+  {divider:'Monday, Dec 7',
+   user:"The campaign ended yesterday. How did it go, and can we pay the creators now?",
+   steps:() => [
+    {think:900},
+    {tool:'get_campaign_results',label:'Get campaign results',
+     input:{campaign_id:'cmp_pp_family_feast'},
+     output:{reels_posted:picked().length,reels_approved:picked().length,views:picked().reduce((s,c) => s + views(c), 0),code_orders:picked().reduce((s,c) => s + orders(c), 0)}},
+    {tool:'get_payout_summary',label:'Get payout summary',
+     input:{campaign_id:'cmp_pp_family_feast'},
+     output:{due:picked().map(c => ({creator:'@' + c.handle,amount:c.cost,reel:'approved'})),total:total(picked()),source:'budget_held'}},
+    {text:`<p>All ${picked().length} reels went up and you approved each one. Here's how they did, with what each creator is owed:</p>`},
+    {card:payoutCard(picked())},
+    {perm:'release_payouts',desc:`This pays ${picked().length} creators ${rs(total(picked()))} in total from the budget already held for this campaign.`,
+     preview:'release_payouts({ campaign_id: "cmp_pp_family_feast", creators: "all_approved" })',once:true},
+    {tool:'release_payouts',label:'Release payouts',
+     input:{campaign_id:'cmp_pp_family_feast',creators:'all_approved'},
+     output:{paid:picked().length,total:total(picked()),arrives:'1–2 business days',campaign:'closed'}},
+    {text:`<p>Done. ${names(picked())} ${picked().length === 1 ? 'has' : 'have'} been paid ${rs(total(picked()))} in total, arriving in 1–2 business days, and the campaign is closed. Want me to save this line-up so you can reuse it for the next Patty Pop campaign?</p>`}
+  ]}
+];
+
 const CHATS = {
   self:{title:'Crunch Chicken launch — our own brief',script:SELF,
     greet:'Good morning, Dinithi',
@@ -1035,7 +1287,11 @@ const CHATS = {
   strat:{title:'Kandy opening — with a strategist',script:STRAT,
     greet:'Good morning, Dinithi',
     blurb:'Path 2 of the campaign flow: the brand has no time to design the campaign, so it sets a budget, uploads a cover image and inspiration posts, picks one of three matched creative strategists, invites them and agrees their commission in chat. The strategist designs it; the brand reviews, approves and goes live.',
-    chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Upload cover &amp; inspiration','Choose from 3 strategists','Invite &amp; agree commission','Review &amp; revise design','Approve &amp; go live']}
+    chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Upload cover &amp; inspiration','Choose from 3 strategists','Invite &amp; agree commission','Review &amp; revise design','Approve &amp; go live']},
+  pick:{title:'Family Feast — we pick the creators',script:PICK,
+    greet:'Good morning, Dinithi',
+    blurb:'Path 3 of the campaign flow: the brand picks the creators from the Polysocial creator pool. It gives the basic idea of the campaign and the creator persona, Polysocial matches available creators, and the brand adjusts and picks them on the creator map (the same map as Polysocial mobile, with each creator\'s profile). Then the design, going live and payouts.',
+    chips:['Check brand connection','Basic idea of the campaign','Creator persona','Polysocial matches creators','Pick on the creator map','Design &amp; cover','Budget &amp; go live','Approve reels &amp; pay out']}
 };
 
 /* ---------- Player ---------- */
@@ -1158,7 +1414,8 @@ async function claudeTurn(steps, id){
     if (s.tool){
       if (!group){ group = document.createElement('div'); group.className = 'tools-group blk'; body.appendChild(group); }
       const el = toolEl(s); el.classList.remove('blk'); group.appendChild(el); toBottom();
-      await sleep(650 + Math.random()*350, id);
+      if (s.running) el.querySelector('.lab').textContent = s.running + '…';
+      await sleep(s.ms || 650 + Math.random()*350, id);
       finishTool(el, s); if (s.after) s.after();
       await sleep(200, id);
       continue;
@@ -1189,10 +1446,11 @@ async function playTurn(){
   busy = true; updateUI();
   const id = run;
   try {
-    await preTurn(SCRIPT[turn], id);
-    await typeUser(SCRIPT[turn].user, id, SCRIPT[turn].paste, SCRIPT[turn].files);
+    const t = SCRIPT[turn];
+    await preTurn(t, id);
+    await typeUser(val(t.user), id, t.paste, t.files);
     await sleep(300, id);
-    await claudeTurn(SCRIPT[turn].steps, id);
+    await claudeTurn(val(t.steps), id);
     turn++;
   } catch (e) { if (e !== CANCEL) throw e; return; }
   busy = false; updateUI();
@@ -1200,8 +1458,11 @@ async function playTurn(){
   else if (turn >= SCRIPT.length){ autoplay = false; updateUI(); }
 }
 
+const val = (v) => typeof v === 'function' ? v() : v;
+
 function reset(){
   run++; busy = false; autoplay = false; instant = false; turn = 0;
+  closeMap(); picks = null; picksLocked = false;
   thread.innerHTML = introHTML; ta.textContent = ''; sendBtn.classList.remove('ready');
   const c = CHATS[chatKey];
   $('#greet').textContent = c.greet; $('#blurb').textContent = c.blurb;
@@ -1211,11 +1472,11 @@ function reset(){
 }
 
 async function showAll(){
-  run++; autoplay = false; busy = false;
+  run++; autoplay = false; busy = false; closeMap(); picksLocked = false;
   // Rebuild from scratch so a half-played turn isn't left behind.
   thread.innerHTML = ''; turn = 0; instant = true;
   const id = run;
-  for (const t of SCRIPT){ await preTurn(t, id); await typeUser(t.user, id, t.paste, t.files); await claudeTurn(t.steps, id); turn++; }
+  for (const t of SCRIPT){ await preTurn(t, id); await typeUser(val(t.user), id, t.paste, t.files); await claudeTurn(val(t.steps), id); turn++; }
   instant = false; updateUI(); toBottom(true);
 }
 
@@ -1225,6 +1486,7 @@ btnAll.addEventListener('click', showAll);
 btnRestart.addEventListener('click', reset);
 document.addEventListener('keydown', (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (!mapov.hidden) return;
   if (e.target.closest && e.target.closest('select')) return;
   if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
   if (e.key === ' ' || e.key === 'ArrowRight'){ e.preventDefault(); playTurn(); }
@@ -1234,6 +1496,7 @@ document.addEventListener('keydown', (e) => {
 });
 async function preTurn(t, id){
   if (t.select) await selectOpts(t.select, id);
+  if (t.pickMap){ closeMap(); markMapCard(); picksLocked = true; }
   if (t.divider){ const d = document.createElement('div'); d.className = 'divider'; d.textContent = t.divider; thread.appendChild(d); toBottom(true); await sleep(500, id); }
 }
 async function selectOpts(keys, id){
@@ -1248,6 +1511,38 @@ async function selectOpts(keys, id){
 thread.addEventListener('click', (e) => {
   const b = e.target.closest('.opts button'); if (!b) return;
   b.parentElement.querySelectorAll('button').forEach(x => x.classList.remove('sel')); b.classList.add('sel');
+});
+
+/* ---------- Creator map overlay (Pick creators chat) ---------- */
+const mapov = $('#mapov'), mapFrame = $('#mapFrame');
+function openMap(){
+  if (mapFrame.getAttribute('src') !== MAP_SRC) mapFrame.setAttribute('src', MAP_SRC);
+  mapov.hidden = false; autoplay = false; updateUI();
+}
+function closeMap(){ if (!mapov.hidden){ mapov.hidden = true; } }
+// Show the picks on the last creator map card in the chat.
+function markMapCard(){
+  const cards = thread.querySelectorAll('.cmap'), card = cards[cards.length - 1];
+  if (!card) return;
+  const list = picked();
+  card.classList.add('done');
+  card.querySelector('.cm-st').textContent = `✓ Picked ${list.length}: ${names(list)}`;
+  card.querySelector('.cm-open').textContent = 'View creator map';
+}
+$('#mapClose').addEventListener('click', closeMap);
+mapov.addEventListener('click', (e) => { if (e.target === mapov) closeMap(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMap(); }, true);
+thread.addEventListener('click', (e) => { if (e.target.closest('.cm-open')) openMap(); });
+window.addEventListener('message', (e) => {
+  if (e.source !== mapFrame.contentWindow || !e.data) return;
+  if (e.data.type === 'polysocial:close') return closeMap();
+  if (e.data.type !== 'polysocial:creators' || !Array.isArray(e.data.creators)) return;
+  closeMap();
+  if (picksLocked) return; // the line-up is already in the campaign
+  picks = e.data.creators.map(c => byHandle(c.handle)).filter(Boolean);
+  if (!picks.length) picks = null;
+  markMapCard();
+  if (SCRIPT[turn] && SCRIPT[turn].pickMap && !busy) playTurn();
 });
 
 function openChat(key){

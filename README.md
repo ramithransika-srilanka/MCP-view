@@ -5,9 +5,10 @@ through the **Polysocial MCP connector**. Open `index.html` in a browser — no 
 
 ## The conversations
 
-The sidebar (or the chat picker on mobile) switches between two chats. Link straight to one with `#self` or `#strat`.
+The sidebar (or the chat picker on mobile) switches between three chats. Link straight to one with `#self`, `#strat`
+or `#pick`.
 
-Both chats follow the same flow: check the brand is connected → requirement and timeline → who designs it →
+The first two chats follow the same flow: check the brand is connected → requirement and timeline → who designs it →
 cover image and inspiration posts (always requested from the brand) → budget → go live. They start the same way and split at "Do you need to hire a creative strategist to design your campaign?" (Yes / No).
 
 **Crunch Chicken launch — our own brief (`#self`, opens by default).** The brand designs the campaign itself.
@@ -36,6 +37,33 @@ strategist's side of this flow:
    `confirm_strategist_commission` (with approval) hires her. The commission is charged only when the design is approved.
 5. `get_strategist_design` returns the design, `send_strategist_feedback` gets a revised version 2, and
    `approve_strategist_design` + `publish_campaign` take it live, with the strategist running it.
+
+**Family Feast — we pick the creators (`#pick`).** The brand chooses the creators itself from the Polysocial creator
+pool. After the connection check it gives only the **basic idea** of the campaign (the Family Feast box, the goal and the
+dates, no design) and the **creator persona** ("momfluencers in Colombo"). `create_campaign_draft` saves the idea and
+`find_creators` takes a while: it checks the 16 creators in the pool against the persona, audience location and
+availability for the dates. Only 2 are momfluencers, so it widens the match to a dadfluencer and restaurant reviewers, and
+leaves out Lelumi Jagoda, who is booked.
+
+Claude then shows the **creator map**, the same map, filters and creators as the Polysocial mobile site
+(`Polysocial-mobile`, `site/creator-map/celeste`), opened with Polysocial's match already applied. **Open creator map**
+opens it over the chat: the brand changes the persona, tier, language, gender, cost range and lifestyle/location view,
+clicks any creator to see their **profile**, and hides the ones it doesn't want with the eyes. **Use these N creators**
+sends whoever is left on the map back to the chat, and the conversation carries on with that line-up (Next, Play and
+Show all use Ranshan, Radeesha, Imasha and Chathuri):
+
+1. `add_campaign_creators` adds the picks, and `draft_campaign_brief` turns the brand's idea into the design.
+2. The brand uploads a cover image (`upload_cover_image`, `update_campaign_design`), and `set_campaign_budget` sets the
+   budget to each creator's price for one reel.
+3. `publish_campaign` (with approval) invites the creators and goes live.
+4. After the campaign, `get_campaign_results` and `get_payout_summary` show each creator's reel and payout, and
+   `release_payouts` (with approval) pays them.
+
+The map lives in `creator-map/`: `index.html` is the mobile site's page without its site nav, footer and "Send this
+plan" form, with a **Use these creators** button that posts the picks to the chat. `data.js` is the same creator list
+(brand set to Patty Pop, with food and family persona filters), and `avatars/` the same profile pictures. The map reads
+its starting filters from the URL (`?persona=…&axis=location&exclude=…&note=…`). Like on the mobile site, it needs a
+desktop-sized window; on a phone it shows "Open on desktop".
 
 Each tool call can be expanded to show its request and response.
 
