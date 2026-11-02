@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body style="margin:0">
+<title>Invite-Only Campaign Flow</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one swimlane diagram (brand · MCP · creator) read top to bottom, then a short reference of the tools it adds. Tokens follow the prototype in index.html. */
+:root{
+  --bg:#faf9f5; --panel:#ffffff; --lane:#f3f2ec; --fg:#141413; --muted:#73726c; --line:rgba(31,30,29,.14); --line-2:rgba(31,30,29,.32);
+  --blue:#1548eb; --blue-soft:#e6ecfd; --blue-ink:#123bbd;
+  --sans:'Inter',-apple-system,system-ui,"Segoe UI",sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#262624; --panel:#30302e; --lane:#2c2c2a; --fg:#faf9f5; --muted:#a6a39b; --line:rgba(222,220,209,.14); --line-2:rgba(222,220,209,.34);
+  --blue:#7d9bf6; --blue-soft:rgba(115,145,243,.18); --blue-ink:#a9bcf9; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#262624; --panel:#30302e; --lane:#2c2c2a; --fg:#faf9f5; --muted:#a6a39b; --line:rgba(222,220,209,.14); --line-2:rgba(222,220,209,.34);
+  --blue:#7d9bf6; --blue-soft:rgba(115,145,243,.18); --blue-ink:#a9bcf9; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.55}
+.wrap{max-width:1040px;margin:0 auto;padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:28px}
+header{display:grid;gap:10px;max-width:68ch}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-ink)}
+h1{font-size:clamp(26px,4vw,34px);line-height:1.15;margin:0;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
+h2{font-size:19px;margin:0;font-weight:650;letter-spacing:-.01em;text-wrap:balance}
+p{margin:0;color:var(--muted)}
+code{font-family:var(--mono);font-size:.86em;background:var(--lane);padding:1px 5px;border-radius:4px;color:var(--fg)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.sw{width:22px;height:14px;border-radius:4px;border:1.5px solid var(--line-2);background:var(--panel)}
+.sw.new{border-color:var(--blue);background:var(--blue-soft)}
+.sw.out{border-style:dashed;background:transparent}
+.sw.pill{border-radius:8px}
+.sw.dm{width:14px;height:14px;transform:rotate(45deg);border-radius:2px}
+figure{margin:0;display:grid;gap:10px}
+.scroll{overflow-x:auto;border-radius:14px}
+.scroll svg{display:block;width:100%;min-width:760px;height:auto;color:var(--muted)}
+figcaption{font-size:13px;color:var(--muted)}
+/* svg parts */
+.lane{fill:var(--lane)}
+.div{stroke:var(--line);stroke-width:1.5;stroke-dasharray:4 5}
+.lh{fill:var(--fg);font:650 15px var(--sans)}
+.ls{fill:var(--muted);font:400 12px var(--sans)}
+.bx{fill:var(--panel);stroke:var(--line-2);stroke-width:1.2}
+.bx.new{fill:var(--blue-soft);stroke:var(--blue);stroke-width:1.6}
+.bx.out{fill:none;stroke-dasharray:5 4}
+.bx.pill{stroke:var(--fg);stroke-width:1.4}
+.dm{fill:var(--panel);stroke:var(--line-2);stroke-width:1.2}
+.dm.new{fill:var(--blue-soft);stroke:var(--blue);stroke-width:1.6}
+.t{fill:var(--fg);font:600 13px var(--sans)}
+.q{fill:var(--fg);font:600 12.5px var(--sans)}
+.s{fill:var(--muted);font:400 11px var(--mono)}
+.s.note{font:400 11.5px var(--sans)}
+.ar{fill:none;stroke:var(--muted);stroke-width:1.4;stroke-linejoin:round}
+.ar.dash{stroke-dasharray:5 4}
+.ar.acc{stroke:var(--blue);stroke-width:1.8}
+.mk{fill:var(--muted)} .mk.acc{fill:var(--blue)}
+.lb{fill:var(--muted);font:500 11px var(--sans);paint-order:stroke;stroke:var(--lane);stroke-width:5px;stroke-linejoin:round}
+.lb.acc{fill:var(--blue-ink);font-weight:650}
+/* reference */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:28px;align-items:start}
+.cols>section{display:grid;gap:12px;min-width:0}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:10px 0;border-top:1px solid var(--line)}
+th{font-weight:600;padding-right:14px;white-space:nowrap}
+td{color:var(--muted)}
+.tag{display:inline-block;font:600 10.5px var(--sans);letter-spacing:.05em;text-transform:uppercase;color:var(--blue-ink);background:var(--blue-soft);border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:1px}
+ol{margin:0;padding-left:20px;display:grid;gap:8px;color:var(--muted)}
+ol b{color:var(--fg);font-weight:600}
+.foot{font-size:13px}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Polysocial in Claude · campaign flow</div>
+    <h1>Invite-only campaign, designed by the brand</h1>
+    <p>The brand writes the brief itself and chooses <b>invite only</b>, so the campaign never appears in the open creator feed. Claude shortlists matching creators, the brand picks who gets an invite, and only those creators can see and join it.</p>
+  </header>
+
+  <div class="legend" aria-label="Legend">
+    <span><i class="sw new"></i>New for invite only</span>
+    <span><i class="sw"></i>Step in the current prototype</span>
+    <span><i class="sw out"></i>Leaves this flow</span>
+    <span><i class="sw dm"></i>Decision</span>
+    <span><i class="sw pill"></i>Start / end</span>
+  </div>
+
+  <figure>
+    <div class="scroll"><svg viewBox="0 0 1000 1910" role="img" aria-label="Swimlane flow for an invite-only campaign designed by the brand: brand connection check, goal and dates, the brand chooses to design it, brief check, the brand chooses invite only, visuals, budget, creator shortlist, publish to invitees only, creators accept or decline, and backups are invited until enough creators join.">
+<defs>
+<marker id="h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk"/></marker>
+<marker id="ha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk acc"/></marker>
+</defs>
+<rect class="lane" x="16" y="16" width="968" height="1878" rx="14"/>
+<line class="div" x1="338" y1="28" x2="338" y2="1882"/>
+<line class="div" x1="662" y1="28" x2="662" y2="1882"/>
+<text class="lh" x="176" y="46" text-anchor="middle">Brand</text>
+<text class="ls" x="176" y="63" text-anchor="middle">Marketing manager in Claude</text>
+<text class="lh" x="500" y="46" text-anchor="middle">Claude + Polysocial MCP</text>
+<text class="ls" x="500" y="63" text-anchor="middle">Tool calls</text>
+<text class="lh" x="824" y="46" text-anchor="middle">Creator</text>
+<text class="ls" x="824" y="63" text-anchor="middle">Polysocial collaborator app</text>
+<rect class="bx pill" x="46" y="90" width="260" height="53" rx="28"/>
+<text class="t" x="176" y="112" text-anchor="middle">Start a campaign</text>
+<text class="s note" x="176" y="129" text-anchor="middle">Asks Claude in the chat</text>
+<rect class="bx" x="370" y="90" width="260" height="70" rx="8"/>
+<text class="t" x="500" y="112" text-anchor="middle">Check the brand</text>
+<text class="s" x="500" y="129" text-anchor="middle">check_brand_connection</text>
+<text class="s" x="500" y="146" text-anchor="middle">get_brand_profile</text>
+<polyline class="ar" points="306,118 370,118" marker-end="url(#h)"/>
+<text class="lb" x="338.0" y="111.0" text-anchor="middle">asks</text>
+<polygon class="dm" points="500,191 595,225 500,259 405,225"/>
+<text class="q" x="500" y="229.5" text-anchor="middle">Brand connected?</text>
+<polyline class="ar" points="500,160 500,191" marker-end="url(#h)"/>
+<rect class="bx" x="46" y="197" width="260" height="53" rx="8"/>
+<text class="t" x="176" y="219" text-anchor="middle">Connect Polysocial</text>
+<text class="s note" x="176" y="236" text-anchor="middle">Sign in and pick the brand</text>
+<polyline class="ar" points="405,225 306,225" marker-end="url(#h)"/>
+<text class="lb" x="355.5" y="218.0" text-anchor="middle">No</text>
+<polyline class="ar dash" points="176,197 176,146" marker-end="url(#h)"/>
+<text class="lb" x="184" y="175.5" text-anchor="start">then retry</text>
+<rect class="bx" x="370" y="300" width="260" height="53" rx="8"/>
+<text class="t" x="500" y="322" text-anchor="middle">Ask goal, dates, designer</text>
+<text class="s note" x="500" y="339" text-anchor="middle">Chat question, no tool</text>
+<polyline class="ar" points="500,259 500,300" marker-end="url(#h)"/>
+<text class="lb" x="508" y="283.5" text-anchor="start">Yes</text>
+<polygon class="dm" points="176,386 271,420 176,454 81,420"/>
+<text class="q" x="176" y="424.5" text-anchor="middle">Hire a strategist?</text>
+<polyline class="ar" points="370,328 176,328 176,386" marker-end="url(#h)"/>
+<text class="lb" x="303.0" y="321" text-anchor="middle">asks</text>
+<rect class="bx out" x="370" y="392" width="260" height="53" rx="8"/>
+<text class="t" x="500" y="414" text-anchor="middle">Strategist path</text>
+<text class="s note" x="500" y="431" text-anchor="middle">Strategist designs it (#strat)</text>
+<polyline class="ar" points="271,420 370,420" marker-end="url(#h)"/>
+<text class="lb" x="320.5" y="413.0" text-anchor="middle">Yes</text>
+<rect class="bx" x="46" y="500" width="260" height="53" rx="8"/>
+<text class="t" x="176" y="522" text-anchor="middle">Share goal, dates, brief</text>
+<text class="s note" x="176" y="539" text-anchor="middle">Hook, script, audience, platforms</text>
+<polyline class="ar" points="176,454 176,500" marker-end="url(#h)"/>
+<text class="lb" x="184" y="481.0" text-anchor="start">No, we design it</text>
+<rect class="bx" x="370" y="500" width="260" height="70" rx="8"/>
+<text class="t" x="500" y="522" text-anchor="middle">Check brief, draft campaign</text>
+<text class="s" x="500" y="539" text-anchor="middle">check_brief</text>
+<text class="s" x="500" y="556" text-anchor="middle">create_campaign_draft</text>
+<polyline class="ar" points="306,528 370,528" marker-end="url(#h)"/>
+<text class="lb" x="338.0" y="521.0" text-anchor="middle">pastes</text>
+<polygon class="dm" points="500,606 595,640 500,674 405,640"/>
+<text class="q" x="500" y="644.5" text-anchor="middle">Brief complete?</text>
+<polyline class="ar" points="500,570 500,606" marker-end="url(#h)"/>
+<polyline class="ar" points="405,640 250,640 250,556" marker-end="url(#h)"/>
+<text class="lb" x="330" y="633" text-anchor="middle">No: fill the gaps</text>
+<rect class="bx" x="370" y="720" width="260" height="53" rx="8"/>
+<text class="t" x="500" y="742" text-anchor="middle">Ask who can join</text>
+<text class="s note" x="500" y="759" text-anchor="middle">Chat question, no tool</text>
+<polyline class="ar" points="500,674 500,720" marker-end="url(#h)"/>
+<text class="lb" x="508" y="701.0" text-anchor="start">Yes</text>
+<polygon class="dm new" points="176,806 271,840 176,874 81,840"/>
+<text class="q" x="176" y="844.5" text-anchor="middle">Who can join?</text>
+<polyline class="ar" points="370,748 176,748 176,806" marker-end="url(#h)"/>
+<text class="lb" x="303.0" y="741" text-anchor="middle">asks</text>
+<rect class="bx out" x="370" y="812" width="260" height="53" rx="8"/>
+<text class="t" x="500" y="834" text-anchor="middle">Open campaign</text>
+<text class="s note" x="500" y="851" text-anchor="middle">All matching creators notified</text>
+<polyline class="ar" points="271,840 370,840" marker-end="url(#h)"/>
+<text class="lb" x="320.5" y="833.0" text-anchor="middle">Open to all</text>
+<rect class="bx new" x="370" y="920" width="260" height="53" rx="8"/>
+<text class="t" x="500" y="942" text-anchor="middle">Make it invite only</text>
+<text class="s" x="500" y="959" text-anchor="middle">set_campaign_access</text>
+<polyline class="ar acc" points="176,874 176,948 370,948" marker-end="url(#ha)"/>
+<text class="lb acc" x="303.0" y="941" text-anchor="middle">Invite only</text>
+<rect class="bx" x="46" y="1020" width="260" height="53" rx="8"/>
+<text class="t" x="176" y="1042" text-anchor="middle">Add cover and inspiration</text>
+<text class="s note" x="176" y="1059" text-anchor="middle">1 image + 3 public posts</text>
+<rect class="bx" x="370" y="1020" width="260" height="70" rx="8"/>
+<text class="t" x="500" y="1042" text-anchor="middle">Add visuals</text>
+<text class="s" x="500" y="1059" text-anchor="middle">upload_cover_image</text>
+<text class="s" x="500" y="1076" text-anchor="middle">add_inspiration_posts</text>
+<polyline class="ar" points="500,973 500,1020" marker-end="url(#h)"/>
+<polyline class="ar" points="306,1048 370,1048" marker-end="url(#h)"/>
+<text class="lb" x="338.0" y="1041.0" text-anchor="middle">uploads</text>
+<rect class="bx" x="46" y="1140" width="260" height="53" rx="8"/>
+<text class="t" x="176" y="1162" text-anchor="middle">Set the budget</text>
+<text class="s note" x="176" y="1179" text-anchor="middle">Fee per creator + per 1K views</text>
+<rect class="bx" x="370" y="1140" width="260" height="70" rx="8"/>
+<text class="t" x="500" y="1162" text-anchor="middle">Budget and reach</text>
+<text class="s" x="500" y="1179" text-anchor="middle">set_campaign_budget</text>
+<text class="s" x="500" y="1196" text-anchor="middle">estimate_reach</text>
+<polyline class="ar" points="500,1090 500,1140" marker-end="url(#h)"/>
+<polyline class="ar" points="306,1168 370,1168" marker-end="url(#h)"/>
+<text class="lb" x="338.0" y="1161.0" text-anchor="middle">sets</text>
+<rect class="bx" x="46" y="1260" width="260" height="53" rx="8"/>
+<text class="t" x="176" y="1282" text-anchor="middle">Pick who to invite</text>
+<text class="s note" x="176" y="1299" text-anchor="middle">From matches or by @handle</text>
+<rect class="bx new" x="370" y="1260" width="260" height="70" rx="8"/>
+<text class="t" x="500" y="1282" text-anchor="middle">Shortlist creators</text>
+<text class="s" x="500" y="1299" text-anchor="middle">match_creators</text>
+<text class="s" x="500" y="1316" text-anchor="middle">set_invite_list</text>
+<polyline class="ar" points="500,1210 500,1260" marker-end="url(#h)"/>
+<polyline class="ar" points="370,1280 306,1280" marker-end="url(#h)"/>
+<text class="lb" x="338.0" y="1273.0" text-anchor="middle">matches</text>
+<polyline class="ar" points="306,1304 370,1304" marker-end="url(#h)"/>
+<text class="lb" x="338.0" y="1297.0" text-anchor="middle">picks</text>
+<rect class="bx" x="46" y="1380" width="260" height="53" rx="8"/>
+<text class="t" x="176" y="1402" text-anchor="middle">Approve going live</text>
+<text class="s note" x="176" y="1419" text-anchor="middle">Permission prompt in chat</text>
+<rect class="bx new" x="370" y="1380" width="260" height="70" rx="8"/>
+<text class="t" x="500" y="1402" text-anchor="middle">Publish to invitees only</text>
+<text class="s" x="500" y="1419" text-anchor="middle">validate_campaign</text>
+<text class="s" x="500" y="1436" text-anchor="middle">publish_campaign</text>
+<polyline class="ar" points="500,1330 500,1380" marker-end="url(#h)"/>
+<polyline class="ar" points="306,1408 370,1408" marker-end="url(#h)"/>
+<text class="lb" x="338.0" y="1401.0" text-anchor="middle">approves</text>
+<rect class="bx" x="694" y="1380" width="260" height="53" rx="8"/>
+<text class="t" x="824" y="1402" text-anchor="middle">Invite arrives</text>
+<text class="s note" x="824" y="1419" text-anchor="middle">Invites tab, closes-in countdown</text>
+<polyline class="ar acc" points="630,1408 694,1408" marker-end="url(#ha)"/>
+<text class="lb acc" x="662.0" y="1401.0" text-anchor="middle">invites</text>
+<polygon class="dm" points="824,1476 919,1510 824,1544 729,1510"/>
+<text class="q" x="824" y="1514.5" text-anchor="middle">Accept invite?</text>
+<polyline class="ar" points="824,1433 824,1476" marker-end="url(#h)"/>
+<rect class="bx" x="694" y="1600" width="260" height="53" rx="8"/>
+<text class="t" x="824" y="1622" text-anchor="middle">Joins the campaign</text>
+<text class="s note" x="824" y="1639" text-anchor="middle">Creates and posts content</text>
+<polyline class="ar" points="824,1544 824,1600" marker-end="url(#h)"/>
+<text class="lb" x="832" y="1576.0" text-anchor="start">Accept</text>
+<rect class="bx new" x="370" y="1600" width="260" height="53" rx="8"/>
+<text class="t" x="500" y="1622" text-anchor="middle">Track responses</text>
+<text class="s" x="500" y="1639" text-anchor="middle">get_invite_status</text>
+<polyline class="ar" points="500,1450 500,1600" marker-end="url(#h)"/>
+<polyline class="ar" points="729,1510 560,1510 560,1600" marker-end="url(#h)"/>
+<text class="lb" x="645" y="1503" text-anchor="middle">Decline or expire</text>
+<polyline class="ar" points="694,1628 630,1628" marker-end="url(#h)"/>
+<text class="lb" x="662.0" y="1621.0" text-anchor="middle">joined</text>
+<polygon class="dm" points="500,1696 595,1730 500,1764 405,1730"/>
+<text class="q" x="500" y="1734.5" text-anchor="middle">Enough joined?</text>
+<polyline class="ar" points="500,1653 500,1696" marker-end="url(#h)"/>
+<rect class="bx" x="46" y="1702" width="260" height="53" rx="8"/>
+<text class="t" x="176" y="1724" text-anchor="middle">Invite more creators</text>
+<text class="s note" x="176" y="1741" text-anchor="middle">Backups from the shortlist</text>
+<polyline class="ar" points="405,1730 306,1730" marker-end="url(#h)"/>
+<text class="lb" x="355.5" y="1723.0" text-anchor="middle">No</text>
+<polyline class="ar dash" points="46,1730 30,1730 30,1288 46,1288" marker-end="url(#h)"/>
+<text class="lb" x="0" y="0" text-anchor="middle" transform="translate(25 1509) rotate(-90)">back to the shortlist</text>
+<rect class="bx" x="370" y="1820" width="260" height="53" rx="8"/>
+<text class="t" x="500" y="1842" text-anchor="middle">Campaign runs</text>
+<text class="s note" x="500" y="1859" text-anchor="middle">Drafts go to the brand</text>
+<polyline class="ar" points="500,1764 500,1820" marker-end="url(#h)"/>
+<text class="lb" x="508" y="1796.0" text-anchor="start">Yes</text>
+<rect class="bx pill" x="46" y="1820" width="260" height="53" rx="28"/>
+<text class="t" x="176" y="1842" text-anchor="middle">Review and approve content</text>
+<text class="s note" x="176" y="1859" text-anchor="middle">Same as an open campaign</text>
+<polyline class="ar" points="370,1848 306,1848" marker-end="url(#h)"/>
+<text class="lb" x="338.0" y="1841.0" text-anchor="middle">drafts</text>
+</svg></div>
+    <figcaption>Apart from the blue steps, this is the open campaign flow from the prototype (<code>#self</code>). Invite only adds the access setting, a creator shortlist, a publish that reaches invitees only, and a loop that invites backups until enough creators join.</figcaption>
+  </figure>
+
+  <div class="cols">
+    <section>
+      <h2>Tool calls on the invite-only path</h2>
+      <table>
+        <tr><th><code>set_campaign_access</code><span class="tag">new</span></th><td>Sets <code>access: "invite_only"</code> on the draft. The campaign is hidden from the creator feed and only invited creators can open it.</td></tr>
+        <tr><th><code>match_creators</code><span class="tag">new</span></th><td>Ranks creators against the brief: audience, city, platforms, category and past results. Claude shows the top matches in the chat.</td></tr>
+        <tr><th><code>set_invite_list</code><span class="tag">new</span></th><td>Saves the creators the brand picked, plus any added by @handle, and a list of backups.</td></tr>
+        <tr><th><code>publish_campaign</code><span class="tag">changed</span></th><td>Needs the brand's approval. Holds the budget and sends invites to the list instead of notifying every matching creator.</td></tr>
+        <tr><th><code>get_invite_status</code><span class="tag">new</span></th><td>Counts accepted, declined, pending and expired invites, so Claude can suggest inviting backups.</td></tr>
+      </table>
+    </section>
+    <section>
+      <h2>Decision points</h2>
+      <ol>
+        <li><b>Brand connected?</b> If not, the manager signs in to Polysocial and Claude checks again.</li>
+        <li><b>Hire a strategist?</b> Yes goes to the strategist path (<code>#strat</code>). No keeps the brand as the designer.</li>
+        <li><b>Brief complete?</b> <code>check_brief</code> flags gaps and Claude asks for them before drafting.</li>
+        <li><b>Who can join?</b> Open to all publishes as today. Invite only continues down this flow.</li>
+        <li><b>Accept invite?</b> Each creator accepts, declines, or lets the invite expire in their Invites tab.</li>
+        <li><b>Enough joined?</b> If not, Claude offers to invite the backups from the shortlist.</li>
+      </ol>
+    </section>
+  </div>
+
+  <p class="foot">Tool names are a proposal for the Polysocial MCP server, not a published API. The invite card matches what creators already see for strategist invites in the collaborator app.</p>
+</div>
+
+</body>
+</html>

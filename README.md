@@ -39,6 +39,14 @@ strategist's side of this flow:
 
 Each tool call can be expanded to show its request and response.
 
+## Flow diagram: invite-only campaign, designed by the brand
+
+`flow-invite-only.html` is a swimlane diagram (brand · Claude + Polysocial MCP · creator) of a variant of the `#self`
+path: the brand designs the campaign and chooses **invite only**, so it is hidden from the open creator feed. It adds
+`set_campaign_access`, `match_creators`, `set_invite_list` and `get_invite_status`, and changes `publish_campaign` to
+send invites to the shortlist instead of notifying every matching creator. Backups are invited until enough creators
+join. These tools are proposals too; the chat prototype doesn't script this path yet.
+
 ## Presenting
 
 | Key | Action |
