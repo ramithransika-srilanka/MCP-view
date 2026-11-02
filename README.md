@@ -3,6 +3,10 @@
 A clickable prototype for stakeholders: a brand's marketing manager creates a Polysocial campaign from a Claude chat
 through the **Polysocial MCP connector**. Open `index.html` in a browser — no build step.
 
+The chat UI recreates the current claude.ai screen: dark theme by default, the sidebar (New, Search, Projects,
+Artifacts, Scheduled, Design, Customize, Pinned, Recents), a centred greeting with the composer underneath on the
+empty screen, and the Project / model / Manual row under the composer.
+
 ## The conversations
 
 The sidebar (or the chat picker on mobile) switches between two chats. Link straight to one with `#self` or `#strat`.
@@ -47,6 +51,7 @@ Each tool call can be expanded to show its request and response.
 | P | Auto-play / pause (permission prompts are accepted automatically) |
 | A | Show the whole conversation |
 | R | Restart |
+| T | Toggle dark / light theme |
 
 Campaign, creator and pricing data follow the demo set in the brand web app
 (`ramithransika-srilanka/brand-web-app`, commit `61d5f80`). Images in `images/` are taken from that app's `assets.js`.

@@ -7,40 +7,35 @@
 <meta name="description" content="Prototype: a brand marketing manager reviews and creates Polysocial campaigns from a Claude chat through the Polysocial MCP connector.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap" rel="stylesheet">
 <style>
-/* ---------- Claude chat tokens ---------- */
+/* ---------- Claude chat tokens (dark by default, like claude.ai) ---------- */
 :root{
-  --bg:#faf9f5; --side:#f5f4ed; --panel:#ffffff; --bubble:#f0eee6;
+  --bg:#1a1a19; --side:#1f1f1e; --panel:#30302e; --bubble:#2c2c2a; --hover:#2a2a28; --active:#3a3a38;
+  --text:#ecebe6; --muted:#a6a39b; --faint:#75736c;
+  --line:rgba(222,220,209,.10); --line-2:rgba(222,220,209,.17);
+  --clay:#d97757; --clay-ink:#e08a6c; --clay-soft:rgba(217,119,87,.18);
+  --ok:#6cc08f; --ok-soft:rgba(108,192,143,.14); --warn:#e0a458; --warn-soft:rgba(224,164,88,.15);
+  --code:#141413;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  /* Polysocial (brand web app) tokens */
+  --ps-blue:#1548eb; --ps-blue-600:#123bbd; --ps-blue-100:rgba(115,145,243,.25);
+  --ps-g100:#3a3a38; --ps-g200:#4a4a47; --ps-g600:#a6a39b; --ps-g800:#faf9f5; --ps-card:#262624;
+  --chat-font:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+  --serif:'Source Serif 4',Georgia,"Times New Roman",serif;
+  --ps-font:'Inter',-apple-system,system-ui,sans-serif;
+  color-scheme:dark;
+}
+/* Light theme: press T, or add data-theme="light" to <html> */
+:root[data-theme="light"]{
+  --bg:#faf9f5; --side:#f5f4ed; --panel:#ffffff; --bubble:#f0eee6; --hover:#ebe9e0; --active:#e3e1d7;
   --text:#141413; --muted:#73726c; --faint:#a3a199;
   --line:rgba(31,30,29,.13); --line-2:rgba(31,30,29,.22);
-  --clay:#d97757; --clay-ink:#c6613f; --clay-soft:rgba(217,119,87,.12);
+  --clay-ink:#c6613f; --clay-soft:rgba(217,119,87,.12);
   --ok:#2f7d4f; --ok-soft:rgba(47,125,79,.12); --warn:#a8641a; --warn-soft:rgba(196,129,40,.14);
-  --code:#f5f4ed;
-  --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.05);
-  /* Polysocial (brand web app) tokens */
-  --ps-blue:#1548eb; --ps-blue-600:#123bbd; --ps-blue-100:#d0dafb;
-  --ps-g100:#ececec; --ps-g200:#d9d9d9; --ps-g600:#717171; --ps-g800:#121212; --ps-card:#fff;
-  --chat-font:ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
-  --ps-font:'Inter',-apple-system,system-ui,sans-serif;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#262624; --side:#1f1e1d; --panel:#30302e; --bubble:#141413;
-    --text:#faf9f5; --muted:#a6a39b; --faint:#7d7b74;
-    --line:rgba(222,220,209,.13); --line-2:rgba(222,220,209,.24);
-    --clay-soft:rgba(217,119,87,.18); --ok:#6cc08f; --ok-soft:rgba(108,192,143,.14); --warn:#e0a458; --warn-soft:rgba(224,164,88,.15);
-    --code:#1f1e1d; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
-    --ps-g100:#3a3a38; --ps-g200:#4a4a47; --ps-g600:#a6a39b; --ps-g800:#faf9f5; --ps-card:#30302e; --ps-blue-100:rgba(115,145,243,.25);
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#262624; --side:#1f1e1d; --panel:#30302e; --bubble:#141413;
-  --text:#faf9f5; --muted:#a6a39b; --faint:#7d7b74;
-  --line:rgba(222,220,209,.13); --line-2:rgba(222,220,209,.24);
-  --clay-soft:rgba(217,119,87,.18); --ok:#6cc08f; --ok-soft:rgba(108,192,143,.14); --warn:#e0a458; --warn-soft:rgba(224,164,88,.15);
-  --code:#1f1e1d; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
-  --ps-g100:#3a3a38; --ps-g200:#4a4a47; --ps-g600:#a6a39b; --ps-g800:#faf9f5; --ps-card:#30302e; --ps-blue-100:rgba(115,145,243,.25);
+  --code:#f5f4ed; --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.05);
+  --ps-blue-100:#d0dafb; --ps-g100:#ececec; --ps-g200:#d9d9d9; --ps-g600:#717171; --ps-g800:#121212; --ps-card:#fff;
+  color-scheme:light;
 }
 
 *{box-sizing:border-box;}
@@ -49,53 +44,85 @@ body{background:var(--bg);color:var(--text);font:15px/1.6 var(--chat-font);-webk
 button{font:inherit;color:inherit;cursor:pointer;}
 img{display:block;}
 
-.app{display:grid;grid-template-columns:260px 1fr;height:100dvh;}
+.app{display:grid;grid-template-columns:288px 1fr;height:100dvh;}
+.ico{width:18px;height:18px;flex:none;}
 
-/* ---------- Sidebar ---------- */
-.side{background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:12px 10px;min-width:0;}
-.side .top{display:flex;align-items:center;gap:8px;padding:6px 8px 14px;font-weight:600;font-size:18px;letter-spacing:-.01em;}
-.newchat{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;border:0;background:none;text-align:left;font-weight:500;color:var(--clay-ink);}
-.newchat .plus{width:24px;height:24px;border-radius:50%;background:var(--clay);color:#fff;display:grid;place-items:center;font-size:17px;line-height:1;}
-.newchat:hover{background:var(--clay-soft);}
-.side h4{margin:18px 10px 6px;font-size:12px;font-weight:500;color:var(--muted);}
+/* ---------- Sidebar (claude.ai) ---------- */
+.side{background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0;min-height:0;}
+.side .top{display:flex;align-items:center;gap:8px;padding:10px 10px 10px 14px;}
+.side .brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:23px;font-weight:500;letter-spacing:-.01em;flex:1;}
+.side .brand .ico{color:var(--muted);}
+.modes{display:flex;gap:2px;}
+.modes span{width:34px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--muted);}
+.modes span.on{background:var(--active);color:var(--text);}
+.side nav{padding:4px 8px 0;display:flex;flex-direction:column;gap:1px;}
+.side nav a{display:flex;align-items:center;gap:11px;padding:7px 10px;border-radius:8px;font-size:14.5px;color:var(--text);text-decoration:none;cursor:pointer;}
+.side nav a:hover{background:var(--hover);}
+.side nav a.on{background:var(--active);}
+.app:not(:has(.main.empty)) .side nav a.on{background:none;}
+.app:has(.main.empty) .side li.on{background:none;}
+.side nav .pill{font-size:11px;border:1px solid var(--line-2);color:var(--muted);border-radius:999px;padding:0 7px;line-height:18px;}
+.side .lists{flex:1;overflow-y:auto;padding:0 8px 12px;min-height:0;scrollbar-width:thin;scrollbar-color:var(--active) transparent;}
+.side h4{display:flex;align-items:center;gap:6px;margin:22px 10px 6px;font-size:12.5px;font-weight:500;color:var(--muted);}
+.side h4 svg{width:10px;height:10px;}
 .side ul{list-style:none;margin:0;padding:0;}
-.side li{padding:7px 10px;border-radius:8px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);opacity:.88;}
-.side li.on{background:var(--bubble);opacity:1;}
-.side li:not(.on):hover{background:var(--clay-soft);}
-.me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid var(--line);}
-.me .av{width:32px;height:32px;border-radius:50%;background:#3d3929;color:#faf9f5;display:grid;place-items:center;font-size:13px;font-weight:600;flex:none;}
-.me b{display:block;font-size:13.5px;font-weight:600;line-height:1.25;}
-.me span{display:block;font-size:12px;color:var(--muted);line-height:1.3;}
+.side li{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;font-size:14.5px;color:var(--text);cursor:default;}
+.side li .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.side li .ico{width:16px;height:16px;color:var(--muted);}
+.side li.on{background:var(--active);}
+.side li:not(.on):hover{background:var(--hover);}
+.me{display:flex;align-items:center;gap:10px;padding:12px 14px 14px;border-top:1px solid var(--line);}
+.me .av{width:24px;height:24px;border-radius:50%;background:var(--active);color:var(--text);display:grid;place-items:center;font-size:11px;font-weight:600;flex:none;}
+.me .who{flex:1;min-width:0;display:flex;align-items:center;gap:6px;font-size:14px;white-space:nowrap;}
+.me .who b{font-weight:500;overflow:hidden;text-overflow:ellipsis;}
+.me .who span{color:var(--muted);font-size:13px;}
+.me .who svg{width:12px;height:12px;color:var(--muted);flex:none;}
+.me > .ico{color:var(--muted);}
 
 /* ---------- Main ---------- */
 .main{display:flex;flex-direction:column;min-width:0;height:100dvh;position:relative;}
-.bar{display:flex;align-items:center;gap:12px;padding:10px 20px;border-bottom:1px solid var(--line);min-height:54px;}
-.bar .title{font-weight:500;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bar{display:flex;align-items:center;gap:10px;padding:10px 16px 10px 20px;min-height:52px;background:var(--bg);z-index:2;}
+.bar .title{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px;}
+.bar .title svg{width:12px;height:12px;color:var(--muted);flex:none;}
 .bar .spacer{flex:1;}
 .conn{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 6px;border:1px solid var(--line);border-radius:999px;font-size:12.5px;color:var(--muted);white-space:nowrap;}
 .conn .dot{width:7px;height:7px;border-radius:50%;background:#3fb06e;}
 .ps-mark{width:16px;height:16px;border-radius:4px;background:var(--ps-blue);color:#fff;display:grid;place-items:center;flex:none;}
 .ps-mark svg{width:11px;height:8px;}
+.ghost{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--muted);flex:none;}
+.ghost:hover{background:var(--hover);}
 
-.ctrls{display:flex;gap:6px;align-items:center;}
-.ctrls button{border:1px solid var(--line-2);background:var(--panel);border-radius:8px;padding:5px 10px;font-size:13px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
-.ctrls button:hover{border-color:var(--clay);}
-.ctrls button.primary{background:var(--text);color:var(--bg);border-color:var(--text);}
-.ctrls button:disabled{opacity:.45;cursor:default;}
-.ctrls .step{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:38px;text-align:right;}
+.ctrls{display:flex;gap:4px;align-items:center;}
+.ctrls button{border:1px solid transparent;background:transparent;color:var(--muted);border-radius:8px;padding:5px 10px;font-size:13px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+.ctrls button:hover{background:var(--hover);color:var(--text);}
+.ctrls button.primary{background:var(--active);color:var(--text);}
+.ctrls button.primary:hover{background:var(--line-2);}
+.ctrls button:disabled{opacity:.4;cursor:default;background:transparent;}
+.ctrls .step{font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums;min-width:34px;text-align:right;}
 
 .scroll{flex:1;overflow-y:auto;scroll-behavior:smooth;}
-.thread{max-width:768px;margin:0 auto;padding:28px 24px 40px;}
+.thread{max-width:768px;margin:0 auto;padding:20px 24px 40px;}
 
-/* intro (empty state) */
-.intro{text-align:center;padding:9vh 0 0;}
-.intro h1{font-size:30px;font-weight:400;letter-spacing:-.02em;margin:14px 0 8px;font-family:Georgia,"Times New Roman",serif;}
-.intro p{color:var(--muted);margin:0 auto 22px;max-width:520px;}
-.intro .spark{width:38px;height:38px;margin:0 auto;}
-.intro .go{border:0;background:var(--clay);color:#fff;border-radius:10px;padding:10px 18px;font-weight:500;}
-.intro .go:hover{background:var(--clay-ink);}
-.intro .hint{display:block;margin-top:12px;font-size:12.5px;color:var(--faint);}
-.intro .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:26px;}
+/* empty state: greeting + composer centred, like claude.ai/new */
+.hero{display:none;align-items:center;justify-content:center;gap:14px;padding:0 24px 30px;text-align:center;}
+.hero .spark{width:40px;height:40px;}
+.hero h1{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.4vw,40px);letter-spacing:-.015em;line-height:1.15;}
+.main.empty{justify-content:center;}
+.main.empty .bar{position:absolute;top:0;left:0;right:0;background:transparent;}
+.main.empty .bar .title,.main.empty .bar .conn{visibility:hidden;}
+.main.empty .hero{display:flex;order:1;}
+.main.empty .composer{order:2;padding-bottom:0;}
+.main.empty .scroll{order:3;flex:none;overflow:visible;}
+.main.empty .thread{padding-top:22px;}
+.main.empty .foot{display:none;}
+
+.intro{text-align:center;}
+.intro p{color:var(--muted);margin:0 auto 18px;max-width:600px;font-size:13.5px;line-height:1.55;}
+.intro .go{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:transparent;color:var(--text);border-radius:10px;padding:7px 14px;font-size:13.5px;}
+.intro .go:hover{background:var(--hover);}
+.intro .go svg{width:12px;height:12px;color:var(--clay);}
+.intro .hint{display:block;margin-top:10px;font-size:12px;color:var(--faint);}
+.intro .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:20px;}
 .intro .chips span{font-size:12.5px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);color:var(--muted);}
 
 /* messages */
@@ -155,19 +182,28 @@ img{display:block;}
 
 /* composer */
 .composer{padding:0 24px 18px;}
-.box{max-width:768px;margin:0 auto;border:1px solid var(--line-2);border-radius:18px;background:var(--panel);box-shadow:var(--shadow);padding:12px 12px 10px 16px;}
-.box .ta{min-height:24px;max-height:120px;overflow:auto;white-space:pre-wrap;color:var(--text);}
+.box{max-width:672px;margin:0 auto;border:1px solid var(--line-2);border-radius:20px;background:var(--panel);box-shadow:0 4px 20px rgba(0,0,0,.18);padding:16px 14px 10px 18px;}
+.box .ta{min-height:26px;max-height:120px;overflow:auto;white-space:pre-wrap;color:var(--text);font-size:15.5px;}
 .box .ta:empty::before{content:"Reply to Claude…";color:var(--faint);}
+.main.empty .box .ta:empty::before{content:"How can I help you today?";}
 .box .ta .caret{display:inline-block;width:1.5px;height:1.1em;background:var(--text);vertical-align:-2px;animation:blink 1s step-end infinite;}
 @keyframes blink{50%{opacity:0;}}
-.box .row{display:flex;align-items:center;gap:6px;margin-top:10px;}
-.ibtn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;background:transparent;color:var(--muted);}
-.ibtn svg{width:16px;height:16px;}
-.box .model{margin-left:auto;font-size:13px;color:var(--muted);padding:0 8px;}
-.send{width:32px;height:32px;border-radius:8px;border:0;background:var(--clay);color:#fff;display:grid;place-items:center;opacity:.5;transition:opacity .15s;}
-.send.ready{opacity:1;}
+.box .row{display:flex;align-items:center;gap:4px;margin-top:14px;margin-left:-6px;}
+.ibtn{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:transparent;color:var(--muted);flex:none;}
+.ibtn svg{width:18px;height:18px;}
+.ibtn.wide{width:auto;padding:0 6px;gap:2px;display:inline-flex;align-items:center;}
+.ibtn.wide svg + svg{width:12px;height:12px;}
+.box .grow{flex:1;}
+.send{width:32px;height:32px;border-radius:8px;border:0;background:var(--clay);color:#fff;display:none;place-items:center;}
+.send.ready{display:grid;}
+.send.ready ~ .voice{display:none;}
 .send svg{width:16px;height:16px;}
-.foot{max-width:768px;margin:8px auto 0;text-align:center;font-size:11.5px;color:var(--faint);}
+.meta{max-width:672px;margin:10px auto 0;display:flex;align-items:center;gap:18px;padding:0 18px;font-size:14px;}
+.meta .proj{display:inline-flex;align-items:center;gap:5px;flex:1;}
+.meta svg{width:12px;height:12px;color:var(--muted);}
+.meta .model b{font-weight:500;}
+.meta .model span{color:var(--muted);margin-left:4px;}
+.foot{max-width:672px;margin:8px auto 0;text-align:center;font-size:11.5px;color:var(--faint);}
 
 /* ---------- Polysocial cards (mirror brand web app) ---------- */
 .ps{font-family:var(--ps-font);background:var(--ps-card);border:1px solid var(--line);border-radius:14px;overflow:hidden;color:var(--ps-g800);font-size:13px;line-height:1.45;box-shadow:var(--shadow);}
@@ -177,13 +213,13 @@ img{display:block;}
 .ps-f{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--ps-g600);}
 .ps-f a{color:var(--ps-blue);font-weight:600;text-decoration:none;}
 .ps-f a:hover{text-decoration:underline;}
-:root[data-theme="dark"] .ps-f a{color:#7391f3;}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ps-f a{color:#7391f3;}}
+.ps-f a{color:#7391f3;}
+:root[data-theme="light"] .ps-f a{color:var(--ps-blue);}
 
 .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;}
 .badge.blue{background:var(--ps-blue-100);color:var(--ps-blue-600);}
-:root[data-theme="dark"] .badge.blue{color:#a1b6f7;}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .badge.blue{color:#a1b6f7;}}
+.badge.blue{color:#a1b6f7;}
+:root[data-theme="light"] .badge.blue{color:var(--ps-blue-600);}
 .badge.ok{background:var(--ok-soft);color:var(--ok);}
 .badge.warn{background:var(--warn-soft);color:var(--warn);}
 .badge.grey{background:var(--ps-g100);color:var(--ps-g600);}
@@ -387,6 +423,13 @@ img{display:block;}
   .bar .spacer{display:none;}
   .thread{padding:20px 16px 32px;}
   .composer{padding:0 16px 12px;}
+  .meta{padding:0 6px;gap:12px;font-size:13px;}
+  .hero{flex-direction:column;gap:8px;}
+  .main.empty{justify-content:flex-start;overflow-y:auto;}
+  .main.empty .bar{position:static;}
+  .main.empty .bar .title,.main.empty .bar .conn{display:none;}
+  .main.empty .hero{padding-top:6vh;}
+  .ghost{display:none;}
   .two{grid-template-columns:1fr;}
   .two > .sec:first-child{border-right:0;}
   .stepper{grid-template-columns:1fr;gap:10px;}
@@ -415,24 +458,42 @@ img{display:block;}
 <body>
 <div class="app">
   <aside class="side" aria-label="Chats">
-    <div class="top"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><use href="#spark"/></svg>Claude</div>
-    <button class="newchat" type="button"><span class="plus">+</span>New chat</button>
-    <h4>Recents</h4>
-    <ul>
-      <li data-chat="self">Crunch Chicken launch — our own brief<span class="new">NEW</span></li>
-      <li data-chat="strat">Kandy opening — with a strategist<span class="new">NEW</span></li>
-      <li>Q4 influencer budget split</li>
-      <li>Caption ideas — Pumpkin Spice</li>
-      <li>Creator brief template</li>
-      <li>Polysocial weekly report — Nov 3</li>
-      <li>Festive menu launch plan</li>
-    </ul>
-    <div class="me"><div class="av">DR</div><div><b>Dinithi Rajapaksa</b><span>Marketing Manager · Patty Pop</span></div></div>
+    <div class="top">
+      <div class="brand"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-panel"/></svg>Claude</div>
+      <div class="modes" aria-hidden="true"><span class="on"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chatsearch"/></svg></span><span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-code"/></svg></span></div>
+    </div>
+    <nav>
+      <a class="on" data-new><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-plus"/></svg>New</a>
+      <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-search"/></svg>Search</a>
+      <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-projects"/></svg>Projects <span class="pill">New</span></a>
+      <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-artifacts"/></svg>Artifacts</a>
+      <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-clock"/></svg>Scheduled</a>
+      <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-palette"/></svg>Design</a>
+      <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bag"/></svg>Customize</a>
+    </nav>
+    <div class="lists">
+      <h4>Pinned <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 8h14l-7 9z"/></svg></h4>
+      <ul>
+        <li data-chat="self"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bubble"/></svg><span class="t">Crunch Chicken launch — our own brief</span></li>
+        <li data-chat="strat"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bubble"/></svg><span class="t">Kandy opening — with a strategist</span></li>
+      </ul>
+      <h4>Recents <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 8h14l-7 9z"/></svg></h4>
+      <ul>
+        <li><span class="t">Q4 influencer budget split</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-doc"/></svg></li>
+        <li><span class="t">Caption ideas — Pumpkin Spice</span></li>
+        <li><span class="t">Creator brief template</span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-doc"/></svg></li>
+        <li><span class="t">Polysocial weekly report — Nov 3</span></li>
+        <li><span class="t">Festive menu launch plan</span></li>
+        <li><span class="t">Burger combo pricing check</span></li>
+        <li><span class="t">TikTok hook ideas for fries</span></li>
+      </ul>
+    </div>
+    <div class="me"><div class="av">D</div><div class="who"><b>Dinithi Rajapaksa</b><span>· Pro</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-devices"/></svg></div>
   </aside>
 
-  <main class="main">
+  <main class="main empty" id="main">
     <div class="bar">
-      <div class="title" id="chatTitle"></div>
+      <div class="title"><span id="chatTitle"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div>
       <select class="chatsel" id="chatSel" aria-label="Choose chat"><option value="self">Crunch Chicken — own brief</option><option value="strat">Kandy opening — with strategist</option></select>
       <span class="conn" title="Polysocial MCP connector is connected"><span class="ps-mark"><svg viewBox="0 0 269 184"><use href="#pslogo"/></svg></span>Polysocial<span class="dot"></span></span>
       <span class="spacer"></span>
@@ -443,16 +504,17 @@ img{display:block;}
         <button type="button" id="next" class="primary" title="Next message (Space or →)"><span>Next</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button>
         <span class="step" id="step"></span>
       </div>
+      <span class="ghost" title="Incognito chat" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-ghost"/></svg></span>
     </div>
+
+    <div class="hero"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><use href="#spark"/></svg><h1 id="greet"></h1></div>
 
     <div class="scroll" id="scroll">
       <div class="thread" id="thread">
         <div class="intro" id="intro">
-          <svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><use href="#spark"/></svg>
-          <h1 id="greet"></h1>
           <p id="blurb"></p>
-          <button class="go" type="button" id="start">Start the conversation</button>
-          <span class="hint">Space / → next message · P auto-play · A show all · R restart</span>
+          <button class="go" type="button" id="start"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"/></svg>Start the conversation</button>
+          <span class="hint">Space / → next message · P auto-play · A show all · R restart · T theme</span>
           <div class="chips" id="chips"></div>
         </div>
       </div>
@@ -462,11 +524,18 @@ img{display:block;}
       <div class="box">
         <div class="ta" id="ta" aria-live="polite"></div>
         <div class="row">
-          <span class="ibtn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
-          <span class="ibtn" title="Connectors: Polysocial" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></span>
-          <span class="model">Claude</span>
+          <span class="ibtn" title="Add files, connectors and more" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-plus"/></svg></span>
+          <span class="ibtn" title="Connectors: Polysocial" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></span>
+          <span class="grow"></span>
           <span class="send" id="send" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
+          <span class="ibtn wide voice" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-mic"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></span>
+          <span class="ibtn voice" title="Voice mode" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><use href="#i-wave"/></svg></span>
         </div>
+      </div>
+      <div class="meta">
+        <span class="proj">Project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></span>
+        <span class="model"><b>Opus 5.5</b><span>Medium</span></span>
+        <span>Manual</span>
       </div>
       <div class="foot">Prototype for stakeholder review · campaign data mirrors the Polysocial brand web app demo set</div>
     </div>
@@ -475,6 +544,22 @@ img{display:block;}
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
+    <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M9 4.5v15"/></symbol>
+    <symbol id="i-chatsearch" viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-11.2 6.5L4 19.5l1.5-4.3A7.5 7.5 0 1 1 20 11.5z"/><circle cx="12.5" cy="11.5" r="2.6"/><path d="M14.4 13.4l1.8 1.8"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></symbol>
+    <symbol id="i-projects" viewBox="0 0 24 24"><path d="M5 8h14v11a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19z"/><path d="M7 5h10M9 12h6"/></symbol>
+    <symbol id="i-artifacts" viewBox="0 0 24 24"><rect x="4" y="9" width="11" height="11" rx="2"/><path d="M9 9V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 4a8 8 0 1 0 0 16c1.2 0 1.8-.8 1.8-1.7 0-1.3-1-1.6-1-2.6 0-.9.7-1.5 1.6-1.5H17a3 3 0 0 0 3-3C20 7.3 16.4 4 12 4z"/><circle cx="8" cy="11" r="1"/><circle cx="10.5" cy="7.7" r="1"/><circle cx="14.6" cy="8" r="1"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><rect x="3.5" y="7.5" width="17" height="12" rx="2"/><path d="M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5"/></symbol>
+    <symbol id="i-bubble" viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-11.2 6.5L4 19.5l1.5-4.3A7.5 7.5 0 1 1 20 11.5z"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3.5H7.5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V8z"/><path d="M14 3.5V8h4.5"/></symbol>
+    <symbol id="i-devices" viewBox="0 0 24 24"><rect x="3" y="5" width="14" height="10" rx="1.5"/><path d="M6 19h8M10 15v4"/><rect x="16" y="10" width="5.5" height="9.5" rx="1.2"/></symbol>
+    <symbol id="i-ghost" viewBox="0 0 24 24"><path d="M5 20V11a7 7 0 0 1 14 0v9l-2.3-1.6L14.3 20 12 18.4 9.7 20l-2.4-1.6z"/><circle cx="9.5" cy="11" r=".6" fill="currentColor"/><circle cx="14.5" cy="11" r=".6" fill="currentColor"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5"/></symbol>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></symbol>
     <symbol id="spark" viewBox="0 0 24 24"><g fill="currentColor"><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(40 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(80 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(125 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(165 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(205 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(245 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(285 12 12)"/><path d="M11.2 1.5h1.6l.5 7.8-1.3 2.2-1.3-2.2z" transform="rotate(322 12 12)"/></g></symbol>
     <symbol id="pslogo" viewBox="0 0 269 184"><path d="M121.556 4.06404C141.556 -7.48297 166.556 6.9505 166.556 30.0445C166.556 31.0921 165.899 32.0212 164.936 32.4319C152.062 37.9179 143.037 50.6867 143.037 65.564V116.564C143.037 131.086 151.636 143.598 164.02 149.29C165.519 149.979 166.556 151.435 166.556 153.085C166.555 176.178 141.556 190.612 121.556 179.065L15 117.545C-5 105.998 -5 77.1306 15 65.5836L121.556 4.06404Z" fill="currentColor"/><path d="M227.969 0.278931C250.418 0.27893 268.617 18.478 268.617 40.9274V140.409C268.617 162.858 250.418 181.056 227.969 181.056C210.666 181.056 195.891 170.245 190.025 155.01C189.233 152.955 190.505 150.769 192.546 149.942C205.734 144.6 215.037 131.669 215.037 116.564V65.5641C215.037 50.3684 205.621 37.3734 192.306 32.0911C190.279 31.2867 188.994 29.1414 189.737 27.0903C195.397 11.453 210.378 0.278951 227.969 0.278931Z" fill="currentColor"/></symbol>
   </defs>
@@ -1034,18 +1119,16 @@ const STRAT = [
 
 const CHATS = {
   self:{title:'Crunch Chicken launch — our own brief',script:SELF,
-    greet:'Good morning, Dinithi',
     blurb:'Path 1 of the campaign flow: the brand is connected, shares the requirement and timeline, designs the campaign itself (hook, script, audience), uploads a cover image and inspiration posts, sets the budget and goes live.',
     chips:['Check brand connection','Requirement &amp; timeline','Brand shares hook, script, audience','Upload cover &amp; inspiration','Set budget','Go live']},
   strat:{title:'Kandy opening — with a strategist',script:STRAT,
-    greet:'Good morning, Dinithi',
     blurb:'Path 2 of the campaign flow: the brand has no time to design the campaign, so it sets a budget, uploads a cover image and inspiration posts, picks one of three matched creative strategists, invites them and agrees their commission in chat. The strategist designs it; the brand reviews, approves and goes live.',
     chips:['Check brand connection','Requirement &amp; timeline','Set budget first','Upload cover &amp; inspiration','Choose from 3 strategists','Invite &amp; agree commission','Review &amp; revise design','Approve &amp; go live']}
 };
 
 /* ---------- Player ---------- */
 const $ = (s) => document.querySelector(s);
-const thread = $('#thread'), scroller = $('#scroll'), ta = $('#ta'), sendBtn = $('#send');
+const mainEl = $('#main'), thread = $('#thread'), scroller = $('#scroll'), ta = $('#ta'), sendBtn = $('#send');
 const btnNext = $('#next'), btnPlay = $('#play'), btnAll = $('#all'), btnRestart = $('#restart'), stepEl = $('#step');
 const introHTML = $('#intro').outerHTML;
 
@@ -1191,6 +1274,7 @@ async function claudeTurn(steps, id){
 async function playTurn(){
   if (busy || turn >= SCRIPT.length) return;
   const intro = $('#intro'); if (intro) intro.remove();
+  mainEl.classList.remove('empty');
   busy = true; updateUI();
   const id = run;
   try {
@@ -1209,7 +1293,9 @@ function reset(){
   run++; busy = false; autoplay = false; instant = false; turn = 0;
   thread.innerHTML = introHTML; ta.textContent = ''; sendBtn.classList.remove('ready');
   const c = CHATS[chatKey];
-  $('#greet').textContent = c.greet; $('#blurb').textContent = c.blurb;
+  mainEl.classList.add('empty');
+  const h = new Date().getHours();
+  $('#greet').textContent = `${h < 12 ? 'Morning' : h < 17 ? 'Afternoon' : 'Evening'}, Dinithi Rajapaksa`; $('#blurb').textContent = c.blurb;
   $('#chips').innerHTML = c.chips.map(x => `<span>${x}</span>`).join('');
   $('#start').addEventListener('click', playTurn);
   scroller.scrollTop = 0; updateUI();
@@ -1218,7 +1304,7 @@ function reset(){
 async function showAll(){
   run++; autoplay = false; busy = false;
   // Rebuild from scratch so a half-played turn isn't left behind.
-  thread.innerHTML = ''; turn = 0; instant = true;
+  thread.innerHTML = ''; turn = 0; instant = true; mainEl.classList.remove('empty');
   const id = run;
   for (const t of SCRIPT){ await preTurn(t, id); await typeUser(t.user, id, t.paste, t.files); await claudeTurn(t.steps, id); turn++; }
   instant = false; updateUI(); toBottom(true);
@@ -1236,6 +1322,7 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 'p' || e.key === 'P') btnPlay.click();
   else if (e.key === 'a' || e.key === 'A') showAll();
   else if (e.key === 'r' || e.key === 'R') reset();
+  else if (e.key === 't' || e.key === 'T'){ const r = document.documentElement; r.dataset.theme = r.dataset.theme === 'light' ? 'dark' : 'light'; }
 });
 async function preTurn(t, id){
   if (t.select) await selectOpts(t.select, id);
@@ -1265,6 +1352,7 @@ function openChat(key){
   reset();
 }
 document.querySelectorAll('.side li[data-chat]').forEach(li => li.addEventListener('click', () => openChat(li.dataset.chat)));
+document.querySelector('[data-new]').addEventListener('click', reset);
 $('#chatSel').addEventListener('change', (e) => openChat(e.target.value));
 window.addEventListener('hashchange', () => { const k = location.hash.slice(1); if (k !== chatKey) openChat(k); });
 openChat(location.hash.slice(1) || 'self');
